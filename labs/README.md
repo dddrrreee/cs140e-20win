@@ -89,39 +89,21 @@ to run the pi and using modern techniques to validate it:
   interrupt-based UART channel and use this to control the ESP 8266
   wireless chip, which you can use to communicate with other pi's.
 
-### Part 3: Packaging up the pi: Shells, file systems, more.
+### Part 3: file systems.
 
-  - [11-shell](11-shell/): You'll write a simple shell that runs 
-  on Unix and can:
-      + Remotely execute a set of built-in commands (`reboot`, `echo`)
-      on the pi using a simple server.
-
-      + Ship pi binaries to the pi-server, where they execute, and their
-      output echoed on the Unix-side shell's console (as you did in your
-      lab5's handoff test).
-
-      + Run Unix commands locally so that, for example, `ls`, `pwd`, work.
-
-      While it sounds like a lot, you've done much of the hard parts,
-      and can just re-purpose old code (bootloader, replay, system call
-      tricks) --- we're at the point in the quarter where you start to get
-      some nice technological velocity because of how much you've done.
-
-  - [12-fuse-fs](12-fuse-fs/): while building a shell is
-  illuminating, you'd like to have the pi more integrated into your
-  computing, versus having to use a special-purpose interface to talk
-  to it.  In this lab you will use the FUSE file system to wrap up your
-  pi as a special file system and mount it on your laptop, where you can
-  use standard utilities (and your normal shell) to interact with it.
-  Writes to special files (`/pi/reboot`, `/pi/run`) will take the place
-  of built-in shell commands.  
+  - [11-fuse-fs](11-fuse-fs/): In this lab you will use the FUSE file
+  system to wrap up your pi as a special file system and mount it on your
+  laptop, where you can use standard utilities (and your normal shell)
+  to interact with it.  You can then control the pi by reading / writing
+  to special files: e.g., echoing a `1` to `pi/reboot` to cause a reboot,
+  echoing a program to `/pi/run` to run it.
 
   This lab is a great example of the power of Unix's simple, powerful
   OO-interface that lets you package a variety of disparete things as
   files, directories, links and interact with them using a uniform set
   of verbs (e.g., `open()-read()-write()-close()`).
 
-  - [13-simple-fs](13-simple-fs): here you will write code to partition
+  - [12-simple-fs](12-simple-fs): here you will write code to partition
   your pi's SD card driver and write a custom file system to manage it so that
   you can read/write files across runs.
 
@@ -140,17 +122,21 @@ to run the pi and using modern techniques to validate it:
   hardware, translation, and page table state (more subtle than it
   sounds).  At the end you should be able to delete all our starter code.
 
-  -[16-syscall](16-syscall): Today is a relatively light lab
-   so you have more time for projects.  We're going to build a
-   simple system call.  Once we have this in place, we can then make
-   user-level processes --- without it, they would not even be able
-   to call `exit()`.
+  - [16-syscall](16-syscall):
+    today we're going to build a simple system call.  Once we have this
+    in place, we can then make user-level processes --- without it,
+    they would not even be able to call `exit()`.
 
-   As a secondary purpose, this lab will get you more comfortable
-   with interrupts since it will require you do invasive surgery on the
-   timer-interrupt code from `lab7-interrupts` in order to repurpose it
-   to support system calls.
+    As a secondary purpose, this lab will get you more comfortable
+    with interrupts since it will require you do invasive surgery on the
+    timer-interrupt code from `lab7-interrupts` in order to repurpose it
+    to support system calls.
 
   - [17-user-level](17-user-level): today you will make user level processes.
-  This will combine the virtual memory, system calls, and threads into a 
-  capstone implementation.
+    This will combine the virtual memory, system calls, and threads into a 
+    capstone implementation.
+
+  - [18-multi-program](18-multi-program):
+    you will use the previous pieces to make your fuse-FS support
+    multiprocessing, so that you can have multiple programs running at
+    the same time.

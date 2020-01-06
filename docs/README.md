@@ -15,7 +15,7 @@ The main documents:
    1.  The r/pi uses the Broadcom BCM2835 chip to control  the various
        pins sticking up on its right side.  The function of these
        pins (and the broadcom chip more generally) is decribed in
-       `BCM2835-ARM-Peripherals.annot.PDF`.
+       [BCM2835-ARM-Peripherals.annot.PDF](https://github.com/dddrrreee/cs140e-20win/blob/master/docs/BCM2835-ARM-Peripherals.annot.PDF).
 
        As you will find with all hardware documents, the broadcom
        on has numerous errors, so always be sure to look at [the

@@ -61,12 +61,12 @@ to run the pi and using modern techniques to validate it:
 
 ### Part 2: Threads and Interrupts, with Tricks:
 
-  7. [7-threads](lab7-threads/): we build a simple, but functional
+  - [7-threads](lab7-threads/): we build a simple, but functional
   threads package.  You will write the code for non-preemptive 
   context switching:  Most people don't understand such things
   so, once again, you'll leave lab knowing something many do not.
 
-  8. [8-interrupts](8-interrupts/): you will walk through a simple,
+  - [8-interrupts](8-interrupts/): you will walk through a simple,
   self-contained implementation of pi interrupts (for timer-interrupts),
   kicking each line until you understand what, how, why.  You will
   use these to then implement a version of `gprof` (Unix statistical
@@ -81,17 +81,17 @@ to run the pi and using modern techniques to validate it:
   cases and have a result that is much much much slower and, worse,
   in terms of insight.
 
-  9. [9-preemptive-threads](9-preemptive-threads): you will use the
+  - [9-preemptive-threads](9-preemptive-threads): you will use the
   timer-code in the previous lab to implement pre-emptive threads along
   with locks and some simple checking code.
 
-  10. [10-ESP](10-esp-int/): in the capstone lab, we implement an
+  - [10-ESP](10-esp-int/): in the capstone lab, we implement an
   interrupt-based UART channel and use this to control the ESP 8266
   wireless chip, which you can use to communicate with other pi's.
 
 ### Part 3: Packaging up the pi: Shells, file systems, more.
 
-  11. [lab11-shell](lab10-shell/): You'll write a simple shell that runs 
+  - [11-shell](11-shell/): You'll write a simple shell that runs 
   on Unix and can:
       + Remotely execute a set of built-in commands (`reboot`, `echo`)
       on the pi using a simple server.
@@ -107,7 +107,7 @@ to run the pi and using modern techniques to validate it:
       tricks) --- we're at the point in the quarter where you start to get
       some nice technological velocity because of how much you've done.
 
-  12. [lab12-fuse-fs](lab11-fuse-fs/): while building a shell is
+  - [12-fuse-fs](12-fuse-fs/): while building a shell is
   illuminating, you'd like to have the pi more integrated into your
   computing, versus having to use a special-purpose interface to talk
   to it.  In this lab you will use the FUSE file system to wrap up your
@@ -121,36 +121,36 @@ to run the pi and using modern techniques to validate it:
   files, directories, links and interact with them using a uniform set
   of verbs (e.g., `open()-read()-write()-close()`).
 
-  13. [13-simple-fs](13-simple-fs): here you will write code to partition
+  - [13-simple-fs](13-simple-fs): here you will write code to partition
   your pi's SD card driver and write a custom file system to manage it so that
   you can read/write files across runs.
 
 ### Virtual Memory
 
-  12. [lab12-vm.0](lab12-vm.0/): Virtual memory and the SD card file
+  - [14-vm.0](14-vm.0/): Virtual memory and the SD card file
   system are the biggest unknowns in our universe, so we'll bang out
   quick versions of each, and then circle back around and make your
   system more real.  This lab is a semi-lecture on the big picture of
   virtual memory, then you take a working VM system and replace its page
   table manipulation with your own.
 
-  13. [lab13-vm.1](lab13-vm.1/): The previous lab defined the main noun
+  - [15-vm.1](15-vm.1/): The previous lab defined the main noun
   in the virtual memory universe (the page table); this lab does the main
   verbs used to set up the VM hardware, including how to synchronize
   hardware, translation, and page table state (more subtle than it
   sounds).  At the end you should be able to delete all our starter code.
 
-  14. [14-syscall](14-syscall): Today is a relatively light lab
-      so you have more time for projects.  We're going to build a
-      simple system call.  Once we have this in place, we can then make
-      user-level processes --- without it, they would not even be able
-      to call `exit()`.
+  -[16-syscall](16-syscall): Today is a relatively light lab
+   so you have more time for projects.  We're going to build a
+   simple system call.  Once we have this in place, we can then make
+   user-level processes --- without it, they would not even be able
+   to call `exit()`.
 
-      As a secondary purpose, this lab will get you more comfortable
-      with interrupts since it will require you do invasive surgery on the
-      timer-interrupt code from `lab7-interrupts` in order to repurpose it
-      to support system calls.
+   As a secondary purpose, this lab will get you more comfortable
+   with interrupts since it will require you do invasive surgery on the
+   timer-interrupt code from `lab7-interrupts` in order to repurpose it
+   to support system calls.
 
-  15. [15-user-level](15-user-level): today you will make user level processes.
+  - [17-user-level](17-user-level): today you will make user level processes.
   This will combine the virtual memory, system calls, and threads into a 
   capstone implementation.

@@ -10,7 +10,7 @@ or just load them externally.
 
 The main documents:
 
-   0.  Cheat sheet of the r/pi A+ GPIO pins: `gpio.png`.
+   0.  Cheat sheet of the r/pi A+ GPIO pins [gpio.png](https://github.com/dddrrreee/cs140e-20win/blob/master/docs/gpio.png).
 
    1.  The r/pi uses the Broadcom BCM2835 chip to control  the various
        pins sticking up on its right side.  The function of these

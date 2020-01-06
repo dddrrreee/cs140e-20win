@@ -107,17 +107,17 @@ great counter-point to what we do.
 
 First things first: 
 
-    1. clone the class repository:
-            git clone git@github.com:dddrrreee/cs140e-win20.git
+   1. clone the class repository:
+            git clone git@github.com:dddrrreee/cs140e-20win.git
 
-       You may need to install `git`, create a `github` account and
-       register a key (if you don't want to do the latter, use the `http`
-       clone method).
+      You may need to install `git`, create a `github` account and
+      register a key (if you don't want to do the latter, use the `http`
+      clone method).
 
-    2. Look in the `labs` directory and read through lab 0, which is our
-       startup lab to make sure everyone is on the same page before we
-       start going forward.
-
-    2. Make sure you have access to the [cs14e
+   2. Make sure you have access to the [cs14e
        newsgroup](https://groups.google.com/forum/#!forum/cs140e-win20).
        Email us if not!
+
+   3. Look in the `labs` directory and read through the labs in `0-blink`
+      and `1-gpio` which are our startup labs to make sure everyone is
+      on the same page.

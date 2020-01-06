@@ -107,6 +107,17 @@ great counter-point to what we do.
     
     The grading breakdown is as follows:
     
+   1. Labs 50% (60% if no Final Project) - Prelabs must be completed
+      before class, and labs must be completed within a week to receive
+      credit.
+
+   2. Homework 20% (30% if no Final Project)
+
+   3. Final Project 20%
+
+   4. Participation 10% - Based on class attendance and contribution, 
+      and newsgroup replies. Students are allowed to miss 1-2 classes,
+      but must notify the instructor beforehand.
 
 ### What to do now.
 

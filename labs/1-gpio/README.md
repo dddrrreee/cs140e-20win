@@ -1,33 +1,14 @@
 ## Lab: write your own code to control the r/pi; throw ours out.
 
+*Important*: as always, read and complete the [PRELAB](PRELAB.md)
+before lab!
+
 The first lab was just setup.  Today we get to the fun part: you'll 
 use the Broadcom document (`../../docs/BCM2835-ARM-Peripherals.annot.PDF`)
 to figure out how to write the code to turn the GPIO pins on/off yourself
 as well as reading them to get values produced by a digital device.
 You'll use this code to blink an LED and to detect when a capacitive touch sensor is
 touched.
-
-*Important PRELAB work*:
-    - Always obey the following: ***IF YOUR PI GETS HOT TO THE TOUCH UNPLUG IT***  You
-      likely have a short somewhere and in the worst-case can fry your laptop.
-
-   - Read throuh `Part 0` below to get a big-picture background of how the r/pi (and many
-     computer systems) control devices.
-
-   - Read through pages 4--7 and 91---96 of the broadcom document 
-     (`../../docs/BCM2835-ARM-Peripherals.annot.pdf`) to see what memory addresses to 
-     read and write to get the GPIO pins to do stuff.
-
-     Note 1: where the broadcom document uses addresses `0x7420xxxx`,
-     you'll use `0x2020xxxx`.
-
-     Note 2: the Broadcom document talks about "registers" --- you can
-     just think of these as magic memory locations that you read or
-     write to get the r/pi to do things.
-
-   - Look through the `gpio.h` and `gpio.c` files in `part1-blink` 
-     you'll be filling this in as well as the two simple programs `touch.c` and `blink.c`
-     which will call into your code.  (You won't modify these two latter files.)
 
 Sign off: to get credit for the lab show the following:
 

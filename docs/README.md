@@ -10,12 +10,12 @@ or just load them externally.
 
 The main documents:
 
-   0.  Cheat sheet of the [r/pi A+ GPIO pins](docs/gpio.png): `docs/gpio.png`.
+   0.  Cheat sheet of the r/pi A+ GPIO pins: `gpio.png`.
 
    1.  The r/pi uses the Broadcom BCM2835 chip to control  the various
        pins sticking up on its right side.  The function of these
        pins (and the broadcom chip more generally) is decribed in
-       `docs/BCM2835-ARM-Peripherals.annot.PDF`.
+       `BCM2835-ARM-Peripherals.annot.PDF`.
 
        As you will find with all hardware documents, the broadcom
        on has numerous errors, so always be sure to look at [the
@@ -26,10 +26,10 @@ The main documents:
       architecture: [arm11](https://en.wikipedia.org/wiki/ARM11).
   
       The general ARMv6 architecture manual (which describes the entire
-      family of chips): `docs/armv6.annot.pdf`.
+      family of chips): `armv6.annot.pdf`.
 
       The specific `ARM1176JZF-S` manual (which describes specific features
-      of the chip we are using):  `docs/arm1176.pdf`.
+      of the chip we are using):  `arm1176.pdf`.
 
    2. We will be doing some assembly programming.  The easiest hack to
       see how to do something in assembly is to write some equivalent C
@@ -38,10 +38,10 @@ The main documents:
 
       For a more general view see the following documents:
 
-      A quick reference: `docs/arm-asm-quick-ref.pdf`.
+      A quick reference: `arm-asm-quick-ref.pdf`.
 
-      A chattier book describing assembly concepts: `docs/ARMBook.pdf`.
+      A chattier book describing assembly concepts: `ARMBook.pdf`.
 
-      A thorough walk through of ARMv6 instructions: `docs/armv6-inst.pdf`.
+      A thorough walk through of ARMv6 instructions: `armv6-inst.pdf`.
 
-      An even more thorough walk-through of ARMv6 instructions: `docs/armv6-inst-full.pdf`.
+      An even more thorough walk-through of ARMv6 instructions: `armv6-inst-full.pdf`.

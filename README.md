@@ -112,8 +112,9 @@ First things first:
             git clone git@github.com:dddrrreee/cs140e-20win.git
 
       You may need to install `git`, create a `github` account and
-      register a key (if you don't want to do the latter, use the `http`
-      clone method).
+      register a key (if you don't want to do the latter, use the
+      `http` clone method).  See the [PRELAB](labs/0-blink/PRELAB.md)
+      for more discussion.
 
    2. Make sure you have access to the [cs14e
        newsgroup](https://groups.google.com/forum/#!forum/cs140e-win20).

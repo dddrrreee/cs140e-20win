@@ -9,7 +9,8 @@ just throw their raw contents to the screen.  You can add a plugin,
 or just load them externally.
 
 The main documents:
-   0.  Cheat sheet of the r/pi A+ GPIO pins: `docs/gpio.png`.
+
+   0.  Cheat sheet of the [r/pi A+ GPIO pins](docs/gpio.png): `docs/gpio.png`.
 
    1.  The r/pi uses the Broadcom BCM2835 chip to control  the various
        pins sticking up on its right side.  The function of these

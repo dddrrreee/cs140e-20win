@@ -111,11 +111,13 @@ The grading breakdown is as follows:
       before class, and labs must be completed within a week to receive
       credit.
 
-   2. Homework 20% (30% if no Final Project)
+   2. Homework 20% (30% if no Final Project) - There will be three 
+      homeworks total, which will consist of integrating previous
+      labs and submitting working code.
 
    3. Final Project 20%
 
-   4. Participation 10% - Based on class attendance and contribution, 
+   4. Participation 10% - Based on class attendance and discussion, 
       and newsgroup replies. Students are allowed to miss 1-2 classes,
       but must notify the instructor beforehand.
 

@@ -26,10 +26,10 @@ The main documents:
       architecture: [arm11](https://en.wikipedia.org/wiki/ARM11).
   
       The general ARMv6 architecture manual (which describes the entire
-      family of chips): `armv6.annot.pdf`.
+      family of chips): [armv6.annot.pdf](https://github.com/dddrrreee/cs140e-20win/blob/master/docs/armv6.annot.pdf).
 
       The specific `ARM1176JZF-S` manual (which describes specific features
-      of the chip we are using):  `arm1176.pdf`.
+      of the chip we are using):  [arm1176.pdf](https://github.com/dddrrreee/cs140e-20win/blob/master/docs/arm1176.pdf).
 
    2. We will be doing some assembly programming.  The easiest hack to
       see how to do something in assembly is to write some equivalent C
@@ -38,10 +38,12 @@ The main documents:
 
       For a more general view see the following documents:
 
-      A quick reference: `arm-asm-quick-ref.pdf`.
+      A quick reference:
+      [arm-asm-quick-ref.pdf](https://github.com/dddrrreee/cs140e-20win/blob/master/docs/arm-asm-quick-ref.pdf).
 
-      A chattier book describing assembly concepts: `ARMBook.pdf`.
+      A chattier book describing assembly concepts:
+      [ARMBook.pdf](https://github.com/dddrrreee/cs140e-20win/blob/master/docs/ARMBook.pdf).
 
-      A thorough walk through of ARMv6 instructions: `armv6-inst.pdf`.
+      A thorough walk through of ARMv6 instructions: [armv6-inst.pdf](https://github.com/dddrrreee/cs140e-20win/blob/master/docs/armv6-inst.pdf).
 
-      An even more thorough walk-through of ARMv6 instructions: `armv6-inst-full.pdf`.
+      An even more thorough walk-through of ARMv6 instructions: [armv6-inst-full.pdf](https://github.com/dddrrreee/cs140e-20win/blob/master/docs/armv6-inst-full.pdf).

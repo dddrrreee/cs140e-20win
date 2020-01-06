@@ -54,22 +54,22 @@ that need to fulfill a OS breadth requirement).  It is perhaps 80% of
 the coding work of CS140, but likely requires a more strenuous type of
 thinking at some points.  The main differences:
 
-    1. We work with raw hardware (the r/pi A+) versus a simulator.  At the
+ 1. We work with raw hardware (the r/pi A+) versus a simulator.  At the
        end you should have a simple, but actually useful embedded system
        you can do interesting tricks with.
 
-    2. Most of the reading involves primary hardware documents, rather
+ 2. Most of the reading involves primary hardware documents, rather
        than high level discussions.   The ability to read and act on
        such documents is a super-power that will serve you well the rest of
        your career:  once you get good at it, almost anything is easy.
 
-    3. Most of the code at the end (I hope) will be written by you, rather
+ 3. Most of the code at the end (I hope) will be written by you, rather
        than you having to deal with a large, complicated code base.
        The downside is that we give up functionality that CS140
        implements, the hoped-for upside is that you will have a much
        more thorough understanding of what we do cover.
 
-    4. We focus much more on checking, somewhat-verifying your code rather
+ 4. We focus much more on checking, somewhat-verifying your code rather
        than tossing it over the wall to TA's to grade at the end of
        an assignment.  Most of these techniques are simple (since we
        only have 10 weeks) but effective and, unfortunately, appear not

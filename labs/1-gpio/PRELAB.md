@@ -1,12 +1,15 @@
-Always obey the following: 
 
-  ***IF YOUR PI GETS HOT TO THE TOUCH UNPLUG IT***  
+### The first rule of PI-CLUB
 
-  ***IF YOUR PI GETS HOT TO THE TOUCH UNPLUG IT***  
+Always obey the following:
 
-  ***IF YOUR PI GETS HOT TO THE TOUCH UNPLUG IT***  
+  - ***IF YOUR PI GETS HOT TO THE TOUCH UNPLUG IT***  
 
-  ***IF YOUR PI GETS HOT TO THE TOUCH UNPLUG IT***  
+  - ***IF YOUR PI GETS HOT TO THE TOUCH UNPLUG IT***  
+
+  - ***IF YOUR PI GETS HOT TO THE TOUCH UNPLUG IT***  
+
+  - ***IF YOUR PI GETS HOT TO THE TOUCH UNPLUG IT***  
 
 You likely have a short somewhere and in the worst-case can fry your laptop.
 

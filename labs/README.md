@@ -6,7 +6,9 @@ lab rewrites.
 ### Part 1: Going down.
 
 The first chunk of the class will be writing all the low-level code needed
-to run the pi and using modern techniques to validate it:
+to run the pi and using modern techniques to validate it.  Doing so will
+remove all magic from what is going on since all of the interesting code
+on both the pi and unix side will be written by you:
 
   - [0-blink](0-blink/): get everyone up to speed and all
       necessary software installed.    This should be a fast lab.
@@ -104,7 +106,7 @@ to run the pi and using modern techniques to validate it:
   your pi's SD card driver and write a custom file system to manage it so that
   you can read/write files across runs.
 
-### Virtual Memory
+### Part 4: Virtual Memory
 
   - [14-vm.0](14-vm.0/): Virtual memory and the SD card file
   system are the biggest unknowns in our universe, so we'll bang out
@@ -119,6 +121,8 @@ to run the pi and using modern techniques to validate it:
   hardware, translation, and page table state (more subtle than it
   sounds).  At the end you should be able to delete all our starter code.
 
+#### Part 5: processes
+
   - [16-syscall](16-syscall):
     today we're going to build a simple system call.  Once we have this
     in place, we can then make user-level processes --- without it,
@@ -129,16 +133,13 @@ to run the pi and using modern techniques to validate it:
     timer-interrupt code from `lab7-interrupts` in order to repurpose it
     to support system calls.
 
-  - [17-user-level](17-user-level): today you will make user level processes.
-    This will combine the virtual memory, system calls, and threads into a 
-    capstone implementation.
+  - [17-user-level](17-user-level): today you will make user level
+    processes.  This will combine the virtual memory, system calls, and
+    threads into a capstone implementation.  You will use this ability to
+    your fuse-FS support multiprocessing, so that you can have multiple
+    programs running at the same time.
 
-  - [18-multi-program](18-multi-program):
-    you will use the previous pieces to make your fuse-FS support
-    multiprocessing, so that you can have multiple programs running at
-    the same time.
-
-### left-over labs:
+### Optional labs:
 
   - [virtualization](virtualization/): this lab will show how
   to virtualize hardware.  We will use simple tricks to transparently flip
@@ -147,3 +148,9 @@ to run the pi and using modern techniques to validate it:
   you have full Unix debugging for pi code (address space protection,
   valgrind, etc) while getting complete fidelity in how the pi will behave
   (since we ship the reads and writes to it directly).
+
+  - [sonar-int](sonar-int/): we take a bit of a fun break,
+  and bang out a quick device driver for a simple sonar device. You
+  will then get a feel for how interrupts can be used to simplify code
+  structure (counter-intuitive!)  by adapting the interrupt code from
+  the previous lab to make this code better.

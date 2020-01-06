@@ -108,6 +108,7 @@ great counter-point to what we do.
 First things first: 
 
    1. clone the class repository:
+
             git clone git@github.com:dddrrreee/cs140e-20win.git
 
       You may need to install `git`, create a `github` account and

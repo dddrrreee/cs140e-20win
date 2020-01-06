@@ -38,7 +38,12 @@ to run the pi and using modern techniques to validate it:
      checking code from lab3 to verify your implementation matches
      everyone else's.
 
-  - [5-replay](5-replay/): in a twist on lab3, you will use Unix
+  - [5-sw-uart](5-sw-uart/): a great way to understand the UART hardware
+    is to write your own software version of it and use this to communicate
+    with your laptop.   Doing so gives you a second source of output, which
+    will turn out to be very useful later when we do networking.
+
+  - [6-replay](6-replay/): in a twist on lab3, you will use Unix
      system calls to interpose between your Unix and pi bootloader code,
      record all reads and writes, and test your bootloader implementation
      by replaying these back, both as seen and with systematic
@@ -50,14 +55,6 @@ to run the pi and using modern techniques to validate it:
      we follow here applies well to other network protocols which have
      multi-step protocols and many potential failure modes, difficult
      to test in practice.)
-
-  - [6-virtualization](6-virtualization/): this lab will show how
-  to virtualize hardware.  We will use simple tricks to transparently flip
-  how your pi code is compiled so you can run it on Unix, only shipping
-  the GPIO reads and writes to a small stub on the pi.  As a result,
-  you have full Unix debugging for pi code (address space protection,
-  valgrind, etc) while getting complete fidelity in how the pi will behave
-  (since we ship the reads and writes to it directly).
 
 ### Part 2: Threads and Interrupts, with Tricks:
 
@@ -92,16 +89,16 @@ to run the pi and using modern techniques to validate it:
 ### Part 3: file systems.
 
   - [11-fuse-fs](11-fuse-fs/): In this lab you will use the FUSE file
-  system to wrap up your pi as a special file system and mount it on your
-  laptop, where you can use standard utilities (and your normal shell)
-  to interact with it.  You can then control the pi by reading / writing
-  to special files: e.g., echoing a `1` to `pi/reboot` to cause a reboot,
-  echoing a program to `/pi/run` to run it.
+    system to wrap up your pi as a special file system and mount it on your
+    laptop, where you can use standard utilities (and your normal shell)
+    to interact with it.  You can then control the pi by reading / writing
+    to special files: e.g., echoing a `1` to `pi/reboot` to cause a reboot,
+    echoing a program to `/pi/run` to run it.
 
-  This lab is a great example of the power of Unix's simple, powerful
-  OO-interface that lets you package a variety of disparete things as
-  files, directories, links and interact with them using a uniform set
-  of verbs (e.g., `open()-read()-write()-close()`).
+    This lab is a great example of the power of Unix's simple, powerful
+    OO-interface that lets you package a variety of disparete things as
+    files, directories, links and interact with them using a uniform set
+    of verbs (e.g., `open()-read()-write()-close()`).
 
   - [12-simple-fs](12-simple-fs): here you will write code to partition
   your pi's SD card driver and write a custom file system to manage it so that
@@ -140,3 +137,13 @@ to run the pi and using modern techniques to validate it:
     you will use the previous pieces to make your fuse-FS support
     multiprocessing, so that you can have multiple programs running at
     the same time.
+
+### left-over labs:
+
+  - [virtualization](virtualization/): this lab will show how
+  to virtualize hardware.  We will use simple tricks to transparently flip
+  how your pi code is compiled so you can run it on Unix, only shipping
+  the GPIO reads and writes to a small stub on the pi.  As a result,
+  you have full Unix debugging for pi code (address space protection,
+  valgrind, etc) while getting complete fidelity in how the pi will behave
+  (since we ship the reads and writes to it directly).

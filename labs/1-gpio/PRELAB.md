@@ -1,7 +1,5 @@
 
-### The first rule of PI-CLUB
-
-Always obey the following:
+### Always obey the first rule of PI-CLUB
 
   - ***IF YOUR PI GETS HOT TO THE TOUCH UNPLUG IT***  
 

@@ -105,7 +105,7 @@ great counter-point to what we do.
 
 ### Grading policy
     
-    The grading breakdown is as follows:
+The grading breakdown is as follows:
     
    1. Labs 50% (60% if no Final Project) - Prelabs must be completed
       before class, and labs must be completed within a week to receive

@@ -1,4 +1,4 @@
-### CS140E: embedded operating systems, Engler, Winter 2020.
+## CS140E: embedded operating systems (Engler, Winter 2020.)
 
 This is a lab-based class with no explicit lectures.  We will do two
 two-to-three hour labs each week.  You should be able to complete almost
@@ -24,7 +24,7 @@ You will also have a too-rare concrete understanding of how computation
 works on real hardware.   This understanding will serve you in many
 other contexts.
 
-#### Who should take this class.
+### Who should take this class.
 
 You should take this class if:
    1. You write code well OR (you don't yet write code well AND have a lot of time
@@ -47,7 +47,7 @@ stories last year were from students that had an initially large gap
 between their understanding and the topic but started to really "get it"
 after some weeks of struggle.
 
-##### CS140e vs CS140
+### CS140e vs CS140
 
 CS140e can count as a substitute for CS140 (including for PhD students
 that need to fulfill a OS breadth requirement).  It is perhaps 80% of

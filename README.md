@@ -120,6 +120,8 @@ First things first:
        newsgroup](https://groups.google.com/forum/#!forum/cs140e-win20).
        Email us if not!
 
-   3. Look in the `labs` directory and read through the labs in [0-blink](labs/0-blink)
+   3. Look in the [docs](docs) directory to get a feel for what is there.
+
+   4. Look in the `labs` directory and read through the labs in [0-blink](labs/0-blink)
       and [1-gpio](labs/1-gpio) which are our startup labs to make sure everyone is
       on the same page.

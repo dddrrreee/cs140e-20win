@@ -80,7 +80,7 @@ With that said, you are strongly encouraged to sit in the cs140
 lectures: Mazieres is incredibly knowledgeable, and will serve as a
 great counter-point to what we do.
 
-#### Lab policies.
+### Lab policies.
 
    - You should be able to complete almost all of the lab in one sitting.
      If not, you *must* complete the lab within a week.  We will not
@@ -94,13 +94,14 @@ great counter-point to what we do.
 
    - Labs are not optional!   If you are going to miss a lab you need
      to make arrangements with us before hand, and missing more than
-     one or two is going to affect your grade.
+     one or two is going to affect your grade even if you turn in the
+     work on time.
 
-     We had a more flexible policy in the past, unfortunately, since
+     We had a more flexible policy in the past.  Unfortunately, since
      labs typically build on each other, once people fell behind they
-     got seriously lost and, this year, we  short-staffed for the amount
-     of students taking the course, so don't have the resources to walk
-     a few students each week through makeup labs.
+     got seriously lost.  Further, this year we short-staffed for the
+     amount of students taking the course, so don't have the resources
+     to walk a few students each week through makeup labs.
 
 ### What to do now
 

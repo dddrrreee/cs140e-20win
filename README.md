@@ -103,6 +103,11 @@ great counter-point to what we do.
      amount of students taking the course, so don't have the resources
      to walk a few students each week through makeup labs.
 
+### Grading policy
+    
+    The grading breakdown is as follows:
+    
+
 ### What to do now.
 
 First things first: 

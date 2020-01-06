@@ -27,8 +27,8 @@ other contexts.
 #### Who should take this class.
 
 You should take this class if:
-   1. You write code well OR you don't yet write code well and have a lot of time
-   to devote to the class;
+   1. You write code well OR (you don't yet write code well AND have a lot of time
+   to devote to the class);
    2. AND you find these systems topics interesting.
 
 The people that found the class valuable in the past were entirely drawn
@@ -53,6 +53,7 @@ CS140e can count as a substitute for CS140 (including for PhD students
 that need to fulfill a OS breadth requirement).  It is perhaps 80% of
 the coding work of CS140, but likely requires a more strenuous type of
 thinking at some points.  The main differences:
+
     1. We work with raw hardware (the r/pi A+) versus a simulator.  At the
        end you should have a simple, but actually useful embedded system
        you can do interesting tricks with.

@@ -116,7 +116,7 @@ First things first:
       `http` clone method).  See the [PRELAB](labs/0-blink/PRELAB.md)
       for more discussion.
 
-   2. Make sure you have access to the [cs14e
+   2. Make sure you have access to the [cs140e
        newsgroup](https://groups.google.com/forum/#!forum/cs140e-win20).
        Email us if not!
 

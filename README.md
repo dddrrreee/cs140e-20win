@@ -1,8 +1,9 @@
-## CS140E: embedded operating systems (Engler, Winter 2020.)
+## CS140E: embedded operating systems (Engler, Winter 2020)
 
 This is a lab-based class with no explicit lectures.  We will do two
 two-to-three hour labs each week.  You should be able to complete almost
-all of the lab in one sitting.
+all of the lab in one sitting.  Assuming it's useful I will do some kind
+of optional discussion section on Fridays.
 
 By the end of the class you will have built your own simple, clean OS
 for the widely-used, ARM-based raspberry pi --- including interrupts,
@@ -76,7 +77,7 @@ thinking at some points.  The main differences:
        widely-known/used by most programmers.
 
 With that said, you are strongly encouraged to sit in the cs140
-lectures: Mazieres is incredibily knowledgeable, and will serve as a
+lectures: Mazieres is incredibly knowledgeable, and will serve as a
 great counter-point to what we do.
 
 #### Lab policies.
@@ -85,7 +86,7 @@ great counter-point to what we do.
      If not, you *must* complete the lab within a week.  We will not
      accept a lab after this.
 
-   - Before each lab there will be some preperatory reading, which will
+   - Before each lab there will be some preparatory reading, which will
      typically include a short set of questions you need to answer and
      turn in *before* the lab begins.  This is an attempt to make the
      labs more information-dense by handling basic stuff outside of it,

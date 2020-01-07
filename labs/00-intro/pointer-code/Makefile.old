@@ -1,0 +1,12 @@
+CFLAGS = -O10 -g
+#-Wall -O
+
+EX=2
+
+all:
+	arm-none-eabi-gcc $(CFLAGS) -c $(EX)-pointer.c
+	arm-none-eabi-objdump -d -S $(EX)-pointer.o > $(EX)-pointer.dis
+	cat $(EX)-pointer.dis
+
+clean:
+	rm -f  *.dis *.o *~ *.s

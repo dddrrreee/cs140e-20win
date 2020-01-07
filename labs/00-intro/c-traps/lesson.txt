@@ -1,0 +1,118 @@
+0-main
+	i think do this after 1-largest
+	"why do we have to return when we don't care?"
+
+1-largest.c
+	C parses the largest token possible, left to right.
+
+	so: a---b ===> a-- - b;   [post-decrement, -b discarded]
+
+	a-----b; ====> parse error.  [a-- -- -b]
+	
+  single character change to make this compile?
+	a--+--b;
+
+
+2-sideefects.c
+	are there any syntax errors here?
+
+	C can have all sorts of side-effect free statements.
+
+	you can cast something to void.   actually if you think about it, 
+	this is interesting.  can't have a var of that type.
+
+	"," is ok.  it's a comma seperated expression list.  you see those
+	all the time in for loops.   but you can do them anywhere.
+
+
+3-comma
+	comma: right most value is the value of the expression
+
+	can have expression statements as well: last statement is the 
+	result.
+		how can you use this?
+
+		it was intended for macros that returned a value.
+
+4-and
+	& will often work.
+
+	does not short circuit.
+
+	does not guard end.
+
+	case where it does not work?
+
+		// this will fail if they don't share bits.
+		if(x & y)
+
+
+	it should always work if there is a logical expression, other than
+	not short circuiting.
+
+5-or
+        what about |?
+
+		"does || short circuit?"
+
+6-or
+	this shows why you need short circuit.
+
+	if you didn't have short circuit what would have have to do?
+
+		if(i > ...)
+			if(array...)
+
+	is the compiler allowed to reorder these?  there is no write..
+		actually: what is the rule?  one way to look at it is that
+		you will run the code with a much broader set of inputs.
+
+		e.g., a bug we found in the flash controller.
+
+			if(some condition)
+				assert();
+
+7 precedence
+	i think we have a bug!   compile with O2 and the print doesn't
+	fire.  i'm thinking perhaps i have some weird error?
+
+	table is on p18 [should give this out to students?]
+
+	if ',' bound more tightly?
+		your for loop init & etc would behave very oddly.
+
+8 mistakes
+	
+        int a = 1, b = 2, c = 3;
+	if(a < b < c)
+		printf("a<b<c\n");
+	else
+		printf("wot?!\n");
+
+	b = 1000000;
+	if(a < b < c)
+		printf("a<b<c!\n");
+	else
+		printf("wot?!\n");
+
+
+only && || ?: ,  specify an order of eval [p47 traps & pitfalls]
+
+2-andor.c
+
+for with no sideeffect.
+
+the goes to operator :)
+
+int x = 10; 
+while( x --> 0 ) // x goes to 0
+{ 
+    printf("%d ", x); 
+}
+
+should do something about function promotion.
+lack of prototypes.
+
+I had this:
+                if(!getbyte() == SOH) {
+

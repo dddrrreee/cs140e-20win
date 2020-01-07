@@ -1,0 +1,335 @@
+
+what is the world view
+        "the right point of view is worth 80 points of iq"
+
+
+	if a tree falls in the forest and no one is there to hear it,
+		then it could be stored in a register.  
+		or could be skipped.
+		or could be deferred until someone walks.
+
+	this is a core systems principle.  and weirdly is not really
+	talked about.
+
+
+	(1) if I am supposed to do simple slow A I can do B instead as long
+	    as for any observer it appears "AS IF" I did b.
+
+	(2) twist: if A is illegal I'm allowed to do anything.
+	
+		crucial: what is correct (i only have to preserve that)
+
+
+	common:
+             make simple semantics for programmer.
+                simple.  sequential.  events happen in given order.
+
+                only way can be correct.
+                this will often be slow.
+
+        let implementation do whatever it wants as long as program
+        behaves "as if" it ran under the simple semantics.  i.e.,
+        program cannot observe changes.
+
+
+        exmaple:
+           * almost any compiler opt:
+                - inlining.
+                - CSE
+                - deadcode elimination.
+                - redundant read elimination.
+                - reorder reads and writes.
+                - code hoisting.
+
+           * use of registers.
+
+           * caching.
+                behaves as if there is a single copy.
+
+                sequential consistency: very read returns
+                value of last write.
+                        hack def: same as if you interleaved threads on
+                        same  processor.
+
+                release consistency:
+                        1. must use locks for correct.
+                        2. so only have to sync on lock/unlock.
+
+
+ 	more generally:
+		how may of you have written parallel?
+
+		all of you.
+
+		do a ps
+
+		but since they have seperate address space, it's as
+		if sequential.
+
+
+        problem: assumes changes *cannot be observed*.  so it depends,
+        intimately on the model of what an observer is.  sequential:
+        assume observer is single thread of control that only sees
+        reality by reading variables.  problem with two threads?
+                [ with one you thin kyou know where all the
+                  observation points are --- if there are no reads,
+                  no one can see anything.  not true with multiple:
+                  any read anywhere else could be reordered in worst
+                  case with anything.]
+
+        draw the figure looking down and the figure looking from the side.
+
+
+cool examples:
+	xsyncfs
+	speculator
+
+----------------------------------------------------------------------------
+observation games huge part of compilers: pointer analysis.  *p can observe
+what?
+
+   - talk about as-if for sequential. [do this first?]
+   - draw stick figure looking down, from the side.
+
+         int x, y;
+
+         x = 1;
+         y = 2;
+
+        can compiler generate code that does:
+                                 y = 2;
+                                 x = 1;
+        yes: cannot observe.
+
+draw picture?  how observe? loads.
+
+        ----------------------------------------
+        given:
+                int x;
+                bar() {
+                        x = 1;
+                        foo();
+                }
+
+        can generate:
+                bar() {
+                        foo();
+                        x = 1;
+                }
+
+        no: foo could read.
+        ------------------------------------------------------
+
+        [what's a different type for x that makes this ok?]
+
+        what about:
+
+        bar() {
+                int x;
+                foo();
+                x = 1;
+                ....
+        }
+        yes.
+
+       what about
+
+        bar() {
+                int x;
+                baz(&x);
+                x = 1;
+                foo();
+        }
+
+        goes to:
+
+        bar() {
+                int x;
+                baz(&x);
+                foo();
+                x = 1;
+                ...
+
+        no.
+
+        --------------------------------------
+        might have reference in baz.  foo could read it.
+
+        bar(int *p) {
+                *p = 1;
+                x = 2;
+        }
+        no.
+
+        might have an alias to x.
+
+
+----------------------------------------------------------------------------
+
+        x = y = 0
+
+        t1                      t2
+          ---------------------------
+        r2 = x;                 r1 = y;
+        y = 1;                  x = 2;
+          ---------------------------
+                r2 = 2, r1 = 1?
+
+        just flip around.
+
+        seq consistency = ?
+
+
+        a = 0, b = 1
+        T1              T2
+        ----------------------------------
+        r1 = a;         r3 = b;
+        r2 = a;         a = r3;
+        if(r1 == r2)
+                b = 2;
+        ----------------------------------
+        r1 == r2 == r3 == 2?
+
+
+        -----------------------------------------------------
+        b = 2;          r3 = b
+        r1 = a;         a = r3;
+        r2 = r1;
+        if(1) ;
+        --------------------------------------------------
+                int x = 0, y = 0;
+        T1                      T2
+        x = 1;                  y = x;
+
+                ----------
+        is it legal?
+                x = 1, y = 42;
+
+        as if: is it legal for compiler to transform:
+                x = 1;
+
+               x = 42;
+                x = x - 41;
+
+        ?  yes.  cannot observe.
+
+        e.e., can do if address huge and want to save on immediates.
+
+        stupid [in this case] perfectly legal.
+        KEY: pretty much disallows all possible reads without locks.
+
+----------------------------------------------------------------------------
+
+what is our deal with devices?
+	another entity is loading and storing to memory memory
+
+	if compiler just assumes its program stream, then it will
+	remove stuff it should not.
+
+volatile:
+	http://blog.regehr.org/archives/28
+
+more undefined reading:
+	http://blog.llvm.org/2011/05/what-every-c-programmer-should-know.html
+
+1-timer
+	stores 0 into the first argument.
+
+	Since the rules for the abstract machine say nothing about
+	hardware registers (or concurrent execution) the C implementation
+	is permitted to assume that two reads from an object, with no
+	intervening stores, both return the same value.  Of course,
+	any value subtracted from itself is zero.  So the translation
+	performed by avr-gcc here is perfectly correct; it is our program
+	that’s wrong.
+
+1-timer-fix
+	we make it volatile.
+	won't that fix?
+
+	no.
+
+	moves multiplication!!
+
+ 	__asm volatile ("" : : : "memory");
+
+	or do a get32 put32
+
+	[so this is just wrong.
+	there is no store, so doesn't matter.
+	if you add a store, it doesn't do this.]
+
+2-wait:
+	here we don't have a volatile so it assumes with no writes to 
+	mbox, no writes can happen.
+	
+	infinite loop
+  		10:   eafffffe        b       10 <write_mailbox+0x10>
+
+3-fb
+
+	this one: it writes 0 to the field.  then returns it.  no intervening
+	writes, so returns 0.
+
+  		58:	e1a00003 	mov	r0, r3
+	
+4-fb:
+	moves the stores down.
+	it doesn't know there is a sequence point.
+
+	if these are non-volatile.
+
+ 	__asm volatile ("" : : : "memory");
+
+	relying on volatile not being reorderd.
+
+5-decl:
+	[skip]
+	this is a bad declaration.
+	but it seems to work --- is this our fault?
+
+6-queue
+	[skip]
+	actually this works fine
+
+	tried to do circular queue.
+
+	this is wrong.  it pushed the head increment *before* the store!
+	need a compiler barrier.
+	or volatile.
+
+7-ident
+	[skip]
+	this works fine too.
+	maybe mention as a good test.
+
+one underlying problem.  three very different intermittent effects.
+
+
+------------------------------------------------------------------------
+Nice:
+	- Use volatile only when you can provide a precise technical
+	justification.	Volatile is not a substitute for thought
+
+	- If an aggregate type is volatile, the effect is the same as making all
+	  members volatile.
+
+	- The C standard is unambiguous that volatile side effects must
+	not move past sequence points
+
+"The keywords 'register' 'volatile' and 'const'are recognized syntactically
+but are semantically ignored.  'Volatile' seems to have no meaning,
+so it is hard to tell if ignoring it is a departure from the standard.
+'Const' only confuses library interfaces with the hope of catching some
+rare errors."
+			Ken Thompson, "A New C Compiler"
+
+he keyword register is recognized syntactically but is semantically
+ignored. Thus taking the address of a register variable is
+not diagnosed. The keyword volatile disables all optimizations, in
+particular registerization, of the corresponding variable. The keyword
+const generates warnings (if warnings are enabled by the compiler’s
+-w option) of non-constant use of the variable, but does not affect the
+generated code.
+
+			follow on :)

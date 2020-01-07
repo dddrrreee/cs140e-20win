@@ -78,6 +78,7 @@ next lab to sort-of prove that the code you write in this lab is correct.)
 
 Generally, whenever you need to control a device, you'll do something like
 the following: 
+
     0. Get the datasheet for the device (i.e., the oft poorly-written PDF that describes it).
     1. Figure out which memory locations control which device actions.
     2. Figure out what magic values have to be written to cause the device to do something.
@@ -90,6 +91,7 @@ of reads when we know data is (or could be) available.
 In our case, we want to get the GPIO pin initialized to be an output pin 
 (to control and LED) or input 
 (so that we can read the value being produced by the device).  So:
+
     1. Figure out what location to write to set a pin to input or output.
     2. Implement `gpio_write` to write the value of an output pin (LED).
     3. Implement `gpio_read` to read the value of an input pin (touch sensor).

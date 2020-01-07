@@ -83,16 +83,15 @@ card on your laptop:
            % cp kernel.img /media/engler/0330-444/
            % sync
  
-     will copy the file in `kernel.img` in the current directory to the
-     top level directory of the mounted SD card, the `sync` command forces
-     the OS to flush out all dirty blocks to all stable media (SD card,
-     flash drive, etc).  At this point you can pull the card out.
+      will copy the file in `kernel.img` in the current directory to the
+      top level directory of the mounted SD card, the `sync` command forces
+      the OS to flush out all dirty blocks to all stable media (SD card,
+      flash drive, etc).  At this point you can pull the card out.
 
-
-     Pro tip: ***do not omit either a `sync` or some file manager eject
-     action*** if you do, parts of the copied file(s) may in fact not
-     be on the SD card.  (Why: writes to stable storage are slow, so
-     the OS tends to defer them.)
+      Pro tip: ***do not omit either a `sync` or some file manager eject
+      action*** if you do, parts of the copied file(s) may in fact not
+      be on the SD card.  (Why: writes to stable storage are slow, so
+      the OS tends to defer them.)
 
 
 ### change your Path

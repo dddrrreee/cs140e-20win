@@ -24,16 +24,28 @@ Do these on your own (described more in the rest of the document):
    5. Read through the first lab (`0-blink/README.md`) and look through the code.
    6. Ideally: Install the rest of the software needed by Part 3 and Part 4 of the lab.
 
-*Turn-in*: At the start of lab, turn your answers to the following four
-questions with your name on it:
+### *Turn-in*
 
-  1. you'll turn on an LED manually;
-  2. then copy a pre-compiled program to an micro-SD and boot up your pi (why not skip 1?);
-  3. then use a bootloader to ship the program to the pi directly (why not skip 2?);
-  4. then install the r/pi tool chain, compile a given assembly
-       version and use it (why not skip 3?);
-  5. then write your own `blink` program, compile and run it (why not skip 4?).
+The wednesday lab is broken down into five parts:
+  1. You'll turn on an LED manually;
+  2. Then copy a pre-compiled program to an micro-SD and boot up your pi;
+  3. Then use a bootloader to ship the program to the pi directly;
+  4. Then install the r/pi tool chain, compile a given assembly
+       version and use it;
+  5. Then write your own `blink` program, compile and run it;
 
+For turn in answer the following questions:
+  1. What is a bug that is easier to find b/c we broke up steps 1 and 2?
+  2. What is a bug that is easier to find b/c we broke up steps 2 and 3?
+  3. What is a bug that is easier to find b/c we broke up steps 3 and 4?
+  4. What is a bug that is easier to find b/c we broke up steps 4 and 5?
+
+Differential debugging: Your pi setup in step 2 is not working. 
+Your partner's does.  You plug your setup into their laptop.
+
+  1. Yours works in their laptop: what do you know?
+  2. Yours does not work in thier laptop: what do you know?
+  
 ### git and checking out the class repo
 
    1. Install `git` on your laptop if you don't have it: we use `git`

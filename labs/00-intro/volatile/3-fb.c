@@ -36,6 +36,10 @@ unsigned write_mailbox(mailbox_t *mbox, fb_config_t *cp, unsigned channel) {
     cp->x_offset = cp->y_offset = 0;
     cp->pointer = 0;
 
+
+        asm volatile ("" : : : "memory");
+
     mbox->write = ((unsigned)(cp) | channel | 0x40000000);
+        asm volatile ("" : : : "memory");
     return cp->pointer;
 }

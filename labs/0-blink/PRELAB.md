@@ -46,22 +46,22 @@ questions with your name on it:
       Ubuntu:
          % sudo apt install git
 
-   2.  Use `git` to clone (check out) the class repository:
+   2. Use `git` to clone (check out) the class repository:
 
           % git clone git@github.com:dddrrreee/cs140e-win20.git  
 
-       If you don't want to install a key on github, use:
+      If you don't want to install a key on github, use:
 
           % git clone https://github.com/dddrrreee/cs140e-win20.git
 
-     Pro tip: run your `git clone` command in some sensible directory
-     (e.g., `~/class/`) and remember where you checked your repository
-     out to!  Also, know how to find it.  We had a surprising (to me)
-     number of people lose work last year because they did not do this.
+      Pro tip: run your `git clone` command in some sensible directory
+      (e.g., `~/class/`) and remember where you checked your repository
+      out to!  Also, know how to find it.  We had a surprising (to me)
+      number of people lose work last year because they did not do this.
 
-     Pro tip: ***Do not download the class repository directly as a
-     .zip file***!  Direct download will be both tedious and overwrite
-     any local changes you do later.
+      Pro tip: ***Do not download the class repository directly as a
+      .zip file***!  Direct download will be both tedious and overwrite
+      any local changes you do later.
 
 #### micro-SD card stuff
 
@@ -146,8 +146,8 @@ executable programs in a `bin` directory located in your home directory.
 #### Install the rest of the code
 
 Gates wireless can really suck, so it's best if you download the rest
-of the code that you need: look in Part 3 and Part 4 of the lab, and
-install the software it says.
+of the code that you need: look in Part 3 (serial drivers) and Part 4
+(gcc toolchain) of the lab, and install the software it says.
 
 #### Nice-haves: Extra, very useful things.
 

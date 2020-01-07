@@ -2,6 +2,12 @@ Today we look at some quick examples to give a feel for how hardware-level
 (operating system) programming is different from at application level.
 
 
+Today is the only non-lab class. 
+   1. We give a broad, high-level view of the course: `intro.pdf`.
+   2. We try to give a feel for the type of thinking in the class by
+      doing a narrow deep-ish dive into the issue of how a compiler
+      can cause extreme grief by optimizing code that controls hardware.
+
 ### The "As-if" substitution principle.
 
 Bishop Berkeley is the patron saint of computer stuff.  If a tree falls in 
@@ -9,9 +15,9 @@ the forest and no one is there to hear it,
 
    - then it could be stored in a register.
    - or could be skipped.
-   - or rendering could be deferred until someone walks.
+   - or rendering could be deferred until someone walks by.
 
-A famous equivalance example is the Turing test.  
+A famous equivalance-substitution example is the Turing test.  
 
 This is a core systems principle.  And weirdly is not really talked about.
 
@@ -87,7 +93,7 @@ A bit more precisely, from the very useful [blog](https://blog.regehr.org/archiv
  - The C standard is unambiguous that `volatile` side effects must
  not move past sequence points
 
-As a more cynical counter-point from someone that should know:
+As a more cynical counter-point from someone who should know:
 
     "The keywords 'register' 'volatile' and 'const'are recognized
     syntactically but are semantically ignored.  'Volatile' seems to have

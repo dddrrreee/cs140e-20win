@@ -77,8 +77,8 @@ Your partner's does.  You plug your setup into their laptop.
 
 #### micro-SD card stuff
 
-In order to run code on the pi, you will need to be able to write to a micro-SD
-card on your laptop:
+In order to run code on the pi, you will need to be able to write to a
+micro-SD card on your laptop:
 
    1.  Get/bring a micro-SD card reader or adaptor if its not built-in
        to your laptop.  The [CS107E guide on SD

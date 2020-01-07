@@ -69,7 +69,7 @@ to read and write addresses.  For example:
 
         put32(0x2020202, (1 << 20));
 
-`put32` will call out to assemmbly code (`gcc` currently cannot optimize
+`put32` will call out to assembly code (`gcc` currently cannot optimize
 this) writes the given value of the second argument to the address
 specified by the first.   In addition, by using `put32` and `get32`,
 it becomes trivial to record all the reads and writes that are done to
@@ -113,7 +113,7 @@ You'll implement the following routines in `gpio.c`:
    4.  After doing so, wire up the LED pins to pin 20 and 21, power-cycle
        the pi, and use the bootloader to load the code:
 
-             % my-install blink.bin
+             % pi-install blink.bin
 
        Don't forget to make `blink.c` into binary!
 
@@ -131,7 +131,7 @@ Hints:
    4. Be very careful to read the descriptions in the broadcom document to
       see when you are supposed to preserve old values or ignore them.
       If you don't ignore them when you should, you can write back
-      indeterminant values, causing weird behavior.  If you overwrite old
+      indeterminate values, causing weird behavior.  If you overwrite old
       values when you should not, the code in this assignment may work,
       but later when you use other pins, your code will reset them.
  

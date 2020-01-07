@@ -78,14 +78,14 @@ or reorder loads and stores to volatile locations.
 
 A bit more precisely, from the very useful [blog](https://blog.regehr.org/archives/28):
 
-    - Use `volatile` only when you can provide a precise technical
-    justification.  `volatile` is not a substitute for thought
+ - Use `volatile` only when you can provide a precise technical
+ justification.  `volatile` is not a substitute for thought
 
-    - If an aggregate type is `volatile`, the effect is the same as making all
-      members `volatile`.
+ - If an aggregate type is `volatile`, the effect is the same as making all
+ members `volatile`.
 
-    - The C standard is unambiguous that `volatile` side effects must
-    not move past sequence points
+ - The C standard is unambiguous that `volatile` side effects must
+ not move past sequence points
 
 As a more cynical counter-point from someone that should know:
 

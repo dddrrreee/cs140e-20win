@@ -99,9 +99,10 @@ card on your laptop:
 To save you time, typing and mistakes: tell your shell to look for
 executable programs in a `bin` directory located in your home directory.
 
-   1.  For whatever shell (`tcsh`, `bash`, etc) you are using, figure out how to 
-     edit your `PATH` variable so that you can install binary programs in a local
-     `~/bin` directory and not have to constantly type out the path to them.  E.g.,
+  1. For whatever shell (`tcsh`, `bash`, etc) you are using, figure
+     out how to edit your `PATH` variable so that you can install binary
+     programs in a local `~/bin` directory and not have to constantly
+     type out the path to them.  E.g.,
 
            % cd ~
            % mkdir bin
@@ -119,7 +120,7 @@ executable programs in a `bin` directory located in your home directory.
 
           set path = ( $path  )
 
-      To 
+     To:
 
           set path = ( $path /home/engler/usr/bin )
 
@@ -127,8 +128,8 @@ executable programs in a `bin` directory located in your home directory.
 
            % source ~/.tcshrc
      
-     Note, you have to run `source` in every open window:  it may be easier to just 
-     logout and log back in.
+     Note, you have to run `source` in every open window:  it may be
+     easier to just logout and log back in.
 
      For MacOS users using `bash`, put the path to your `~/bin` directory
      in a `.bashrc` file in your home directory. Just run:
@@ -140,7 +141,7 @@ executable programs in a `bin` directory located in your home directory.
 
            export PATH="$PATH:your/path/here:your/other/path/here"
 
-     and source it the same way as the `.tcshrc`.
+      and source it the same way as the `.tcshrc`.
 
 #### Install the rest of the code
 

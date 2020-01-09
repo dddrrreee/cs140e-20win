@@ -1,6 +1,6 @@
 ### Lab: make sure R/pi hardware and its toolchain works.
 
-Make sure you start with the [prelab](labs/PRELAB.md).
+Make sure you start with the [prelab](PRELAB.md).
 
 There's a lot of fiddly little details in getting a pi working, and
 this lab is many people's first time working with hardware, so we break

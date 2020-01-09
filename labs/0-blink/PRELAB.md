@@ -53,9 +53,11 @@ Your partner's does.  You plug your setup into their laptop.
 
       MacOS seems to ship with `git`, but you might need to install the
       xcode command line tools with:
+
           % xcode-select --install
 
       Ubuntu:
+
          % sudo apt install git
 
    2. Use `git` to clone (check out) the class repository:

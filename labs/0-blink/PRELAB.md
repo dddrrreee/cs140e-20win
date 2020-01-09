@@ -58,7 +58,7 @@ Your partner's does.  You plug your setup into their laptop.
 
       Ubuntu:
 
-         % sudo apt install git
+          % sudo apt install git
 
    2. Use `git` to clone (check out) the class repository:
 

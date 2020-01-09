@@ -1,5 +1,3 @@
-// when you run should blink 10 times. will have to restart the pi by pulling the
-// usb connection out.
 #include "gpio.h"
 
 void notmain(void) {

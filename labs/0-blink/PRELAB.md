@@ -16,7 +16,7 @@ shell commands, pi stuff in general:
 
 Do these on your own (described more in the rest of the document):
    1. Check-out the class git repo.
-   2. Figure out how to add a local `bin` directory to your shell's `PATH` variable.
+   2. Figure out how to add a local `~/bin` directory in your home directory to your shell's `PATH` variable.
    3. Have a way to mount a micro-SD card on your laptop.  You may need an adaptor.
       We will have some at the lab, but it's better if you have your own.
    4. Make sure you know how to use common unix commands such as:

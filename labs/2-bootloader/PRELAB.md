@@ -6,6 +6,11 @@ project code structure.  Since we are writing code to run on both UNIX
 (`unix-side`) and on the r/pi (`pi-side`) we have more directories than
 usual for today:
 
+##### Read through the lab
+
+You'll especially want to look through the protocol in Part 2 for context. 
+
+
 ##### `pi-side` directory
 
 The `pi-side` directory holds all the r/pi code.   In it, the 

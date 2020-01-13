@@ -97,3 +97,32 @@ you can do these before lab:
 
      You should give an error if there zero or more than one matching
      tty-serial devices.
+
+
+### 4. Nice haves to make coding faster, better.
+
+Tags: Again, as discussed in the previous lab, please try to get a "tags"
+equivalent installed / used on your development environment.  It will make
+looking at function / variable / structure definitions much much easier:
+you simply will move the cursor to the identifier you care about, do
+some kind of key sequence, and your editor will take you to identifier's
+definition.  To pick the first google result for `emacs` and `vim`:
+ - [tags in vim](https://vim.fandom.com/wiki/Browsing_programs_with_tags).
+ - [tags in emacs](https://www.jayconrod.com/posts/36/emacs-etags--a-quick-introduction)
+
+
+Multiple code windows: the more different contexts you can keep on
+your screen, the less you have to keep in your head and the less time
+you have to spend hunting around.  There are a variety of different
+terminal programs that make it easy to do split-screen and use hotkeys
+to jump between them.  I use `terminator` and am happy with it; there
+are many others.
+
+`git` conflicts:  you may wind up having a `git` conflict at some point.
+The easiest, stupid-simple way to handle: 
+  1. If you need your changes: copy your conflicted `<file> somewhere (e.g., `/tmp`).
+  2. Run: `git checkout -- <file>`.
+
+There are [better, more general ways](https://docs.gitlab.com/ee/topics/git/numerous_undo_possibilities_in_git/), but this approach is hard to mess up.   
+
+

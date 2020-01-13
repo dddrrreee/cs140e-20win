@@ -48,9 +48,9 @@ Make sure you look through:
      the `libunix` directory.
 
 And, look but DO NOT MODIFY:
-    1. `send-recv.[ch]`: this holds helper routines to send/receive data
-       to/from the pi.   Use these directly!
-    2. `my-install.c`: this is our starter code for setting everything up.
+  1. `send-recv.[ch]`: this holds helper routines to send/receive data
+     to/from the pi.   Use these directly!
+  2. `my-install.c`: this is our starter code for setting everything up.
 
 #### Implement two Unix support routines.
 

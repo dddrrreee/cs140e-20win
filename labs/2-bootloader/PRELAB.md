@@ -1,14 +1,22 @@
-### 1. Look around the code.
+### Bootloader prelab
+
+Since this lab is going out so late, there is no official thing you
+need to hand in.  HOWEVER, you are strongly encouraged to do all
+the prelab work, otherwise it's going to be a long lab.
+
+### 1. Read through the lab
+
+You'll especially want to look through the protocol in Part 2 for context.
+It's not that complicated, and everything else is only interesting
+to the extent it enables you to build the protocol.
+
+### 2. Look around the code.
 
 To save time in lab (yeah, I know, I didn't give you much time to
 save time) it's good to get sort-of familiar with the starter code and
 project code structure.  Since we are writing code to run on both UNIX
 (`unix-side`) and on the r/pi (`pi-side`) we have more directories than
 usual for today:
-
-##### Read through the lab
-
-You'll especially want to look through the protocol in Part 2 for context. 
 
 
 ##### `pi-side` directory
@@ -57,11 +65,11 @@ And, look but DO NOT MODIFY:
      to/from the pi.   Use these directly!
   2. `my-install.c`: this is our starter code for setting everything up.
 
-#### Implement two Unix support routines.
+### 3. Implement two Unix support routines.
 
 To get you used to dealing with `man` pages and their ilk, you'll write
-two routines need by your bootloader.  Neither is very hard, we do it
-in lab to make sure that everyone is up to speed:
+two routines need by your bootloader.  Neither is very hard; hopefully
+you can do these before lab:
 
   1. `read_file(size,name)`: read the file `name` into a buffer you
      allocate in its entirety and return it, writing the size of the

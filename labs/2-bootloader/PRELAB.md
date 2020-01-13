@@ -119,10 +119,9 @@ to jump between them.  I use `terminator` and am happy with it; there
 are many others.
 
 `git` conflicts:  you may wind up having a `git` conflict at some point.
-The easiest, stupid-simple way to handle: 
-  1. If you need your changes: copy your conflicted `<file> somewhere (e.g., `/tmp`).
-  2. Run: `git checkout -- <file>`.
+The a stupid-simple way if you don't care about your local modifications:
+  - `git checkout -- <file>`
 
-There are [better, more general ways](https://docs.gitlab.com/ee/topics/git/numerous_undo_possibilities_in_git/), but this approach is hard to mess up.   
-
+See [here](https://docs.gitlab.com/ee/topics/git/numerous_undo_possibilities_in_git/) for
+more general variants.
 

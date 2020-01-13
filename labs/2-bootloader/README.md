@@ -40,14 +40,14 @@ pi to unix.
 
 The key files (as discussed in the PRELAB):
 
-    1. The sub-directory `pi-side` has the skeleton code
-       that will run on the pi.  In this part and the next, you'll write
-       missing code in `bootloader.c:notmain`, compile it, and copy it
-       to the SD card as `kernel.img` just as you did in lab1.
+  1. The sub-directory `pi-side` has the skeleton code
+     that will run on the pi.  In this part and the next, you'll write
+     missing code in `bootloader.c:notmain`, compile it, and copy it
+     to the SD card as `kernel.img` just as you did in lab1.
 
-    2. The sub-directory `unix-side` has the code that will run on
-       your Unix laptop. You'll implement the code missing in
-       `simple-boot.c:simple_boot`. 
+  2. The sub-directory `unix-side` has the code that will run on
+     your Unix laptop. You'll implement the code missing in
+     `simple-boot.c:simple_boot`. 
 
 For this part:
 

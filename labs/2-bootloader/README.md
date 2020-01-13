@@ -76,7 +76,7 @@ A key feature you have that last year's students did not is the
 ability to use `putk` from your bootloader code.   This makes debugging
 wildly easier.  (Embarrassingly, I only realized the trick to allow easy
 printing this past week, the surgery that ensued is why the lab is late.)
-Without the ability to have output, all bugs lead to: "my pi isn't
+Without output, all bugs lead to: "my pi isn't
 responding," which is difficult function to invert back to root cause.
 
 I would use `putk` judiciously as you incrementally develop the code so
@@ -84,11 +84,11 @@ you can see what state the pi believes it is in.
 
 #### A (typical) nasty hardware limitation
 
-The pi UART hardware (which communicates with the tty-serial device) has
-a key limitation that it only has space to hold 8 bytes in its internal
-hardware buffer:  if your pi code take too long between UART reads, the
-hardware will drop bytes.   Thus, whenever the pi side can receive data,
-it has to move promptly.
+A key limit of the pi UART hardware is that it only has space to hold 8
+bytes in its internal hardware buffer:  if your pi code take too long
+between UART reads, the hardware will fill up and then drop bytes.
+Thus, whenever the pi side is expecting to receive data, it has to
+move promptly.
 
 If you forget this limitation, and (for example) print using `putk`
 when a message is arriving, you'll almost certainly input lose bytes,

@@ -38,14 +38,14 @@ The `unix-side` directory holds all the UNIX side code.  In it, the
       These routines are all described in `libunix/libunix.h`.
 
 Make sure you look through:
-    1. `simple-boot.c`: this holds the starter code you will extend
-       out into a full implementation that sends code to the pi.
-    2. `libunix/read-file.c`: you will implement this (see below).
-    3. `libunix/find-ttyusb.c`: you will implement this (see below).
-    4. `libunix/libunix.h`: this has all the routines you can use.
-    5. `libunix/demand.h`: this has a variety of helpful macros to simplify
-       error handling / checking.  You can see examples by using `grep` in
-       the `libunix` directory.
+  1. `simple-boot.c`: this holds the starter code you will extend
+     out into a full implementation that sends code to the pi.
+  2. `libunix/read-file.c`: you will implement this (see below).
+  3. `libunix/find-ttyusb.c`: you will implement this (see below).
+  4. `libunix/libunix.h`: this has all the routines you can use.
+  5. `libunix/demand.h`: this has a variety of helpful macros to simplify
+     error handling / checking.  You can see examples by using `grep` in
+     the `libunix` directory.
 
 And, look but DO NOT MODIFY:
     1. `send-recv.[ch]`: this holds helper routines to send/receive data

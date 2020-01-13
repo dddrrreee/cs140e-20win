@@ -14,8 +14,10 @@ The `pi-side` directory holds all the r/pi code.   In it, the
      the `.o` files with your own implementation.
 
 Make sure you look through:
+
   1. `pi-side/bootloader.c` this holds the starter code that you will extend out
        into a full implementation that receives code from the UNIX side.  
+
   2. `libpi.small/rpi.h` contains the protypes and descriptions of pi routines
       you (or our starter code) can call.  Each has a comment describing them:
       please post to the newsgroup if these (or any other function descriptions)

@@ -73,8 +73,8 @@ in lab to make sure that everyone is up to speed:
 
   2. `find_tty` will look though your `/dev` directory to find the
      USB device that your OS has connected the TTY-USB to, open it,
-     and return the resultant file descriptor.  
-     Implementation goes in `unix-side/libunix/find-ttyusb.c`
+     and return the resultant file descriptor.  Implementation goes in
+     `unix-side/libunix/find-ttyusb.c`
 
      You should use `scandir` to scan the `/dev` directory.  (`man
      scandir`).  The array `ttyusb_prefixes` has the set of prefixes

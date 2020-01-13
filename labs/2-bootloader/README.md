@@ -165,16 +165,18 @@ More descriptively:
   4. The unix side sends `PUT_CODE` and the code.
 
   5. The pi side copies the received code into memory starting at the
-     indicated code address.  It then computes `crc32(addr,nbytes)`
-     over this range and compares it to the expected value received in
-     step 2.  If they do not match, it sends `BAD_CODE_CKSUM`.  If so,
-     it sends back `BOOT_SUCCESS`.
+     indicated code address (from step 2).  It then computes
+     `crc32(addr,nbytes)` over this range and compares it to the
+     expected value received in step 2.  If they do not match, it sends
+     `BAD_CODE_CKSUM`.  If so, it sends back `BOOT_SUCCESS`.
 
   6. Once the Unix side receives `BOOT_SUCCESS` it simply echoes all
      subsequent received bytes to the terminal.
 
   7. If at any point the pi side receives an unexpected message, it
      sends a `BOOT_ERROR` message to the unix side and reboots.
+     If at any point the Unix side receives an unexpected or error
+     message it simply exits with an error.
 
 The use of send-response in the protocol is intended to prevent the
 Unix-side from overrunning the pi sides finite-sized UART queue.
@@ -185,5 +187,8 @@ the next.  If you go in small, verifiable steps and check at each point,
 this can go fairly smoothly.  If you do everything all-at-once and then
 have to play wack-a-mole with various bugs that arise from combinations
 of mistakes, this will take awhile.
+
+And don't forget: there are a bunch of useful error checking macros in
+`libunix/demand.h` and uses in `libunix/*.c`.
 
 #### Done!

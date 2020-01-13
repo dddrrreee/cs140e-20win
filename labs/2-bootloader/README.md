@@ -127,6 +127,7 @@ This is a stripped down version (explained more below):
                                       foreach b in code
                                            put_byte(b);
                               <-------
+     <copy code to addr>
      <check code crc32>
      put_uint(BOOT_SUCCESS)
                               ------->
@@ -142,10 +143,10 @@ More descriptively:
 
      (Q: Why can't the pi simply send a single `GET_PROG_INFO` request?)
 
-  2. When the unix side receives one of these, it sends back the reply
-     `PUT_PROG_INFO`, the constant to load the code at (for the moment,
-     `ARMBASE` which is `0x8000`), the size of the code in bytes,  and
-     a CRC (a collision resistant checksum) of the code.  
+  2. When the unix side receives a `GET_PROG_INFO`, it sends back
+     `PUT_PROG_INFO` along with: the constant to load the code at (for
+     the moment, `ARMBASE` which is `0x8000`), the size of the code in
+     bytes,  and a CRC (a collision resistant checksum) of the code.
 
      (Q: Why not skip step 1 and simply have the unix side start first
      with this step?)

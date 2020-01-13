@@ -2,13 +2,14 @@
 
 Since this lab is going out so late, there is no official thing you
 need to hand in.  HOWEVER, you are strongly encouraged to do all
-the prelab work, otherwise it's going to be a long lab.
+the prelab work, otherwise it's going to be a long lab --- in particular,
+implement the two routines described in Part 3 (below).
 
 ### 1. Read through the lab
 
-You'll especially want to look through the protocol in Part 2 for context.
-It's not that complicated, and everything else is only interesting
-to the extent it enables you to build the protocol.
+You'll especially want to look through the protocol in the lab's Part
+2 for context.  It's not that complicated, and everything else is only
+interesting to the extent it enables you to build the protocol.
 
 ### 2. Look around the code.
 

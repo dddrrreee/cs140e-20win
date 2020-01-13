@@ -6,7 +6,7 @@ show_on_index: true
 
 ## Lab: build a bootloader.
 
-***NOTE: Make sure you start with the `PRELAB.md`!***
+***NOTE: Make sure you start with the [PRELAB](PRELAB.md)!***
 
 The next few labs attempt to remove all magic from your pi setup
 by going downward and having you write and replace all of our code.

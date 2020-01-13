@@ -54,7 +54,7 @@ For this part:
 
   1. Change `pi-side/bootloader.c:notmain` to use `putk` to
      send `hello world` to the Unix side and then `get_uint` to wait
-     for a 32-bit magic value (use `0x12345678`) to be sent back.
+     for a 32-bit magic value (e.g., `0x12345678`) to be sent back.
      Print whether it matched or not, `delay_ms(500)`, and reboot.
 
   2. Change the code in `unix-side/simple-boot.c` to wait for a
@@ -63,14 +63,14 @@ For this part:
      sending it:  `./my-install hello.bin` should work.
 
 At this point you should be in fine shape to complete start implementing
-your bootloader.
+your bootloader (below).
 
 ### Step 2: send `hello.bin` from UNIX to the pi.
 
 Here you'll write implement the code to:
-  1. ask for the program to run (pi);
-  2. send the program code (unix);
-  3. receive the program code, copy it to where it should go, and jump to it (pi).
+  1. pi: ask for the program to run;
+  2. unix: send the program code;
+  3. pi: receive the program code, copy it to where it should go, and jump to it.
 
 A key feature you have that last year's students did not is the
 ability to use `putk` from your bootloader code.   This makes debugging

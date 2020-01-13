@@ -6,9 +6,7 @@ show_on_index: true
 
 ## Lab: build a bootloader.
 
-***NOTE***:
-
-  - Make sure you start with the `PRELAB.md`!
+***NOTE: Make sure you start with the `PRELAB.md`!***
 
 The next few labs attempt to remove all magic from your pi setup
 by going downward and having you write and replace all of our code.
@@ -21,9 +19,9 @@ Today's lab is a big step in that direction.  You will:
   - Write your own bootloader (both the Unix and pi side) to replace
      what we used last lab (i.e., `pi-install` and `bootloader.bin`).
 
-In the next two lab you will build the code to handle the low-level
-device functions this code needs (i.e., to handle the UART and some
-fancier GPIO functions) .
+In the next two labs you will write your own versions of the low-level
+device code your bootloader needs (some fancier GPIO functions and a
+UART device driver).
 
 ### Sign off.
 

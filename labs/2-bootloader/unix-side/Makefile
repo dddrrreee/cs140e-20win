@@ -3,10 +3,17 @@ CC = gcc
 SRC = my-install.c simple-boot.c  send-recv.c
 OBJS = $(SRC:.c=.o)
 
-all : libunix.a my-install run # tags 
+# uncomment:
+#   - the 'run' target to automatically run the hello.bin code.
+#   - the 'tags' target to run tags on the code.  this is super
+#     helpful.
+all : libunix.a my-install # run # tags 
 
 libunix.a:
 	make -C libunix
+
+my-install:  $(OBJS) 
+	$(CC) $(CFLAGS) $(OBJS) -o my-install -lm libunix/libunix.a
 
 tags:
 	ctags *.[ch]
@@ -14,10 +21,9 @@ tags:
 run:
 	./my-install ./hello.bin
 
-my-install:  $(OBJS) 
-	$(CC) $(CFLAGS) $(OBJS) -o my-install -lm libunix/libunix.a
 
 clean :
 	rm -f *.o *~ Makefile.bak my-install  tags
 	make -C libunix clean
 
+.PHONY: run clean tags

@@ -60,7 +60,7 @@ in lab to make sure that everyone is up to speed:
 
   1. `read_file(size,name)`: read the file `name` into a buffer you
      allocate in its entirety and return it, writing the size of the
-     buffer in `size`.  This is in `unix-side/libunix/read-file.c`.
+     buffer in `size`.  Implementation goes in `unix-side/libunix/read-file.c`.
 
      Note that you should pad the memory with zero-filled data up
      to the next multiple of 4.  (Easiest hack: just add 4 when you
@@ -74,7 +74,7 @@ in lab to make sure that everyone is up to speed:
   2. `find_tty` will look though your `/dev` directory to find the
      USB device that your OS has connected the TTY-USB to, open it,
      and return the resultant file descriptor.  
-     This is in `unix-side/libunix/find-ttyusb.c`
+     Implementation goes in `unix-side/libunix/find-ttyusb.c`
 
      You should use `scandir` to scan the `/dev` directory.  (`man
      scandir`).  The array `ttyusb_prefixes` has the set of prefixes

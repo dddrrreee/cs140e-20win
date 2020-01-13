@@ -117,11 +117,11 @@ This is a stripped down version (explained more below):
 
                                       put_uint(PUT_PROG_INFO);
                                       put_uint(ARMBASE);
-                                      put_uint(<code nbytes>);
-                             <------- put_uint(crc32(<code>));
+                                      put_uint(nbytes);
+                             <------- put_uint(crc32(code));
 
       put_uint32(GET_CODE)
-      put_uint32(crc32<code>) ------->
+      put_uint32(crc32)      ------->
                                       <check crc = the crc value sent>
                                       put_uint(PUT_CODE);
                                       foreach b in code

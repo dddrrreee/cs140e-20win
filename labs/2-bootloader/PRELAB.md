@@ -120,7 +120,7 @@ are many others.
 
 `git` conflicts:  you may wind up having a `git` conflict at some point.
 The a stupid-simple way if you don't care about your local modifications:
-  - `git checkout -- <file>`
+    `git checkout -- <file>`
 
 See [here](https://docs.gitlab.com/ee/topics/git/numerous_undo_possibilities_in_git/) for
 more general variants.

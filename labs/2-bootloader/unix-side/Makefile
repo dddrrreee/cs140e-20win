@@ -7,12 +7,12 @@ OBJS = $(SRC:.c=.o)
 #   - the 'run' target to automatically run the hello.bin code.
 #   - the 'tags' target to run tags on the code.  this is super
 #     helpful.
-all : libunix.a my-install # run # tags 
+all : libunix my-install # run # tags 
 
-libunix.a:
+libunix:
 	make -C libunix
 
-my-install:  $(OBJS) 
+my-install:  $(OBJS)  libunix/libunix.a
 	$(CC) $(CFLAGS) $(OBJS) -o my-install -lm libunix/libunix.a
 
 tags:
@@ -26,4 +26,4 @@ clean :
 	rm -f *.o *~ Makefile.bak my-install  tags
 	make -C libunix clean
 
-.PHONY: run clean tags
+.PHONY: run clean tags libunix

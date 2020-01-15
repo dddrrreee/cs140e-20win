@@ -14,11 +14,11 @@ endif
 include includes.mk
 
 # if you get source from other directories, add them to vpath too.
-VPATH := .:libc/:src/:your-src
+VPATH := .:libc/:src/:my-src:
 START= cs140e-start
 
 # grab everything in libc and src
-SOURCES     := $(wildcard ./libc/*.c  ./src/*.c)
+SOURCES     := $(wildcard ./libc/*.c  ./src/*.c  ./my-src/*.c)
 ASM_SOURCES := $(wildcard ./libc/*.S  ./src/*.S)
 OUR_OBJS := $(patsubst %.c, %.o, $(SOURCES)) $(patsubst %.S, %.o, $(ASM_SOURCES))
 
@@ -30,7 +30,7 @@ CFLAGS += -Wno-unused-function -Werror
 
 BUILD_DIR := ./objs
 TARGET = libpi.a
-OBJS = $(OUR_OBJS)  $(YOUR_OBJS)
+OBJS := $(OUR_OBJS)  $(YOUR_OBJS)
 
 OBJS := $(foreach o, $(OBJS), $(BUILD_DIR)/$(notdir $o)) $(EXTRA_OBJS)
 # Get all depend files by replacing extensions

@@ -7,7 +7,7 @@ AS  = $(ARM)-as
 OD  = $(ARM)-objdump
 OCP = $(ARM)-objcopy
 CS140E_LIBPI_PATH = $(CS140E_PATH)/libpi
-LPP= $(CS140E_LIBPI_PATH)
+LPP = $(CS140E_LIBPI_PATH)
 LPI = $(CS140E_LIBPI_PATH)/libpi.a
 
 MEMMAP=$(LPP)/memmap

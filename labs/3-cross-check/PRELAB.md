@@ -1,8 +1,10 @@
 #### Deliverables before class.
 
-To refresh your memory, re-read the Broadcom GPIO descriptions that
-we read in lab 1.  Especially the part for `GPFSELn` on page 91.
-Ideally implement `gpio_set_function` (described below).
+(You don't have to turn these in: but you should do them before
+lab so we aren't stuck there til 11pm again!)
+
+To refresh your memory, re-read the Broadcom GPIO descriptions that we
+read in lab 1.  Ideally implement `gpio_set_function` (described below).
 
 Before class, make sure you can 
 
@@ -41,7 +43,7 @@ Broadcom description for `GPFSELn` starting on page 91 (you already have,
 so this shouldn't take long).  This routine will look fairly similar to
 `gpio_set_input` except what it sets the bits to will be an argument.
 
-### 2. setting up your `libpi`
+### 2. Setting up your `libpi`
 
 We're going to start scaling up your programs and generally build on
 each part of the code you write.    These parts will be collected in
@@ -70,17 +72,19 @@ And, as before, don't forget to source your configuration file.
 #### Make sure libpi compile
 
 If you change directories into:
-   1. Your `libpi` and type `make` it should compile without issue;
-   2. Into `labs/3-cross-check/hello` and type `make` `hello` should compile.
+   1. `cs140e-20win/libpi` and type `make` it should compile without issue;
+   2. Into `cs140e-20win/labs/3-cross-check/hello` and type `make`, it 
+      should compile without issue.
    3. Dependencies should work --- if you `touch rpi.h` in `libpi` and do 
-      a `make` in `hello`, everything should recompile.
+      a `make` in `hello`, everything should recompile.  You should never
+      have to type `make clean` then `make` after making a change!
 
 #### look around at libpi
 
 Look around the `libpi` code.  Most of it are simple library functions
 to save you time.
 
-The subdirectories:
+The subdirectories in `cs140e-20win/libpi`:
   - `src`: these are pi-specific source files.  You can write your own, but
     these are not super interesting.
 

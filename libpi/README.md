@@ -7,6 +7,13 @@ Main rule:
                         DO NOT MODIFY THE MAKEFILE!
 
 
+Also:
+  don't add files to src/  or lib/  --- files we add later may conflict with yours.
+
+  however, you can add them to my-src/  --- if you do, the makefile will automatically
+  grab them and compile.  this is nice b/c you don't have to do anything.  it's bad
+  if you put .c files in there that you don't want compiled.
+
 Basic idea:
   - Put your source code files in this directory.
   - Put their names in the `put-your-src-here.mk` so that the `Makefile`

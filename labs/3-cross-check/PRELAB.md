@@ -19,6 +19,7 @@ Before class, make sure you can
      edit `put-your-code-here.mk` to use `gpio.o` and not use
      `cs140e-objs/gpio.o`.  Make sure the result compiles.
 
+-------------------------------------------------------------------------
 #### 1. Re-read the GPIO prose in the Broadcom document.
 
 Today you're going to write a `gpio_set_function`:
@@ -43,6 +44,7 @@ Broadcom description for `GPFSELn` starting on page 91 (you already have,
 so this shouldn't take long).  This routine will look fairly similar to
 `gpio_set_input` except what it sets the bits to will be an argument.
 
+-------------------------------------------------------------------------
 ### 2. Setting up your `libpi`
 
 We're going to start scaling up your programs and generally build on
@@ -96,3 +98,47 @@ The subdirectories in `cs140e-20win/libpi`:
     write your own and remove these pretty quickly.
 
   - `objs`: this is where `make` puts all the .o's; you can ignore it.
+
+
+-------------------------------------------------------------------------
+#### Cross checking background
+
+One way to compare two pieces of code A and B is to do so by just
+comparing the code itself.    This is what you've been doing so far
+in class: when your code doesn't work, you'll sometimes stare at
+someone else; or when it does, you'll stare to verify you both did
+the same.  This can be a fine approach.
+
+If two pieces of code are identical, then we can trivially do this
+automatically using something like `diff` or `strcmp`.  However, if the
+code differs in any way besides mere formatting, then a simple string
+comparison fails.
+
+The other approach is to just run tests, and compare the test output.
+A nice result of this approach is that even if two pieces of code
+look wildly different we can still automatically detect when they are
+equivalant by comparing their outputs.  This is why your classes use
+it for homeworks.
+
+The better your testing, the more chance you have of finding where
+the code differs.  The intuition here is that we don't actually care
+how the code works, just that it has the same end result --- i.e., its
+"side-effects" are the same.  In general, side-effects include anything
+code does visible to the outside world: its writes to memory, what it
+prints, any network packets it sends, etc.
+
+We're going to do a special case version of this check, since for the r/pi
+code so far, all we care about are reads and writes to device memory.
+If we record these, and compare them to another implementation, if
+they read or write the same memory in the same order, we know they are
+the same.  (Later, when we get more advanced, in some cases they can
+read or write in different orders, but we ignore this for now.)
+
+A drawback of this approach that we have glossed over, is that we
+only check equivalance on the inputs we run them on, so to really show
+equvalance we need to exhaust these.  Fortunately, if you look at the
+r/pi code we have written so far, it has simple inputs --- either none
+(where it just reads/writes device memory to initialize it) or a single
+pin input, which we can more-or-less exhaustively test (`0..31` and some
+illegal values).
+

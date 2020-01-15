@@ -21,6 +21,7 @@ Before class, make sure you can
 
 Today you're going to write a `gpio_set_function`:
 
+    // libpi/src/gpio.h
     enum {
         GPIO_FUNC_INPUT   = 0,
         GPIO_FUNC_OUTPUT  = 1,

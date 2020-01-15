@@ -44,7 +44,8 @@ int snprintk(char *buf, size_t n, const char *fmt, ...);
 int uart_hex(unsigned h);
 
 // a not very good rand()
-unsigned short rpi_rand(void);
+unsigned short rpi_rand16(void);
+unsigned rpi_rand32(void);
 
 /*****************************************************************************
  * common device functions
@@ -160,6 +161,8 @@ void dummy(unsigned);
 void cb_init(void);
 
 #include "src/gpio.h"
-#include "libc/assert.h"
+#ifndef RPI_UNIX
+#   include "libc/assert.h"
+#endif
 
 #endif

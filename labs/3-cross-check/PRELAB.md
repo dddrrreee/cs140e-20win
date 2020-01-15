@@ -16,8 +16,19 @@ Before class, make sure you can
 
   2. Then after 1 and 2, put your `gpio.c` into the `libpi` library
      directory.  Edit `gpio.h` to include `rpi.h` and also
-     edit `put-your-code-here.mk` to use `gpio.o` and not use
-     `cs140e-objs/gpio.o`.  Make sure the result compiles.
+     edit `put-your-src-here.mk` to use `gpio.o` and not use
+     `cs140e-objs/gpio.o`.  
+
+     Make sure any routine that takes a `pin` simply returns if the pin
+     value is greater than 31:
+
+         if(pin >= 32)
+            return;
+
+     (Anyone making the argument that we should return an error has the
+     better end argument, but for the moment we live in sin.) 
+
+     Make sure the result compiles.
 
 -------------------------------------------------------------------------
 #### 1. Re-read the GPIO prose in the Broadcom document.

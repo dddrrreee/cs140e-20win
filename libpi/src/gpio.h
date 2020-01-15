@@ -33,7 +33,7 @@ void gpio_set_output(unsigned pin);
 void gpio_write(unsigned pin, unsigned val);
 
 // read <pin>: 1 = high, 0 = low.
-unsigned gpio_read(unsigned pin);
+int gpio_read(unsigned pin);
 
 // turn <pin> on.
 void gpio_set_on(unsigned pin);

@@ -26,7 +26,7 @@ DEPS := $(OBJS:.o=.d)
 all: libpi $(NAME).bin
 
 # is there a better way to do this?
-libpi:
+libpi: $(LPP)/Makefile
 	make -C $(LPP)
 
 $(NAME).bin: $(MEMMAP) $(OBJS)

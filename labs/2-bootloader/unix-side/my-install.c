@@ -59,10 +59,12 @@ static int done(unsigned char *s) {
 
 // replace any unprintable characters with a space.
 // otherwise terminals can go haywire/bizarro.
-static void remove_nonprint(uint8_t *p) {
-    for(; *p; p++) {
-        if(isprint(*p)
-        || (isspace(*p) && *p != '\r'))
+// note, the string can contain 0's, so we send the
+// size.
+static void remove_nonprint(uint8_t *buf, int n) {
+    for(int i = 0; i < n; i++) {
+        uint8_t *p = &buf[i];
+        if(isprint(*p) || (isspace(*p) && *p != '\r'))
             continue;
         *p = ' ';
     }
@@ -87,8 +89,8 @@ static void echo(int fd, const char *portname) {
         } else if(n < 0) {
             sys_die(read, "pi connection closed.  cleaning up\n");
         } else {
-            remove_nonprint(buf);
             buf[n] = 0;
+            remove_nonprint(buf,n);
             output("%s", buf);
 
             if(done(buf)) {

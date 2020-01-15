@@ -26,7 +26,8 @@ Before class, make sure you can
             return;
 
      (Anyone making the argument that we should return an error has the
-     better end argument, but for the moment we live in sin.) 
+     better end argument, but for the moment we live in sin --- later we
+     will add a `panic` in such cases.)
 
      Make sure the result compiles.
 

@@ -1,6 +1,8 @@
 #ifndef __FAKE_TEST_H__
 #define __FAKE_TEST_H__
 
+
+unsigned long rpi_rand32(void);
 static unsigned long fake_random(void) {
     return rpi_rand32();
 }

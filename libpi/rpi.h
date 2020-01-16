@@ -45,7 +45,7 @@ int uart_hex(unsigned h);
 
 // a not very good rand()
 unsigned short rpi_rand16(void);
-unsigned rpi_rand32(void);
+unsigned long rpi_rand32(void);
 void rpi_reset(unsigned seed);
 
 /*****************************************************************************

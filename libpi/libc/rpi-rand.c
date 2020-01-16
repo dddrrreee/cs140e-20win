@@ -14,7 +14,7 @@ unsigned short rpi_rand16(void) {
     return lfsr;
 }
 
-unsigned rpi_rand32(void) {
+unsigned long rpi_rand32(void) {
     return (rpi_rand16() << 16) | rpi_rand16();
 }
 

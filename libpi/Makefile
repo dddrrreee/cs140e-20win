@@ -30,13 +30,14 @@ CFLAGS += -Wno-unused-function -Werror
 
 BUILD_DIR := ./objs
 TARGET = libpi.a
+
 OBJS := $(OUR_OBJS)  $(YOUR_OBJS)
 
 OBJS := $(foreach o, $(OBJS), $(BUILD_DIR)/$(notdir $o)) $(EXTRA_OBJS)
 # Get all depend files by replacing extensions
 DEPS := $(OBJS:.o=.d)  $(BUILD_DIR)/$(START).d
 
-all: $(TARGET) $(START).o
+all: $(TARGET) $(START).o 
 
 # we bundle start.s with the library: just make different ones for each
 # different start so that the library is internally consistent.

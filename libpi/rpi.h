@@ -46,6 +46,7 @@ int uart_hex(unsigned h);
 // a not very good rand()
 unsigned short rpi_rand16(void);
 unsigned rpi_rand32(void);
+void rpi_reset(unsigned seed);
 
 /*****************************************************************************
  * common device functions
@@ -163,6 +164,9 @@ void cb_init(void);
 #include "src/gpio.h"
 #ifndef RPI_UNIX
 #   include "libc/assert.h"
+#else
+#   define PUT32(addr,val) put32((void*)(unsigned long)addr, val)
+#   define GET32(addr) get32((void*)(unsigned long)addr)
 #endif
 
 #endif

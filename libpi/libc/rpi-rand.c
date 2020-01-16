@@ -1,7 +1,11 @@
 // need a better random!!
 #include "rpi.h"
 
-static unsigned short lfsr = 0xACE1u;
+// bug in gcc?
+// static unsigned initial_seed = 0xACE1u;
+#define initial_seed  0xACE1u
+
+static unsigned short lfsr = initial_seed;
 static unsigned bit;
 
 unsigned short rpi_rand16(void) {
@@ -12,4 +16,9 @@ unsigned short rpi_rand16(void) {
 
 unsigned rpi_rand32(void) {
     return (rpi_rand16() << 16) | rpi_rand16();
+}
+
+// seed is ignored!  need a better random.
+void rpi_reset(unsigned seed) {
+    lfsr = initial_seed;
 }

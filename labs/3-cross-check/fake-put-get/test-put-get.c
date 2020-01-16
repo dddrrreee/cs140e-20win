@@ -4,12 +4,12 @@
 #include <stdlib.h>
 
 #include "rpi.h"
+#include "pi-test.h"
 
-#define random (unsigned long)rpi_rand32
 
 int main(void) {
     // make sure that everyone has the same random.
-    assert(1450224440 == random());
+    fake_random_check();
 
 #   define N 128
 
@@ -17,12 +17,12 @@ int main(void) {
     volatile void *addrs[N];
     unsigned vals[N];
     for(int i = 0; i < N; i++) {
-        addrs[i] = (volatile void*)random();
+        addrs[i] = (volatile void*)fake_random();
 
-        if(random()%2 == 0)
+        if(fake_random()%2 == 0)
             vals[i] = get32(addrs[i]);
         else
-            put32(addrs[i], vals[i] = random());
+            put32(addrs[i], vals[i] = fake_random());
     }
     for(int i = 0; i < N; i++)
         assert(get32(addrs[i]) == vals[i]);

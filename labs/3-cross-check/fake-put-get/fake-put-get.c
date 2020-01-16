@@ -33,6 +33,15 @@
 
 #include "demand.h"
 #include "rpi.h"
+#include "pi-test.h"
+
+/****************************************************************************
+ *          DO NOT CHANGE THIS CODE (your changes go after it)
+ *          DO NOT CHANGE THIS CODE (your changes go after it)
+ *          DO NOT CHANGE THIS CODE (your changes go after it)
+ *          DO NOT CHANGE THIS CODE (your changes go after it)
+ *          DO NOT CHANGE THIS CODE (your changes go after it)
+ */
 
 typedef struct {
     const volatile void *addr;
@@ -50,11 +59,11 @@ static mem_t mk_mem(const volatile void *addr, unsigned val) {
 
 // don't change routine so we can compare to everyone.
 static void print_write(mem_t *m) {
-    printf("\tWRITE:addr=%p, val=%u\n", m->addr, m->val);
+    printf("\tTRACE:PUT32(%p)=0x%x\n", m->addr, m->val);
 }
 // don't change routine so we can compare to everyone.
 static void print_read(mem_t *m) {
-    printf("\tREAD:addr=%p, val=%u\n", m->addr, m->val);
+    printf("\tTRACE:GET32(%p)=0x%x\n", m->addr, m->val);
 }
 
 unsigned get32(const volatile void *addr) {
@@ -64,3 +73,4 @@ unsigned get32(const volatile void *addr) {
 void put32(volatile void *addr, unsigned val) {
     unimplemented();
 }
+

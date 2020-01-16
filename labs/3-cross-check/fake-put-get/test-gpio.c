@@ -5,6 +5,9 @@
 #include <stdlib.h>
 
 #include "rpi.h"
+#include "pi-test.h"
+
+
 
 void run_test(const char *name, void (*fp)(unsigned), int ntrials) {
     printf("testing: <%s>\n", name);
@@ -12,7 +15,7 @@ void run_test(const char *name, void (*fp)(unsigned), int ntrials) {
     for(int i = 0; i < 32; i++) 
         fp(i);
     for(int i = 0; i < ntrials; i++) 
-        fp(random());
+        fp(fake_random());
 }
 
 // can refactor this code, but we keep it simple.
@@ -31,20 +34,20 @@ void test_gpio_set_off(int ntrials) {
 
 void test_gpio_set_function(int ntrials) {
     printf("testing: <%s>\n", __FUNCTION__);
-    // test pins 0..32, then a bunch of random.
+    // test pins 0..32, then a bunch of fake_random.
     for(int pin = 0; pin < 32; pin++)  {
         for(int func = 0;  func < 16; func++) {
             gpio_set_function(pin, func);
-            gpio_set_function(random(), func);
+            gpio_set_function(fake_random(), func);
         }
     }
     for(int i = 0; i < ntrials; i++) 
-        gpio_set_function(random(), random()%6);
+        gpio_set_function(fake_random(), fake_random()%6);
 }
 
 int main(int argc, char *argv[]) {
-    // make sure that everyone has the same random.
-    assert(1450224440 == random());
+    // make sure that everyone has the same fake_random.
+    fake_random_check();
 
 #   define N 128
     if(argc > 2) {
@@ -60,13 +63,13 @@ int main(int argc, char *argv[]) {
     case 1: test_gpio_set_on(N); break;
     case 2: test_gpio_set_off(N); break;
     case 3:
+            test_gpio_set_input(N);
             test_gpio_set_output(N); 
             test_gpio_set_on(N); 
             test_gpio_set_off(N);
             break;
     case 4: 
             //test_gpio_set_function(N);
-            test_gpio_set_input(N);
             break;
 
     default: 

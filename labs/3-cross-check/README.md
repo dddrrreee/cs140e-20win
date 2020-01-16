@@ -3,6 +3,8 @@ Lab: automatically cross-check your pi code against everyone else's.
 
 ****THIS IS A DRAFT: will be changed before lab!****
 
+***As usual, start with the [PRELAB](PRELAB.md)!***
+
 A goal of this course is that you will write every single line of
 (interesting) low level code you use.  On the plus side, you will
 understand everything and, unlike most OS courses, there will not be
@@ -32,12 +34,12 @@ The basic idea: After completing the lab you will:
 
 #### Sign-off
 
-   1. Show you can run our `test_all` function and get the same trace /
+   1. Show you can run our `test_all` program and get the same trace /
       checksum as everyone else.  (This code checks: `gpio_set_output`,
       `gpio_set_input`, `gpio_set_on`, `gpio_set_off`).
 
-   2. Show you can run our `bootloader_test` and get the same trace /
-      checksum as everyone else.
+   2. Show you can trace the gpio functions when invoked on pin `20`, both
+      with and without capturing the output in a log.
 
 ----------------------------------------------------------------------
 #### 0. make sure your `gpio.c` can compile on Unix.
@@ -112,10 +114,10 @@ On `get32(addr)`:
   4. Return `v`.
 
 To test it:
-  1. Run `./test-put-get > out` on Unix.	It should run without
+  1. Run `make test-put-get` on Unix.	It should run without
 	   crashing and, importantly, print out the values for each
-	   `put32` and `get32` in the exact order they happened.
-  2. Get the checksum of the output (`cksum out`) and compare to your partner.
+	   `put32` and `get32` in the exact order they happened as well as a `cksum`.
+  2. Compare the cksum to your partner.
   3. If these values match, you know your code worked the same as your partner's.
   4. Now post to the newsgroup so everyone can compare.
   5. If everyone matches, and one person got it right, we've proven that
@@ -138,12 +140,19 @@ that two `gpio` implementations are the same:
 If both checks pass then we know that both implementations are equivalent
 --- at least for the tested inputs.
 
-For this section:
+For this section start with the simplest case:
+ 1. Uncomment out the rule for `simple-gpio-test` in `Makefile` and run `make`.
+       This will compile the test harness `simple-gpio-test.c`, which will test a 
+    single invocation of each `gpio` function.
+ 2. Check that each function gives the same answer as everyone else.
+
+More fancy:
  1. Uncomment out the rule for `test-gpio` in `Makefile` and run `make`.
-       This will compile the test harness `test-gpio.c`.
+       This will compile and run test harness `test-gpio.c`.
  2. You can test each function individually by running `test-gpio 0`,
        `test-gpio 1`, etc.  (Look in the `test-gpio.c` file.)
- 3. Again compare the results to your partner and post to the newsgroup.
+ 3. For checkoff make sure the your get the same result for `test-gpio 3` which
+    compares all of them.
 
 ----------------------------------------------------------------------
 #### 4. Add `gpio_set_func` and cross-check it.
@@ -158,7 +167,7 @@ You'll see we can write an implementation even without having a way to run it.
    4. Cross-check your results.
 
 ----------------------------------------------------------------------
-#### 5. Replace our `gpio.o`!
+#### 5. Replace our `gpio.o` entirely!
 
 Put it all together:
    1. Follow the pre-lab instructions on how to swap your `gpio.o` for ours.
@@ -166,7 +175,54 @@ Put it all together:
    3. Run it on the pi using the bootloader.
    4. Congratulations!  You have removed a big chunk of our code.
 
-#### 5. Advanced.
+----------------------------------------------------------------------
+#### 6. Do similar tracing on the pi 
+
+We would also like to check that the code running in its native
+environment works as expected: running on your laptop is great, but it
+does not guarantee the code works on the pi.
+
+In addition, while running in a fake environment lets us test all sorts of
+crazy combinations, it does require extracting the code.  The most common
+pain point I've had at least when doing OS stuff is:
+  1. You write some device driver.
+  2. It takes forever to get the thing working (bad docs, bad programmer, bad etc).
+  3. When it finally does it looks like a mess, but you don't want to touch it.
+
+The ability to use read-write equivalance to show that a new version is identical
+to an old version allows you to fearlessly fix the disgusting code you wrote as
+a first draft and have a safety net to prevent breaking what wasn't already so.
+
+In some sense our problem is easier here: we have a running machine, so
+we don't need to make fake anything.  Our main issue, besides some subtle
+recursion reasoning (later), is that we want to interpose on calls to
+`put32`, `get32` etc so that they first go into our tracing sytem, which
+can then call the original functions itself after logging what it needs.
+(In the future, you'll want to interpose on a wide set of things.)
+
+One option would be to abuse the C preprocessor to translate the names;
+another would be to just go in and replace all the calls with a function
+pointer that we can redirect.   There's not that much code yet, so it's
+not horrible to do either.  But the GNU linker gives us a more elegant
+and safe method of "wrapping".  Assume we want to wrap `GET32`:
+
+  1. When linking the pi program, add a `-wrap=GET32` argument to the linker command.
+  2. The linker will replace all calls to `GET32` with calls to `__wrap_GET32`.  We
+     will implement the `__wrap_GET32` function.
+  3. The linker will also rename the definition of `GET32` as `__real_GET32`, which
+     our code can call when (if) it wants to invoke the original code.
+
+  4. The file `pi-trace/trace.c` has an example.
+
+This part of the lab should be fast:
+
+  1. Extend the tracing to handle PUT32, put32, and get32.  (both `put32` and
+     `PUT32` do the same thing, they just have a different types for their
+     address argument, which you can see in `rpi.h`)
+  2. Extend the tracing to simply capture reads and writes for later printing.
+     This allows us to trace `printk` or anything else that uses the UART.
+
+#### Advanced.
 
 Making the code more useful mostly involves expanding it so that
 even when code writes values in different orders, you can still

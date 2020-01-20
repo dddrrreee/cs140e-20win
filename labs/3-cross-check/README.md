@@ -1,7 +1,8 @@
 Lab: automatically cross-check your pi code against everyone else's.
 ======================================================================
 
-****THIS IS A DRAFT: will be changed before lab!****
+***NOTE: we had some `Makefile` issues.   Simplest is probably to work with
+   `fake-put-get.current`.***
 
 ***As usual, start with the [PRELAB](PRELAB.md)!***
 

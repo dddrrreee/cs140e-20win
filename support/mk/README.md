@@ -8,6 +8,10 @@ not know (perhaps the substring matching was getting messed up by the
 substrings in their path?).  We just get rid of it.  Compilatation is
 cheap; lab time is not.
 
+Several approaches:
+ - `Makefile.n-file`: if you have more than one program, but it uses
+ only one file, copy this and update 
+
 Our two approaches:
 
  - `Makefile.one-file` can use this to inline everything and specialize make

@@ -2,7 +2,12 @@
 
 # we've had some make issues going cross windows/mac/linux, so we just do brute stupid
 # to make things work: no fancy rules, just always recompile.
-NAME := hello
+
+# NAME = hello
+
+ifndef NAME
+$(error NAME of target not defined!)
+endif
 
 # check that your path is defined.
 ifndef CS140E_PATH

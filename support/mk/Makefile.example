@@ -1,19 +1,27 @@
-# simple example of how to use the template.mk
-
+# produce a single program `foo`, but automatically compile all .c files in the
+# directory (template.mk does this)
+export NAME = foo
 MAKEFLAGS +=  --no-print-directory
 
 ifndef CS140E_PATH
 $(error CS140E_PATH not defined!)
 endif
 
-MK = $(CS140E_PATH)/template.mk
+MK = $(CS140E_PATH)/support/mk/template.n-file.mk
+LPI = $(CS140E_PATH)/libpi
 
-all: hello
+# if you don't want to see the output of any of these make commands
+# just pass a -s to them.
+all: $(NAME)
 
-hello:
-	make -f $(MK) NAME=hello
+$(NAME):
+	@make -f $(MK)
 
 clean:
-	make -f $(MK) clean
+	@make -f $(MK) clean
 
-.PHONY: all hello clean
+cleanall:
+	@make -f $(MK) clean
+	@make -C $(LPI) clean
+
+.PHONY: all hello clean cleanall

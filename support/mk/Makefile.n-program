@@ -1,6 +1,8 @@
 # https://stackoverflow.com/questions/2463356/make-failure-in-subdirectory-make-not-stopping-build
 
-PROGS = hello1 hello2
+ifndef PROGS
+PROGS := hello1 hello2
+endif
 MAKEFLAGS +=  --no-print-directory
 
 ifndef CS140E_PATH

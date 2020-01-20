@@ -23,7 +23,7 @@ DEPS := $(LPI) ./Makefile
 all: libpi $(OBJS) $(NAME).bin
 
 libpi: 
-	make -C $(LPP)
+	@make -s -C $(LPP)
 
 $(OBJS): $(DEPS)
 
@@ -31,7 +31,7 @@ $(OBJS): $(DEPS)
 # dependencies.
 $(NAME).bin: $(MEMMAP) $(OBJS) $(LPI) ./Makefile
 	$(LD) $(OBJS) -T $(LPP)/memmap -o $(NAME).elf  $(LPI)
-	$(OD) -D $(NAME).elf > $(NAME).list
+	@$(OD) -D $(NAME).elf > $(NAME).list
 	$(OCP) $(NAME).elf -O binary $(NAME).bin
 
 run:

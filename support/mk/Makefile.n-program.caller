@@ -1,3 +1,5 @@
+MAKEFLAGS +=  --no-print-directory
+
 # if you have multiple programs of one file each, you can use this.
 export PROGS = hello1 hello2
 

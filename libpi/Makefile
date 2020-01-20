@@ -14,12 +14,12 @@ endif
 include includes.mk
 
 # if you get source from other directories, add them to vpath too.
-VPATH := .:libc/:src/:my-src:
+VPATH := .:libc/:cs140e-src/:my-src:
 START= cs140e-start
 
 # grab everything in libc and src
-SOURCES     := $(wildcard ./libc/*.c  ./src/*.c  ./my-src/*.c)
-ASM_SOURCES := $(wildcard ./libc/*.S  ./src/*.S)
+SOURCES     := $(wildcard ./libc/*.c  ./cs140e-src/*.c  ./my-src/*.c)
+ASM_SOURCES := $(wildcard ./libc/*.S  ./cs140e-src/*.S)
 OUR_OBJS := $(patsubst %.c, %.o, $(SOURCES)) $(patsubst %.S, %.o, $(ASM_SOURCES))
 
 # this is where your code is.
@@ -96,6 +96,6 @@ ctags:
 clean:
 	rm -rf $(BUILD_DIR) $(TARGET) *~ $(TARGET).list tags cs140e-start.o 
 	make   --no-print-directory -C libc clean
-	make   --no-print-directory -C src clean
+	make   --no-print-directory -C cs140e-src clean
 
 .PHONY: clean all ctags

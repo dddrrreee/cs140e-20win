@@ -161,7 +161,10 @@ void dummy(unsigned);
 // for initializing using the control block.
 void cb_init(void);
 
-#include "src/gpio.h"
+#include "cs140e-src/gpio.h"
+
+// extra student-defined libc prototypes.
+#include "libc/libc-extra.h"
 #ifndef RPI_UNIX
 #   include "libc/assert.h"
 #else

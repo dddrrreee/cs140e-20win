@@ -17,7 +17,7 @@
 #	include <ctype.h>
 
 #else
-#	include "src/rpi-internal.h"
+#	include "cs140e-src/rpi-internal.h"
 
 
 static int internal_putchar(int c) { uart_putc(c); return c; } 

@@ -6,7 +6,7 @@ MAKEFLAGS +=  --no-print-directory
 ifndef CS140E_PATH
 $(error CS140E_PATH not defined!)
 endif
-MK = $(CS140E_PATH)/support/mk/Makefile.one-file
+MK = $(CS140E_PATH)/support/mk/template.one-prog.mk
 
 all clean: $(PROGS)
 

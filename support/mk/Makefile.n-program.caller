@@ -1,9 +1,8 @@
-# if you have a dirt-simple standard compilation, just copy this into your directory
-# and change NAME
-export NAME = bar
+# if you have multiple programs of one file each, you can use this.
+export PROGS = hello1 hello2
 
 ifndef CS140E_PATH
 $(error CS140E_PATH not defined!)
 endif
 
-include $(CS140E_PATH)/support/mk/Makefile.example
+include $(CS140E_PATH)/support/mk/Makefile.n-program

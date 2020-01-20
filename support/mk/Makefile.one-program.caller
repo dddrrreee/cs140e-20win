@@ -6,4 +6,4 @@ ifndef CS140E_PATH
 $(error CS140E_PATH not defined!)
 endif
 
-include $(CS140E_PATH)/support/mk/Makefile.example
+include $(CS140E_PATH)/support/mk/Makefile.one-program

@@ -8,19 +8,20 @@ not know (perhaps the substring matching was getting messed up by the
 substrings in their path?).  We just get rid of it.  Compilatation is
 cheap; lab time is not.
 
-Several approaches:
- - `Makefile.n-file`: if you have more than one program, but it uses
- only one file, copy this and update 
+If you want things as simple as possible you have two options:
 
-Our two approaches:
+  1. If you want to produce a single executable, copy `Makefile.one-program.caller`
+     to your target directory as `Makefile` and change `NAME` to your program.
+     It will automatically compile and include all `.c` files in the directory.
+     (If you don't want this behavior, use  `template.one-prog.mk` instead).
+ 
+   2. If you want to produce multiple executables, but they only need one
+      file each, copy `Makefile.n-program.caller` to your target directory
+      as `Makefile` ane change `PROGS` to all the executables you want.
 
- - `Makefile.one-file` can use this to inline everything and specialize make
-    for one file (or, really, a string of enumerated `.o` files).   Use this
-    by copying it to your directory as `Makefile` and changing `NAME` and/or 
-    `OBJS`.
+Otherwise:
 
- - `Makefile.example` which uses `template.mk` to make all `.c` files in a given
-    directory.  Use this by copying it to your directory as `Makefile` and add any
-    target calls you need.
+   - Just copy and modify `template.one-prog.mk`.   It has more characters
+     in it, but there's no recursion, which can be confusing.
 
 Hopefully should eliminate all breakage during labs.

@@ -1,4 +1,5 @@
-#  a template that should work in all the different directories.
+# compiles n files into single executable: grabs all .c files automatically.
+# maybe make it check if OBJS is already defined.
 
 # we've had some make issues going cross windows/mac/linux, so we just do brute stupid
 # to make things work: no fancy rules, just always recompile.

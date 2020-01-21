@@ -1,4 +1,10 @@
+//  PLEASE DON"T MODIFY THIS FILE YET --- I'm going to add some comments, etc.
+//  PLEASE DON"T MODIFY THIS FILE YET --- I'm going to add some comments, etc.
+//  PLEASE DON"T MODIFY THIS FILE YET --- I'm going to add some comments, etc.
+//  PLEASE DON"T MODIFY THIS FILE YET --- I'm going to add some comments, etc.
+//
 // implement these three functions.
+//
 //
 #include "rpi.h"
 

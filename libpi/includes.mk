@@ -9,6 +9,7 @@ OCP = $(ARM)-objcopy
 CS140E_LIBPI_PATH = $(CS140E_PATH)/libpi
 LPP = $(CS140E_LIBPI_PATH)
 LPI = $(CS140E_LIBPI_PATH)/libpi.a
+START = $(LPP)/cs140e-start.o
 
 MEMMAP=$(LPP)/memmap
 

@@ -40,12 +40,14 @@ on both the pi and unix side will be written by you:
      checking code from lab3 to verify your implementation matches
      everyone else's.
 
-  - [5-sw-uart](5-sw-uart/): a great way to understand the UART hardware
-    is to write your own software version of it and use this to communicate
-    with your laptop.   Doing so gives you a second source of output, which
-    will turn out to be very useful later when we do networking.
+     A great way to understand the UART hardware is to write your own
+     software version of it and use this to communicate with your laptop.
+     Doing so gives you a second source of output, which will turn out
+     to be very useful later when we do networking.
 
-  - [6-replay](6-replay/): in a twist on lab3, you will use Unix
+***[HAVE NOT UPDATED THE LABS BELOW]***
+
+  - [5-replay](5-replay/): in a twist on lab3, you will use Unix
      system calls to interpose between your Unix and pi bootloader code,
      record all reads and writes, and test your bootloader implementation
      by replaying these back, both as seen and with systematic

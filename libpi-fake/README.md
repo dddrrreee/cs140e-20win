@@ -1,15 +1,33 @@
 ---------------------------------------------------------------------------------
 ## `libpi-fake`: simple user-space testing library for the pi
 
-NOTE: Currently the discussion below is much too mechanical, and completely
-ignores fundmental problems in emulation and equivalance checking, such as: 
 
-   1. When you read pi hardware state, how do you know what to do?  
-   2. When there are many equivalant ways to do the same thing, what is the 
-      right approach to checking superficially non-equivalant traces?
+#### Caveat.
+
+Currently the discussion below is much too mechanical, and completely
+ignores fundamental problems in emulation and equivalence checking, such as: 
+
+   1. When you read pi hardware state, how do you know what to do?
+      In some cases writes are stable, and a read returns the last
+      value written.  In others, the hardware could return a different
+      value each time, depending on the environment and its configuration.
+      Knowing a good (much less correct) value to return can be difficult.
+      Fortunately, we are not trying to run pi programs with perfect
+      fidelity so that they produce the same output they would on the pi
+      --- we are just trying to detect when they compute the same answer
+      (versus the right answer).
+
+
+   2. When different methods have the same result, what is
+      a good approach to showing equivalence?  For example, one program
+      sets GPIO pin 19, then 20 to output pins, while another sets 20
+      then 19 --- same result, but our current equivalence checking
+      would flag these as different.
 
 Hopefully this can get filled in later.
 
+------------------------------------------------------------------
+### Overview
 
 This library will build up additional code we need to run pi programs
 on a fake Unix environment for testing.  I've put some initial simple
@@ -32,8 +50,8 @@ Our method of cross-checking has two main parts:
      If your code *does not* visit the same routines in the same order
      as someone else then it's probable (but not guaranteed!) that
      does not compute the same results.   Of course, since we do not
-     perfectly simulate the pi, trace equivalance cannot guarantee
-     actual equivalances (much less correctness), however it is often
+     perfectly simulate the pi, trace equivalence cannot guarantee
+     actual equivalences (much less correctness), however it is often
      significantly stronger than just running a few tests and saying
      "ship it".  The `driver.c` code can do as many random runs as you
      like, which can somewhat mitigate this problem.
@@ -53,6 +71,7 @@ even catch a dereference of null now, as you can check:
     // should be same
     printk("*NULL = %x\n", GET32(0));
 
+------------------------------------------------------------------
 ###  `libpi-fake` organization
 
 Different fake pieces of `libpi` are in their associated files:
@@ -68,7 +87,7 @@ Different fake pieces of `libpi` are in their associated files:
   - `fake-reboot.c`: calls exit.
 
   - `fake-time.c`: simple version of `time_get_usec` that advances the
-    current time by 1 usecond each time it's called.  Also the `delay_ms`
+    current time by 1 micro-second each time it's called.  Also the `delay_ms`
     and `delay_usec` functions that similarly advance the time.
 
   - `driver.c`: a driver to call a pi programs `notmain`.
@@ -88,7 +107,7 @@ Code changes:
      primitive but hopefully bullet-proof one.
 
   2. Also, the `random` we used in lab 3 was so bad I'm a bit worried about
-     what the equivalance checking actually means.  I've replaced it with
+     what the equivalence checking actually means.  I've replaced it with
      a better version from `libc`.
 
 You should look through `libpi-fake` code, in particular look at how it

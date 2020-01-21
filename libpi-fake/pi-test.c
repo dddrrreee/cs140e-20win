@@ -6,6 +6,7 @@
 #include "pi-test.h"
 #include "pi-random.h"
 
+static unsigned fake_random_check(void);
 #if USE_BAD_RANDOM
 
 unsigned long rpi_rand32(void);
@@ -17,12 +18,11 @@ void fake_random_seed(unsigned x) {
 }
 
 // check that we get what we expect.
-static void fake_random_check(void) {
-    // make stdout always flush.
-    setvbuf(stdout, NULL, _IONBF, 0);
-
+static unsigned fake_random_check(void) {
     // make sure that everyone has the same random.
-    assert(1450224440 == fake_random());
+    unsigned u = fake_random();
+    assert(1450224440 == u);
+    return u;
 }
 
 #else 
@@ -45,13 +45,11 @@ void fake_random_seed(unsigned x) {
 }
 
 // make sure that everyone has the same random.
-static void fake_random_check(void) {
-    // make stdout always flush.
-    setvbuf(stdout, NULL, _IONBF, 0);
-
+static unsigned fake_random_check(void) {
     fake_random_seed(0);
-    assert(0x6b8b4567 == fake_random());
-    // assert(1450224440 == fake_random());
+    unsigned u = fake_random();
+    assert(0x6b8b4567 == u);
+    return u;
 }
 
 unsigned long fake_random(void) {
@@ -64,5 +62,9 @@ unsigned long fake_random(void) {
 #endif
 
 void fake_pi_init(void) {
-    fake_random_check();
+    // make stdout always flush.
+    setvbuf(stdout, NULL, _IONBF, 0);
+
+    unsigned u = fake_random_check();
+    fake_time_init(u);
 }

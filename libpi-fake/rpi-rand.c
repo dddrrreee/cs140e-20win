@@ -1,5 +1,8 @@
+// gross.
+#ifdef USE_BAD_RANDOM
+
 // need a better random!!
-#include "rpi.h"
+#include "pi-test.h"
 
 // bug in gcc?
 // static unsigned initial_seed = 0xACE1u;
@@ -22,3 +25,5 @@ unsigned long rpi_rand32(void) {
 void rpi_reset(unsigned seed) {
     lfsr = initial_seed;
 }
+
+#endif

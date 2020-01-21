@@ -1,7 +1,13 @@
 TARGET = libpi-test.a
 
+
+# compile everything in this directory.
+# if you want to compile everything in a directory, do something like this.
+SOURCES := $(wildcard ./*.c)
+OBJS := $(patsubst %.c, %.o, $(SOURCES))
+
 # add any other object files here.
-OBJS = fake-put-get.o pi-test.o pi-random.o fake-pi.o fake-gpio.o driver.o
+# OBJS = fake-put-get.o pi-test.o pi-random.o fake-pi.o fake-gpio.o driver.o fake-time.o
 
 # check that your path is defined.
 ifndef CS140E_PATH

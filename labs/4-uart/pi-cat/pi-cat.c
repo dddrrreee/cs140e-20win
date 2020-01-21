@@ -1,5 +1,5 @@
-// engler
-// simple program to cat the output of whatever tty-usb you give it.
+// engler, cs140e
+// simple program to echo between unix and the pi.
 #include <assert.h>
 #include <fcntl.h>
 #include <stdio.h>
@@ -11,7 +11,6 @@
 
 #include "libunix.h"
 
-// echo between unix and the pi.
 // uses select to see if 
 //  - stdin (file descriptor 0) has input
 //  - the pi fd has ouput.
@@ -78,7 +77,7 @@ int main(int argc, char *argv[]) {
     else
         panic("too many arguments %d\n", argc);
     
-    // baud rates are defined in:
+    // on linux, baud rates are defined in:
     //  /usr/include/asm-generic/termbits.h
     //
     // when doing software uart, these all worked:

@@ -41,7 +41,7 @@ all: $(TARGET) $(START).o
 
 # we bundle start.s with the library: just make different ones for each
 # different start so that the library is internally consistent.
-$(TARGET): $(OBJS) $(SUPPORT_OBJS) 
+$(TARGET): $(OBJS) $(SUPPORT_OBJS)  ./put-your-src-here.mk 
 	arm-none-eabi-ar crf $(TARGET) $(OBJS) $(SUPPORT_OBJS)
 	$(OD) -D $@ > $@.list
 
@@ -59,16 +59,16 @@ $(BUILD_DIR)/%.o : %.c $(BUILD_DIR)/%.d
 
 # XXX: I think we need this to catch errors in .S as well.
 $(BUILD_DIR)/%.o : %.S
-$(BUILD_DIR)/%.o : %.S $(BUILD_DIR)/%.d
+$(BUILD_DIR)/%.o : %.S $(BUILD_DIR)/%.d 
 	$(CC) $(CPP_ASFLAGS) $<
 
 # Rules to automatically generate dependencies and put in build directory
 # We want to recompile everything if the makefile changes.
-$(BUILD_DIR)/%.d: %.c Makefile
+$(BUILD_DIR)/%.d: %.c ./Makefile
 	@mkdir -p $(BUILD_DIR)
 	$(CC) $(CFLAGS) -c -MT $@ -MMD -MP -MF $@ $< -o $(BUILD_DIR)/$(notdir $*).o
 
-$(BUILD_DIR)/%.d: %.S Makefile
+$(BUILD_DIR)/%.d: %.S ./Makefile
 	@mkdir -p $(BUILD_DIR)
 	$(CC) $(CPP_ASFLAGS) -c -MT $@ -MMD -MP -MF $@ $< -o $(BUILD_DIR)/$(notdir $*).o
 

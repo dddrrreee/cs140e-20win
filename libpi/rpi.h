@@ -170,6 +170,7 @@ void cb_init(void);
 #else
 #   define PUT32(addr,val) put32((void*)(unsigned long)addr, val)
 #   define GET32(addr) get32((void*)(unsigned long)addr)
+#   include "demand.h"
 #endif
 
 #endif

@@ -150,10 +150,6 @@ functionality in a private lab directory where it won't mess with anything
 else, test or (better) equivalence check it, and then, migrate it into
 your main `libpi` library so it can be used by subsequent programs.
 
-You will write the code `uart_init()` to initialize the mini-UART
-to the state the TTY-USB needs and write `uart_getc` and `uart_putc`
-routines to receive and transmit bytes using it, respectively.
-
 Concretely, you will implement three routines (skeletons given in
 `4-lab/uart/uart.c`):
 

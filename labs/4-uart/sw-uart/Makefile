@@ -28,6 +28,7 @@ libpi:
 
 fake:
 	@make -f ./Makefile.unix NAME=$(NAME).fake
+	# to run: ./hello.fake
 
 $(OBJS): $(DEPS)
 

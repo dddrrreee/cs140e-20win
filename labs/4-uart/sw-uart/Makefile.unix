@@ -26,8 +26,8 @@ TLIB = $(FLPI)/libpi-test.a
 # might need other libs too -lm -lutil, etc
 LIBS= $(TLIB)
 
-# make fake lib pi first, then progs, then run.
-all: libfake $(NAME) run
+# make fake lib pi first, then progs
+all: libfake $(NAME) 
 
 # don't worry about deps: always run make
 libfake:
@@ -43,10 +43,9 @@ libfake:
 # we don't want .o b/c will hit the pi stuff.
 $(NAME): $(SRC) $(TLIB)
 	$(CC) $(CFLAGS) $(SRC) -o $@ $(LIBS)
-	./$(NAME)
 
 clean:
 	rm -f *.o *~  *.bak $(NAME) *.out blink
 	make -C $(FLPI) clean
 
-.PHONY: all clean run libfake
+.PHONY: all clean libfake

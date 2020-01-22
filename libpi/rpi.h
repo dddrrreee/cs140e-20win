@@ -56,7 +56,13 @@ void rpi_reset(unsigned seed);
 void uart_init(void);
 int uart_getc(void);
 void uart_putc(unsigned c);
-int uart_can_getc(void);
+
+// returns -1 if no byte, the value otherwise.
+int uart_getc_async(void);
+
+// 0 = no data, 1 = at least one byte
+int uart_has_data(void);
+// 0 = no space, 1 = space for at least 1 byte
 int uart_can_putc(void);
 
 /***************************************************************************

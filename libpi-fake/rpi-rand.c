@@ -27,3 +27,4 @@ void rpi_reset(unsigned seed) {
 }
 
 #endif
+void shut_up_linker(void) {}

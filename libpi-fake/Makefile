@@ -4,10 +4,7 @@ TARGET = libpi-test.a
 # compile everything in this directory.
 # if you want to compile everything in a directory, do something like this.
 
-# SOURCES := $(wildcard ./*.c)
-
-SOURCES := driver.c fake-gpio.c  fake-printk.c   fake-reboot.c  fake-uart.c  pi-test.c \
-            fake-dev-barrier.c  fake-pi.c    fake-time.c    pi-random.c  rpi-rand.c
+SOURCES := $(wildcard ./*.c)
 OBJS := $(patsubst %.c, %.o, $(SOURCES))
 
 

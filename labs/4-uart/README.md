@@ -303,6 +303,6 @@ cycle counters (`cycle-count.h` has the macros to access) and in-lining
 the GPIO routines.  (Note that as you go faster your laptop's OS might
 become the problem.)
 
-    ***NOTE: that if you switch baud rates on the pi, you'll need to change
+  ***NOTE: that if you switch baud rates on the pi, you'll need to change
     it in the `pi-cat` code too.***
 

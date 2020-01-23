@@ -48,4 +48,8 @@ clean:
 	rm -rf $(BUILD_DIR) $(NAME) *~ tags *.o *.bin *.elf *.list *.img Makefile.bak 
 	@make -f ./Makefile.unix NAME=$(NAME).fake clean
 
+cleanall:
+	make clean
+	make -f ./Makefile.unix NAME=$(NAME).fake clean
+	make -C ../../../libpi-fake clean
 .PHONY: libpi all run tags clean  fake

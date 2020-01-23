@@ -256,32 +256,32 @@ as the overhead of reading time, writing pins, checking for deadlines gets large
 as compared to `T` you can introduce enough noise so that you get corrupted data.
 Possible options:
 
-    - Compute how long to wait for each bit in a way that does not lead to cumulative
+  - Compute how long to wait for each bit in a way that does not lead to cumulative
       error (do something smarter than waiting for `T`, `2*T`, etc.)
 
-    - The overhead of time is probably the main issue (measure!), so
+  - The overhead of time is probably the main issue (measure!), so
       you could inline this.  In general, reading time obviously adds
       unseen overhead, so you have to reason about this.
 
-    - You could also switch to cycles.  (our pi runs at `700MHz` or 7 million
+  - You could also switch to cycles.  (our pi runs at `700MHz` or 7 million
       cycles per second.  You should verify 70 cycles is about 1 micro-second!)
 
-    - Unroll any loop and tune the code.
+  - Unroll any loop and tune the code.
 
-    - Maybe enable caching.
+  - Maybe enable caching.
 
-    - Maybe inlining GPIO operations (probably does not matter as long overhead as `< T`)
+  - Maybe inlining GPIO operations (probably does not matter as long overhead as `< T`)
 
-    - In general: Measure the overhead of reading time, writing a bit,
+  - In general: Measure the overhead of reading time, writing a bit,
       etc.  You want to go after the stuff that happens "later" in the bit
       transmit since it has the most issue and the stuff that has a large
       fixed cost (since that will cause the error to increase the most).
 
-    - Could just hand compute an assembly routine that runs for exactly
+  - Could just hand compute an assembly routine that runs for exactly
       the cycles needed (count the jump and return overhead!).  Or,
       better, write a program to generate this code.
 
-    - Part of "systems" as a discipline is actually measuring what effect
+  - Part of "systems" as a discipline is actually measuring what effect
       your changes make.  People are notoriously stupid at actually
       predicting where time goes and what will lead to improvements.
 

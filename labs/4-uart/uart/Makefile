@@ -21,7 +21,7 @@ OBJS := $(NAME).o uart.o
 #   DEPS := $(wildcard ./*.h) $(LPI)
 DEPS := $(LPI) ./Makefile 
 
-all: fake # libpi $(OBJS) $(NAME).bin fake
+all: libpi $(OBJS) $(NAME).bin fake
 
 libpi: 
 	@make -s -C $(LPP)

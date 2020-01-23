@@ -206,7 +206,7 @@ such as I2C, that are built-in to the pi's hardware.)
 
 Wiring up the software UART is fairly simple: 
 
-  1. You'll need two GPIO pins, one for transmit, one for receive.  
+  1. You'll need two GPIO pins, one for transmit, one for receive.
      Configure these as GPIO output and inputs respectively.
   2. Connect these pin's to the CP2102 tty-usb device (as with the 
      hardware remember that `TX` connects to `RX` and vice versa).

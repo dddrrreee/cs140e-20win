@@ -56,7 +56,7 @@ void echo(int fd, const char *portname) {
             if((n = read(fd, buf, sizeof buf)) <= 0)
                 sys_die(read, failed);
             buf[n] = 0;
-            output("PI: %s", buf);
+            output("%s", buf);
         }
     }
     notreached();

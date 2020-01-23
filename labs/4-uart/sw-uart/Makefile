@@ -15,13 +15,13 @@ include $(CS140E_PATH)/libpi/includes.mk
 # if you want to compile everything in a directory, do something like this.
 #   SOURCES := $(wildcard ./*.c)
 #   OBJS := $(patsubst %.c, %.o, $(SOURCES))
-OBJS := $(NAME).o uart.o
+OBJS := $(NAME).o sw-uart.o
 
 # if you want to add all the .h's as dependencies:
 #   DEPS := $(wildcard ./*.h) $(LPI)
 DEPS := $(LPI) ./Makefile 
 
-all: fake # libpi $(OBJS) $(NAME).bin fake
+all: libpi $(OBJS) $(NAME).bin #  fake
 
 libpi: 
 	@make -s -C $(LPP)

@@ -53,11 +53,18 @@ Multiple reasons:
 
 Show that:
    1. `uart/hello` works using your `uart`.
-   2. Your bootloader works just using your `uart.o` and the libpi.
-   3. `hello.fake` using your `uart.c` gives the same hash as everyone
+   2. Your bootloader works just using your `uart.o` and the libpi (see
+      `bootloader/`).
+   3.  `hello.fake` using your `uart.c` gives the same hash as everyone
       else.  Note, there are multiple ways to do same thing, so maybe
       do the first one as a way to resolve ambiguity.
-   4. Your software UART can reliably print and echo text between the pi
+
+   4. Check that after you put your `uart.c` in `libpi` that your
+      tracing lab from last time gives the same hash as everyone.
+      Note: you should be able just compie and run!  To get the cksum:
+      `pi-install hello.bin |& grep TRACE | cksum`.
+
+   5. Your software UART can reliably print and echo text between the pi
       and your laptop.
 
 For your homework, your `uart.c` code should make it clear why you did

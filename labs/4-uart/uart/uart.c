@@ -1,10 +1,5 @@
-//  PLEASE DON"T MODIFY THIS FILE YET --- I'm going to add some comments, etc.
-//  PLEASE DON"T MODIFY THIS FILE YET --- I'm going to add some comments, etc.
-//  PLEASE DON"T MODIFY THIS FILE YET --- I'm going to add some comments, etc.
-//  PLEASE DON"T MODIFY THIS FILE YET --- I'm going to add some comments, etc.
-//
 // implement:
-//  uart_init
+//  void uart_init(void)
 //
 //  int uart_can_getc(void);
 //  int uart_getc(void);

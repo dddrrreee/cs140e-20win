@@ -93,7 +93,7 @@ set to 115200.  You're looking for sentences/rules:
 
   * How to get the gpio TX, RX pins to do what you need.
 
-  * How to receive/send data.  The miniUART has a fixed sized transmit
+  * How to receive/send data.  The mini-UART has a fixed sized transmit
 	buffer, so you'll need to figure out if there is room to transmit.
 	Also, you'll have to detect when data is not there (for `uart_getc`).
 
@@ -190,6 +190,20 @@ A possibly-nasty issue:
 -----------------------------------------------------------------------
 ### Part 2. implement a software UART.
 
+This part of the lab is from a cute hack Jonathan Kula did in last year's
+class as part of his final project.  
+
+While the hardware folks in the class likely won't make this
+assumption-mistake it's easy as software people (e.g., me) to assume
+things such as: "well, the tty-usb device wants to talk to a 8n1-UART
+so I need to configure the pi hardware UART to do so."  This belief,
+of course, is completely false --- the 8n1 "protocol" is just a fancy
+word for setting pins high or low for some amount of time for output,
+and reading them similarly for input.  So, of course, we can do this
+just using GPIO.  (You can do the same for other protocols as well,
+such as I2C, that are built-in to the pi's hardware.)
+
+
 Wiring up the software UART is fairly simple: 
 
   1. You'll need two GPIO pins, one for transmit, one for receive.  
@@ -200,26 +214,36 @@ Wiring up the software UART is fairly simple:
   4. When you plug it in, the tty-usb should have a light on it and nothing
      should get hot!
 
-For a given baud rate, you'll need to compute how many micro-seconds
-`T` you write each bit.  For example, for 115,200, this is:
-`(1000*1000)/115200 = 8.68`.  Given that we will have various overheads
-we round this down to `T=8` seconds.
-
 As described in 
 [UART](https://en.wikipedia.org/wiki/Universal_asynchronous_receiver-transmitter)
-the protocol to transmit a byte `B` is pretty simple:
-  1. write a 0 (start) for T usec.
-  2. write each bit value in the given byte for T usec (starting at bit 0, bit 1, ...).
-  3. write a 1 (stop) for T.
+the protocol to transmit a byte `B` at a baud rate B is pretty simple.
 
-Adding input is good, and not too different.
+  1. For a given baud rate, compute how many micro-seconds
+     `T` you write each bit.  For example, for 115,200, this is:
+     `(1000*1000)/115200 = 8.68`.  (As a first cut, given that we will
+     have various overheads we round this down to `T=8` seconds.
+
+To transmit:
+  1. write a 0 (start) for T.
+  2. write each bit value in the given byte for T (starting at bit 0, bit 1, ...).
+  3. write a 1 (stop) for at-least T.
+
+Adding input is good.  Two issues:
+  1. The GPIO pins (obvious) have no buffering, so if you are reading from the RX
+     pin when the input arrives it will disappear.
+  2. To minimize problems with the edges of the transitions being off
+     I'd have your code read until you see a start bit, delay `T/2` and then
+     start sampling the data bits so that you are right in the center of 
+     the bit transmission.
+
 
 The code is in `4-uart/sw-uart`:
 
   1. Your software UART code goes in `sw-uart.c`.
   2. You can test it by running `sw-uart/hello`.
 
-Note, testing is a bit more complicated:
+Note, testing is a bit more complicated since you'll have two `UART` devices.
+
   1. When you connect your pi and figure out its `/dev` name; you will
      give this to the `pi-install` code.
 
@@ -227,13 +251,58 @@ Note, testing is a bit more complicated:
      You will give this device name to `pi-cat` which will echo everything
      your code emits.
 
+Note:  our big issue is with error.  At slow rates, this is probably ok.   However,
+as the overhead of reading time, writing pins, checking for deadlines gets larger
+as compared to `T` you can introduce enough noise so that you get corrupted data.
+Possible options:
+
+    - Compute how long to wait for each bit in a way that does not lead to cumulative
+      error (do something smarter than waiting for `T`, `2*T`, etc.)
+
+    - The overhead of time is probably the main issue (measure!), so
+      you could inline this.  In general, reading time obviously adds
+      unseen overhead, so you have to reason about this.
+
+    - You could also switch to cycles.  (our pi runs at `700MHz` or 7 million
+      cycles per second.  You should verify 70 cycles is about 1 micro-second!)
+
+    - Unroll any loop and tune the code.
+
+    - Maybe enable caching.
+
+    - Maybe inlining GPIO operations (probably does not matter as long overhead as `< T`)
+
+    - In general: Measure the overhead of reading time, writing a bit,
+      etc.  You want to go after the stuff that happens "later" in the bit
+      transmit since it has the most issue and the stuff that has a large
+      fixed cost (since that will cause the error to increase the most).
+
+    - Could just hand compute an assembly routine that runs for exactly
+      the cycles needed (count the jump and return overhead!).  Or,
+      better, write a program to generate this code.
+
+    - Part of "systems" as a discipline is actually measuring what effect
+      your changes make.  People are notoriously stupid at actually
+      predicting where time goes and what will lead to improvements.
+
+      Of course, measuring the actual error is tricky, since the
+      measurement introduces error.  One approach is to write a trivial
+      oscilloscope program on the pi that will monitor a GPIO pin on
+      another pi for some time window (e.g., a millisecond), record at
+      what exact cycle count the pin changed value, and print the results
+      after. You'll need a partner (or a 2nd pi) but this is actually a
+      close-to trivial program and gives a very good measurement of error
+      (it's useful in general, as well).
+
 ### Extension: speed.
 
-It's a fun hack to see how high of a baud rate you can squeeze out of 
-this code. Note: that if you switch baud rates on the pi, you'll 
-need to change it in the `pi-cat` code too.   In the
-end I wound up switching from micro-seconds to using the pi's cycle
-counters (`cycle-count.h` has the macros to access) and inlining
-the GPIO routines.  (Note that as you go faster your laptop's OS
-might become the problem.)
+Once you have a handle on error, it's a fun hack to see how high of a
+baud rate you can squeeze out of this code using the above tricks.
+In the end I wound up switching from micro-seconds to using the pi's
+cycle counters (`cycle-count.h` has the macros to access) and in-lining
+the GPIO routines.  (Note that as you go faster your laptop's OS might
+become the problem.)
+
+    ***NOTE: that if you switch baud rates on the pi, you'll need to change
+    it in the `pi-cat` code too.***
 

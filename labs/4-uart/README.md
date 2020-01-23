@@ -217,7 +217,7 @@ Wiring up the software UART is fairly simple:
      Configure these as GPIO output and inputs respectively.
   2. Connect these pin's to the CP2102 tty-usb device (as with the 
      hardware remember that `TX` connects to `RX` and vice versa).
-  3. Connect the tty-usb to your pi's 5v power and ground.
+  3. Connect the tty-usb to your pi's ground.  ***DO NOT CONNECT TO ITS POWER!!***
   4. When you plug it in, the tty-usb should have a light on it and nothing
      should get hot!
 

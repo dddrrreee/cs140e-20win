@@ -46,3 +46,6 @@ unsigned get32(const volatile void *addr) {
     return x;
 }
 #endif
+
+void gpio_set_function(unsigned pin, gpio_func_t function) { trace("pin=%d, func=%d\n", pin, function); }
+

@@ -5,13 +5,5 @@
 
 #include "pi-test.h"
 
-void dev_barrier(void) {
-    trace("dev barrier\n");
-}
-
-void uart_init(void) { 
-    trace("uart\n");
-}
-
 // in case they didn't include rpi
 void (nop)(void) {}

@@ -93,3 +93,38 @@ Steps:
         <...more output omitted...>
 
       Make sure you know what is going on!
+
+------------------------------------------------------------------------------
+### Using two tty-usb devices.
+
+The easiest approach to dealing with multiple tty-usb devices is to just
+specify them on the command line (I'd suggest adding commands in your
+`Makefile` that do this for you)
+
+For example, on Linux, the first device I plug in will be `/dev/ttyUSB0`
+and the second `/dev/ttyUSB1`.  So I would bootload by doing:
+
+        my-install /dev/ttyUSB0 hello.bin
+
+And running `pi-cat` by:
+
+        pi-cat /dev/ttyUSB1
+
+Also, in general, if your code has called reboot, you do not have to pull
+the usb in/out to reset the pi.  Just re-run the bootloader.  (A simple
+hack is to look at the tty-usb device --- if it is blinking regularly
+that is caused by the first message your bootloader keeps sending every
+300ms or so: this tells you it's ready for you to send a program).
+
+
+A more clever solution would be to make variants of your find_ttyusb code:
+
+  - `find_ttyusb_first:   return the first created `/dev/ttyUSB` ---
+    have the bootloader call this.
+
+  - `find_ttyusb_last`: return the last created `/dev/ttyUSB --- have
+  `pi-cat` call this .
+
+Then, as long as you plug in the USBs in the right order you don't have
+to specify anything.   I'd suggest you do this if you get annoyed enough
+since you now how the tools :)

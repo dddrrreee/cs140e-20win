@@ -8,7 +8,7 @@
 } while(0)
 
 // read.  should add a write().
-#define read_cycle_cnt() ({	 					\
+#define cycle_cnt_read() ({	 					\
 	unsigned _out;							\
   	asm volatile ("MRC p15, 0, %0, c15, c12, 1" : "=r"(_out));	\
 	_out;								\

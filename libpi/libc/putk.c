@@ -4,7 +4,8 @@
 int internal_putk(const char *p) {
     for(; *p; p++)
         rpi_putchar(*p);
-    rpi_putchar('\n');
+//  we were adding this.
+//  rpi_putchar('\n');
     return 1;
 }
 

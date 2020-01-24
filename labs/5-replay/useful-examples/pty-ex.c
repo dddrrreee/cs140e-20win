@@ -13,6 +13,13 @@
 
 #include "demand.h"
 
+#ifdef  __APPLE__
+#   include <util.h>
+#else
+#   include <pty.h>
+#endif
+
+
 int set_tty_to_8n1(int fd, unsigned speed, double timeout) {
     struct termios tty;
     memset(&tty, 0, sizeof tty);

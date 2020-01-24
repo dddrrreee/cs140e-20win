@@ -132,3 +132,6 @@ The basic idea:
    4. Do a `read` on the pipe.  When it returns send a kill to the child.
    5. Check the return value of `kill`!   In particular if it has an error it 
       should only be `ESRCH` (see `useful-examples`).
+
+Make sure you test this code!  If the parent crashes, it should never leave a 
+child running.

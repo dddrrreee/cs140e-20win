@@ -265,14 +265,14 @@ Note, testing is a bit more complicated since you'll have two `UART` devices.
      You will give this device name to `pi-cat` which will echo everything
      your code emits.
      
-     For example, on Linux, the first device for me is in `/dev/ttyUSB0`
-     and the second in `/dev/ttyUSB1`.  So I would bootload by doing:
+     For example, on Linux, the first device I plug in will be `/dev/ttyUSB0`
+     and the second `/dev/ttyUSB1`.  So I would bootload by doing:
 
-        my-install /dev/ttyUSB0 hello.bin
+            my-install /dev/ttyUSB0 hello.bin
 
      And running `pi-cat` by:
 
-        pi-cat /dev/ttyUSB1
+            pi-cat /dev/ttyUSB1
 
   3. In general, if your code has called reboot, you do not have to pull
      the usb in/out to reset the pi.  Just re-run the bootloader.  (A simple

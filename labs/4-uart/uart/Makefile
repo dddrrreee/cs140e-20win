@@ -27,7 +27,7 @@ libpi:
 	@make -s -C $(LPP)
 
 fake:
-	@make -f ./Makefile.unix NAME=$(NAME).fake
+	@make -f ./Makefile.unix NAME=equiv-check.fake
 
 $(OBJS): $(DEPS)
 

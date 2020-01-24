@@ -1,4 +1,4 @@
-SUBDIRS= uart-tests pi-cat uart sw-uart
+SUBDIRS= uart-tests pi-cat uart sw-uart cycle-counter-ex
 
 .PHONY: all check clean
 all check clean: $(SUBDIRS)

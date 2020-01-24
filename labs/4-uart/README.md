@@ -227,8 +227,10 @@ the protocol to transmit a byte `B` at a baud rate B is pretty simple.
 
   1. For a given baud rate, compute how many micro-seconds
      `T` you write each bit.  For example, for 115,200, this is:
-     `(1000*1000)/115200 = 8.68`.  (As a first cut, given that we will
-     have various overheads we round this down to `T=8` seconds.
+     `(1000*1000)/115200 = 8.68`.  (NOTE: we will use cycles rather
+     than micro-seconds since that is much easier to make accurate.
+     The A+ runs at `700MHz` so that is 700 * 1000 * 1000 cycles per
+     second or about `6076` cycles per bit.)
 
 To transmit:
   1. write a 0 (start) for T.
@@ -243,11 +245,16 @@ Adding input is good.  Two issues:
      start sampling the data bits so that you are right in the center of 
      the bit transmission.
 
-
 The code is in `4-uart/sw-uart`:
 
   1. Your software UART code goes in `sw-uart.c`.
   2. You can test it by running `sw-uart/hello`.
+
+An example of how to use the pi cycle counters is in: `cycle-counter-ex`.
+Note:
+  1. You have to initialize the cycle counters first!
+  2. Because the counter will overflow frequently you must be careful
+  how you compare values.
 
 Note, testing is a bit more complicated since you'll have two `UART` devices.
 
@@ -257,7 +264,21 @@ Note, testing is a bit more complicated since you'll have two `UART` devices.
   2. Now connect the auxiliary UART, and figure out its `/dev` name.
      You will give this device name to `pi-cat` which will echo everything
      your code emits.
+     
+     For example, on Linux, the first device for me is in `/dev/ttyUSB0`
+     and the second in `/dev/ttyUSB1`.  So I would bootload by doing:
 
+        my-install /dev/ttyUSB0 hello.bin
+
+     And running `pi-cat` by:
+
+        pi-cat /dev/ttyUSB1
+
+  3. In general, if your code has called reboot, you do not have to pull
+     the usb in/out to reset the pi.  Just re-run the bootloader.  (A simple
+     hack is to look at the tty-usb device --- if it is blinking regularly
+     you know the pi is sending the first bootloader message :)).
+  
 Note:  our big issue is with error.  At slow rates, this is probably ok.   However,
 as the overhead of reading time, writing pins, checking for deadlines gets larger
 as compared to `T` you can introduce enough noise so that you get corrupted data.

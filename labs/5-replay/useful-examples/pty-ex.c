@@ -74,9 +74,6 @@ int set_tty_to_8n1(int fd, unsigned speed, double timeout) {
     return fd;
 }
 
-#include <pty.h>
-
-
 // usage: my-install [-silent] [/<dev path>]  progname
 int main(int argc, char *argv[]) { 
 

@@ -52,7 +52,7 @@ int main(int argc, char *argv[]) {
     log_ent_t *log = log_parse_tuples(logfile,&n);
 
     // gross calculation to figure out the last byte we can corrupt.
-    int ncorrupt;
+    int ncorrupt = 0;
     for(int i = 0; i < n-4; i++) {
         if(log[i].sender != PI_OUTPUT)
             continue;

@@ -9,7 +9,7 @@ SOURCES := $(wildcard ./*.c)
 OBJS := $(patsubst %.c, %.o, $(SOURCES))
 DEPS := Makefile $(LIB_SUPPORT) $(PATH_LIB_SUPPORT)/libunix.h interpose.h
 
-CFLAGS = -Wall -Werror -g -Wno-unused-function -Wno-unused-variable -I.  -I$(PATH_LIB_SUPPORT)  -I$(CS140E_PATH)/labs/2-bootloader
+CFLAGS = -Wall -Werror -g -Wno-unused-function -Wno-unused-variable -I.  -I$(PATH_LIB_SUPPORT)  -I$(CS140E_PATH)/labs/2-bootloader -O
 
 all : support pretty-print replay # run.replay # trace run.trace 
 

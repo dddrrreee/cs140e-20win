@@ -124,6 +124,18 @@ contents ---- this way its obvious when you generate a new trace and
 its easy to compare different traces.  You should compare the resultant
 traces to everyone else.
 
+Helpful hints:
+
+  - `select` of a closed socket will indicate there is data there (a
+     zero-byte `EOF`).
+  - A `read` of a closed socket will return EOF (again: 0 bytes).  When
+    a subprocess exits, any socket it has will be closed (along with all
+    other open file descriptors).
+  - Unfortunately, occasionally it appears that a `read` of a closed
+    socket returns an error --- if this happens on your OS, you should
+    print `errno` and see what the actual error is and then check for
+    it explicitly.
+
 #### Non-determinism
 
 Note: there are legal ways that the code can be non-deterministic.  For

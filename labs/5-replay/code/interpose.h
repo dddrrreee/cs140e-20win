@@ -1,6 +1,7 @@
 #ifndef __INTERPOSE_H__
 #define __INTERPOSE_H__
 
+#include <stdint.h>
 struct endpoint;
 typedef void (*fail_ptr_t)(struct endpoint *self, const char *msg);
 

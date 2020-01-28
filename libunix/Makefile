@@ -43,7 +43,7 @@ all: $(TARGET)
 # we bundle start.s with the library: just make different ones for each
 # different start so that the library is internally consistent.
 $(TARGET): $(OBJS) 
-	ar crf $(TARGET) $(OBJS) 
+	ar cr $(TARGET) $(OBJS) 
 
 
 # XXX: We seem to need this rule to stop compilation with an error if the 

@@ -8,7 +8,7 @@
 #include <unistd.h>
 #include <termios.h>
 
-#ifdef  TARGET_OS_MAC
+#ifdef  __APPLE__
 #   include <util.h>
 #else
 #   include <pty.h>

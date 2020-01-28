@@ -420,7 +420,6 @@ void pretty_print(struct msg *m, unsigned n) {
 // string for print will not be a 32-bit int.
 struct msg *parse_trace(log_t *l, unsigned *n) {
     uint8_t op;
-    uint32_t v;
 
     // way over-allocate so we don't have to think.
     struct msg *m = calloc(l->nbytes, sizeof *m);
@@ -522,7 +521,6 @@ int main(int argc, char *argv[]) {
         die("expected 2 arguments, have %d\n", argc);
 
     log_t l = log_readin(argv[1]);
-    uint8_t op,v;
 
     check_parse(argv[1], &l);
     check_parse(argv[1], &l);       // make sure we can to 2x.

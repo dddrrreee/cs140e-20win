@@ -22,7 +22,8 @@ static rpi_thread_t *th_alloc(void) {
     static Q_t freeq;
     rpi_thread_t *t = Q_pop(&freeq);
     if(!t)
-        t = kmalloc(sizeof *t);
+        // stack has to be 8-byte aligned.
+        t = kmalloc_aligned(sizeof *t, 8);
     return t;
 }
 

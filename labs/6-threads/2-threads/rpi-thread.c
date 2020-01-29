@@ -6,8 +6,8 @@
 #define E rpi_thread_t
 #include "Q.h"
 
-static Q_t runq, freeq;
-static unsigned nthreads;
+// currently only have a single run queue and a free queue.
+static Q_t runq;
 
 static rpi_thread_t *cur_thread;        // current running thread.
 static rpi_thread_t *scheduler_thread;  // first scheduler thread.
@@ -19,6 +19,7 @@ rpi_thread_t *rpi_cur_thread(void) {
 
 // keep a cache of freed thread blocks.  call kmalloc if run out.
 static rpi_thread_t *th_alloc(void) {
+    static Q_t freeq;
     rpi_thread_t *t = Q_pop(&freeq);
     if(!t)
         t = kmalloc(sizeof *t);
@@ -72,6 +73,8 @@ void rpi_yield(void) {
 void rpi_thread_start(void) {
     // statically check that the stack is 8 byte aligned.
     AssertNow(offsetof(rpi_thread_t, stack) % 8 == 0);
+    // statically check that the register save area is at offset 0.
+    AssertNow(offsetof(rpi_thread_t, reg_save_area) == 0);
 
     // no other runnable thread: return.
     if(Q_empty(&runq))
@@ -83,10 +86,10 @@ void rpi_thread_start(void) {
     //	    <scheduler_thread>
     scheduler_thread = th_alloc();
     unimplemented();
-    printk("THREAD: done with all threads, returning\n");
+    printk("rpithreads: done with all threads! returning\n");
 }
 
-/************************************************************
+/********************************************************************
  * you can save the following for the homework assignment.
  */
 
@@ -96,7 +99,6 @@ void rpi_thread_start(void) {
 void rpi_exact_sleep(uint32_t usec) {
     unimplemented();
 }
-
 
 // fork a thread that guarantees it will 
 // only run for <usec> until blocking.  this allows

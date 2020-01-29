@@ -22,8 +22,10 @@ Some useful introduction (or review) reading for threads:
 
 Deliverables:
   1. Implement kernel memory allocation in `1-kmalloc` (see below).  
-  2. Read about threads carefully, especially the API chapter above.  
-  3. Figure out these puzzles: what do we have to do to context
+  2. Look through the `2-threads/rpi-thread.[ch]` header and skeleton code
+     so you see what you will be implementing.
+  3. Read about threads carefully, especially the API chapter above.  
+  4. Figure out these puzzles: what do we have to do to context
      switch from one thread to another?  How to switch from "normal
      execution" to the first thread?  How to handle the case where a
      thread running `foo()` does not call `rpi_thread_exit` explicitly

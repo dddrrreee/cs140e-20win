@@ -2,7 +2,7 @@
 
 // symbol created by libpi/memmap, placed at the end
 // of all the code/data in a pi binary file.
-extern char __heap__start__;
+extern char __heap_start__;
 
 // track if initialized.
 static int init_p;
@@ -59,8 +59,7 @@ void *kmalloc_aligned(unsigned nbytes, unsigned alignment) {
 void kmalloc_init(void) {
     demand(!init_p, cannot initialize twice!\n);
     init_p = 1;
-    heap_ptr = &__heap__start__;
-    debug("Heap is at %x", heap_ptr);
+    heap_ptr = &__heap_start__;
 }
 
 /* 
@@ -68,7 +67,7 @@ void kmalloc_init(void) {
  * pointer back to the beginning.
  */
 void kfree_all(void) {
-    heap_ptr = &__heap__start__;
+    heap_ptr = &__heap_start__;
 }
 
 // return pointer to the first free byte.

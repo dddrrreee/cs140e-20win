@@ -227,7 +227,7 @@ at a level most CS people do not.
 There's a lot more you can do.  We will be doing a bunch of this later
 in the class:
 
-   0. save state onto the stack itself.
+  - save state onto the stack itself.
 
   - Make versions of the `libpi` `delay` routines that use your function rather than
   busy wait.  Make sure to check if threads are enabled in `rpi_yield()`!
@@ -243,4 +243,4 @@ in the class:
   since it is at least 2x slower than optimal.  (I'm embarrassed, but
   time = short.  Next year!)
 
-   4. See how many PWM threads you can run in `3-yield-test`.
+   - See how many PWM threads you can run in `3-yield-test`.

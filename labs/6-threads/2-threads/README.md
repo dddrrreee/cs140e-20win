@@ -9,3 +9,8 @@ Code you have to implement is in:
 Provided:
   - `Q.h`: trivial queue implementation.
   - `rpi-thread.h` prototypes and description for the threads routines.
+
+Tests from easiest to hardest:
+  - `1-test-thread.c`: test basic thread execution.
+  - `3-test-yield.c`: test how efficient your yield is.  Should add some 
+    statistics tracking.

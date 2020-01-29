@@ -59,6 +59,15 @@ on both the pi and unix side will be written by you:
      multi-step protocols and many potential failure modes, difficult
      to test in practice.)
 
+At this point you have written low-level device driver code, a bootloader,
+and pretty much replaced all of our code.  You've learned how to crush
+it under a barrage of automatic checks based on read-write equivalance
+and simple systematic exploration  so that will be surprised if the code
+ever breaks.
+
+We are now going to switch gears to intensively implementing core OS
+functionality: threads, interrupts, virtual memory and file systems.
+
 ### Part 2: Threads and Interrupts, with Tricks:
 
   - [6-threads](6-threads/): we build a simple, but functional

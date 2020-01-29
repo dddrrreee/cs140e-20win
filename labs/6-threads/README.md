@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Threads
-show_on_index: true
+show_on_index: false
 ---
 
 ## Writing a non-preemptive threads package

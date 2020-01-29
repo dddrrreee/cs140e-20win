@@ -40,9 +40,9 @@ void *kmalloc_aligned(unsigned nbytes, unsigned alignment) {
 
     if(alignment <= 4)
         return kmalloc(nbytes);
-    demand(alignment % 4 == 0, weird alignment: not a multiple of 4!);
+    demand(alignment % 4 == 0, "weird alignment: not a multiple of 4!");
     unsigned aligned_heap_ptr = (unsigned) heap_ptr;
-	aligned_heap_ptr = roundup(aligned_heap_ptr, 4);
+	aligned_heap_ptr = roundup(aligned_heap_ptr, alignment);
 	heap_ptr = (void*) aligned_heap_ptr;
 
 	return kmalloc(nbytes);

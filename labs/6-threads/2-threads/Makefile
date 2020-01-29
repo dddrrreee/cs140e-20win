@@ -17,13 +17,15 @@ CFLAGS += -Wno-unused-function -Wno-unused-variable
 # if you want to compile everything in a directory, do something like this.
 #   SOURCES := $(wildcard ./*.c)
 #   OBJS := $(patsubst %.c, %.o, $(SOURCES))
-OBJS := $(NAME).o rpi-thread.o thread-asm.o
+PROGS := 1-test-thread 3-test-yield
+PROG_BIN := $(patsubst %, %.bin, $(PROGS))
+OBJS := rpi-thread.o thread-asm.o
 
 # if you want to add all the .h's as dependencies:
-#   DEPS := $(wildcard ./*.h) $(LPI)
-DEPS := $(LPI) ./Makefile 
+DEPS := $(wildcard ./*.h) $(LPI) ./Makefile
+# DEPS := $(LPI) ./Makefile 
 
-all: libpi $(OBJS) $(NAME).bin # fake
+all: libpi $(OBJS) $(PROG_BIN)
 
 libpi: 
 	@ # @make -s -C $(LPP)
@@ -39,10 +41,10 @@ $(OBJS): $(DEPS)
 
 # <LPI> will get rebuilt if anything changes, so we don't need any other
 # dependencies.
-$(NAME).bin: $(MEMMAP) $(OBJS) $(LPI) ./Makefile
-	$(LD) $(START) $(OBJS) -T $(LPP)/memmap -o $(NAME).elf  $(LPI)
-	$(OD) -D  -S $(NAME).elf > $(NAME).list
-	$(OCP) $(NAME).elf -O binary $(NAME).bin
+%.bin: %.o $(MEMMAP) $(OBJS) $(LPI) ./Makefile
+	$(LD) $(START) $< $(OBJS) -T $(LPP)/memmap -o $@.elf  $(LPI)
+	$(OD) -D  -S $@.elf > $@.list
+	$(OCP) $@.elf -O binary $@.bin
 
 run:
 	my-install $(NAME).bin

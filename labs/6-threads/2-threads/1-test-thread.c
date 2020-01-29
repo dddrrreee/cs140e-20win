@@ -15,6 +15,7 @@ static void thread_code(void *arg) {
 
 void notmain() {
     uart_init();
+    kmalloc_init();
 
     printk("about to test summing of 30 threads\n");
 	int n = 30;

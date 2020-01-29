@@ -22,3 +22,10 @@ MK_FN(rpi_cswitch)
 MK_FN(rpi_init_trampoline)
 	bx lr
 
+
+#if 0
+MK_FN(kmalloc)
+    bx lr
+MK_FN(kmalloc_init)
+    bx lr
+#endif

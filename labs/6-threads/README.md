@@ -130,7 +130,7 @@ understanding of assembly code by having you write a few assembly
 routines.  Being comfortable doing so will come in handy later.
 
    1. Implement a simple assembly routine `test_csave(p,...)` that that
-   stores *all* general-purpose registers `cpsr` in the pointed-to memory
+   stores *all* general-purpose registers in the pointed-to memory
    `p` using the ARM instruction `str` and explicit constant offsets
    (i.e., there will be one instruction for each register saved).  Verify
    that the values stored and the amount of space it used makes sense.
@@ -142,8 +142,8 @@ routines.  Being comfortable doing so will come in handy later.
    doc](http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.dui0473m/dom1359731152499.html)
    or [this](https://www.heyrick.co.uk/armwiki/STM).
 
-Don't be afraid to go through the ARM manual (`docs/armv6.pdf`)  or the 
-lectures we posed in lab7 (`../lab7-interrupts/docs/`).
+Don't be afraid to go through the ARM manual (`docs/armv6.pdf`) or the
+lectures we posted in `6-threads/docs`.
 
 ----------------------------------------------------------------------
 ### Part 1: Cooperative context-switching (20 minutes)

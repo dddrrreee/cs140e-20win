@@ -102,12 +102,18 @@ void clean_reboot(void) __attribute__((noreturn));
 void *kmalloc(unsigned nbytes) ;
 void *kmalloc_aligned(unsigned nbytes, unsigned alignment);
 
+// initialize kmalloc
+void kmalloc_init(void);
+// initialize and set where the heap starts.
+void kmalloc_init_set_start(unsigned _addr);
+
+// return pointer to the first free byte.  used for
+// bounds checking.
+void *kmalloc_heap_ptr(void);
+
 // currently no-ops.
 void kfree(void *p);
 void kfree_all(void);
-
-// set where the heap starts.
-void kmalloc_set_start(unsigned _addr);
 
 /*****************************************************************************
  * memory related helpers

@@ -15,4 +15,8 @@
 // the code so that we can malloc.
 #define HIGHEST_USED_ADDR INT_STACK_ADDR
 
+#define MK_FN(fn_name)     \
+.globl fn_name;             \
+fn_name:
+
 #endif

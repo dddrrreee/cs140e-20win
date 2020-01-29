@@ -25,9 +25,11 @@ void *kmalloc(unsigned nbytes) {
 // address of returned pointer should be a multiple of
 // alignment.
 void *kmalloc_aligned(unsigned nbytes, unsigned alignment) {
+    demand(init_p, calling before initialized);
+
     if(alignment <= 4)
         return kmalloc(nbytes);
-    demand(alignment % 4 == 0, weird alignment);
+    demand(alignment % 4 == 0, weird alignment: not a multiple of 4!);
     unimplemented();
 }
 

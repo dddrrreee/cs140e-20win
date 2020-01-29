@@ -3,7 +3,7 @@ MAKEFLAGS +=  --no-print-directory
 
 # we've had some make issues going cross windows/mac/linux, so we just do brute stupid
 # to make things work: no fancy rules, just always recompile.
-NAME = thread
+NAME = test-thread
 
 # check that your path is defined.
 ifndef CS140E_PATH
@@ -17,7 +17,7 @@ CFLAGS += -Wno-unused-function -Wno-unused-variable
 # if you want to compile everything in a directory, do something like this.
 #   SOURCES := $(wildcard ./*.c)
 #   OBJS := $(patsubst %.c, %.o, $(SOURCES))
-OBJS := $(NAME).o test-thread.o thread-asm.o
+OBJS := $(NAME).o rpi-thread.o thread-asm.o
 
 # if you want to add all the .h's as dependencies:
 #   DEPS := $(wildcard ./*.h) $(LPI)

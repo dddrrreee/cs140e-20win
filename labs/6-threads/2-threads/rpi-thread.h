@@ -67,6 +67,6 @@ void rpi_stack_check(void);
 
 // sleep for <usec>.  can be used to implement simple
 // real-time scheduling.
-void rpi_sleep_us(uint32_t usec);
+void rpi_exact_sleep(uint32_t usec);
 
 #endif

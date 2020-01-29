@@ -105,19 +105,20 @@ great counter-point to what we do.
 
 ### Grading policy
     
-The grading breakdown is as follows:
-    
-   1. Labs 50% (60% if no Final Project) - Prelabs must be completed
-      before class, and labs must be completed within a week to receive
-      credit.
+We are currently debating whether there will be a final project. 
+Grading will be adjusted accordingly:
+  - No project: labs 60%, homework 30%, participation 10%.
+  - Final project: labs 50%, homework 20%, final project 20%, participation
+    10%.
 
-   2. Homework 20% (30% if no Final Project) - There will be three 
-      homeworks total, which will consist of integrating previous
-      labs and submitting working code.
+Notes:
+ 1. Prelabs must be completed before class, and labs must be completed within a week to receive credit.
 
-   3. Final Project 20%
+ 2. There will be three homeworks total, which will consist of
+      integrating previous labs
+      and submitting working code.
 
-   4. Participation 10% - Based on class attendance and discussion, 
+ 4. Participation: Based on class attendance and discussion, 
       and newsgroup replies. Students are allowed to miss 1-2 classes,
       but must notify the instructor beforehand.
 

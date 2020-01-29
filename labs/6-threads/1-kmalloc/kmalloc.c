@@ -2,7 +2,7 @@
 
 // symbol created by libpi/memmap, placed at the end
 // of all the code/data in a pi binary file.
-extern char __heap__start__;
+extern char __heap_start__;
 
 // track if initialized.
 static int init_p;

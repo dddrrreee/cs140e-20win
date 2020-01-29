@@ -42,7 +42,8 @@ void *kmalloc_aligned(unsigned nbytes, unsigned alignment) {
  *      it makes sense!
  */
 void kmalloc_init(void) {
-    demand(!init_p, cannot initialize twice!\n);
+    if(init_p)
+        return;
     init_p = 1;
     unimplemented();
 }

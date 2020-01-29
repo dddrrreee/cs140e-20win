@@ -23,7 +23,7 @@ OBJS := $(NAME).o kmalloc.o
 #   DEPS := $(wildcard ./*.h) $(LPI)
 DEPS := $(LPI) ./Makefile 
 
-all: libpi $(OBJS) $(NAME).bin # fake
+all: libpi $(OBJS) $(NAME).bin run
 
 libpi: 
 	@make -s -C $(LPP)

@@ -116,7 +116,12 @@ int main(int argc, char *argv[]) {
         dev_name = argv[1];
     else
         die("%s: wrong number (n=%d) of arguments: expected 1 or 2\n", progname, argc-1);
-    int fd = set_tty_to_8n1(open_tty(dev_name), B115200, 1);
+    int fd;
+	if(fcntl(21, F_GETFL) >= 0) {
+		fd = 21;
+	} else {
+		fd = set_tty_to_8n1(open_tty(dev_name), B115200, 1);
+	}
 
     // get program to boot.
     char *pi_prog = argv[argc-1];

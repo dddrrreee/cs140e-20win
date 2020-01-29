@@ -94,6 +94,8 @@ void wait_for_data(void) {
  * All the code you write goes below.
  */
 
+#define CODE_LIMIT 0x200000
+
 // Simple bootloader: put all of your code here: implement steps 2,3,4,5,6
 void notmain(void) {
     uart_init();
@@ -108,22 +110,41 @@ void notmain(void) {
 
     // 2. expect: [PUT_PROG_INFO, addr, nbytes, cksum] 
     //    we echo cksum back in step 4 to help debugging.
-
-
-    // 3. If the binary will collide with us, abort. 
+	if(get_uint() != PUT_PROG_INFO) {
+		die(BOOT_ERROR);
+	}
+	unsigned addr = get_uint();
+	unsigned nbytes = get_uint();
+	unsigned cksum = get_uint();
+    
+	// 3. If the binary will collide with us, abort. 
     //    you can assume that code must be below where the booloader code
     //    gap starts.
-
+	
+	// Disassembly shows address of BRANCHAT is  0x0020000C, but stop by 0x00200000
+	if(addr + nbytes > (unsigned) BRANCHTO) {
+		die(BAD_CODE_ADDR);
+	}
 
     // 4. send [GET_CODE, cksum] back.
-
-
-    // 5. expect: [PUT_CODE, <code>]
+	put_uint(GET_CODE);
+	put_uint(cksum);
+    
+	// 5. expect: [PUT_CODE, <code>]
     //  read each sent byte and write it starting at 
     //  ARMBASE using PUT8
+	if (get_uint() != PUT_CODE) {
+		die(BOOT_ERROR);
+	}
+	int i = 0;
+	for(; i < nbytes; i++) {
+		PUT8(addr + i, get_byte());
+	}
 
     // 6. verify the cksum of the copied code.
-
+	if(cksum != crc32((void*) addr, nbytes)) {
+		put_uint(BAD_CODE_CKSUM);
+	}
 
     /****************************************************************
      * add your code above: don't modify below unless you want to 

@@ -2,10 +2,15 @@
 
 // symbol created by libpi/memmap, placed at the end
 // of all the code/data in a pi binary file.
-extern char __heap_start__;
+extern char __heap__start__;
 
 // track if initialized.
 static int init_p;
+
+// Module-level variable for the heap
+static char* heap_ptr;
+
+#define roundup(x,n) (((x)+((n)-1))&(~((n)-1)))
 
 /*
  * Return a memory block of at least size <nbytes>
@@ -19,7 +24,13 @@ static int init_p;
  */
 void *kmalloc(unsigned nbytes) {
     demand(init_p, calling before initialized);
-    unimplemented();
+    
+    void* to_allocate = heap_ptr;
+    unsigned rounded_nbytes = roundup(nbytes, 4);
+    heap_ptr += rounded_nbytes;
+    memset(heap_ptr, 0, rounded_nbytes);
+    return to_allocate;
+
 }
 
 // address of returned pointer should be a multiple of
@@ -30,7 +41,11 @@ void *kmalloc_aligned(unsigned nbytes, unsigned alignment) {
     if(alignment <= 4)
         return kmalloc(nbytes);
     demand(alignment % 4 == 0, weird alignment: not a multiple of 4!);
-    unimplemented();
+    unsigned aligned_heap_ptr = (unsigned) heap_ptr;
+	aligned_heap_ptr = roundup(aligned_heap_ptr, 4);
+	heap_ptr = (void*) aligned_heap_ptr;
+
+	return kmalloc(nbytes);
 }
 
 /*
@@ -42,10 +57,10 @@ void *kmalloc_aligned(unsigned nbytes, unsigned alignment) {
  *      it makes sense!
  */
 void kmalloc_init(void) {
-    if(init_p)
-        return;
+    demand(!init_p, cannot initialize twice!\n);
     init_p = 1;
-    unimplemented();
+    heap_ptr = &__heap__start__;
+    debug("Heap is at %x", heap_ptr);
 }
 
 /* 
@@ -53,7 +68,7 @@ void kmalloc_init(void) {
  * pointer back to the beginning.
  */
 void kfree_all(void) {
-    unimplemented();
+    heap_ptr = &__heap__start__;
 }
 
 // return pointer to the first free byte.
@@ -62,5 +77,5 @@ void kfree_all(void) {
 //    assert(<addr> < kmalloc_heap_ptr());
 // 
 void *kmalloc_heap_ptr(void) {
-    unimplemented();
+    return (void*) heap_ptr;
 }

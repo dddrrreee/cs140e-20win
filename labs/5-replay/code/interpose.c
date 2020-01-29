@@ -127,14 +127,36 @@ static uint8_t corrupt_byte(uint8_t c) {
 // returns 0 if not exited, 1 if exited cleanly, < 0 otherwise.
 // should clean this up.
 static int handle_child_exit(int pid, int can_fail_p) {
-    unimplemented();
+	int status;
+	int r;
+	usleep(500);
+    r = waitpid(pid, &status, WNOHANG);
+	if(r < 0){
+		 ;//sys_die(waitpid, failed);
+	} else if (r == 0) {
+		return 0;
+	}
+	
+	if(WIFEXITED(status)) {
+		if(!WEXITSTATUS(status)) { 
+			printf("Unix exited cleanly with status %d\n", WEXITSTATUS(status));
+			return 1;
+		} else {
+			printf("Unix did not exit cleanly with status %d\n", WEXITSTATUS(status));
+			return -1;
+		}
+	}
+
+	printf("Unix did not exit cleanly with status %d\n", WEXITSTATUS(status));
+	return -1;
 }
 
 static int forward(endpt_t *in, endpt_t *out) {
     char buf[1024];
     int n;
-    unimplemented();
-    for(int i = 0; i < n; i++)
+	n = read(in->fd, buf, sizeof(buf));
+    write(out->fd, buf, n);
+	for(int i = 0; i < n; i++)
         wr_log_byte(in->log_fd, in->type, buf[i]);
     return n;
 }
@@ -164,7 +186,6 @@ void trace(int log_fd, endpt_t *u, endpt_t *p) {
     }
 
 done:
-    unimplemented();
     if(!handle_child_exit(u->pid,0))
         panic("received EOF: unix side should be dead!\n");
     else

@@ -6,6 +6,8 @@ show_on_index: true
 
 ***AM DOING A MASSIVE REWRITE OF THIS.  Will be done in a couple of hours***
 
+***MAKE SURE YOU DO THE [PRELAB](PRELAB.md) FIRST!***
+
 ## Writing a non-preemptive threads package
 
 Big picture:  by the end of this lab you will have a very simple

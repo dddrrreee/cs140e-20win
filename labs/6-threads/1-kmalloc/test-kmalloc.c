@@ -1,4 +1,4 @@
-/* trivial, sleazy test of kmalloc.  */
+/* trivial, sleazy test of kmalloc: don't modify!  */
 #include "rpi.h"
 
 void notmain() {
@@ -23,6 +23,9 @@ void notmain() {
         demand(start[i] == v, 
             "invalid start[%d] =%x, should be %x\n", start[i],v);
     }
+
+    void *p = kmalloc_aligned(1,64);
+    demand((unsigned)p % 64 == 0, bug in kmalloc_aligned);
 
     kfree_all();
     void *heap1 = kmalloc_heap_ptr();

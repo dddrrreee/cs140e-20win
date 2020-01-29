@@ -62,8 +62,8 @@ on both the pi and unix side will be written by you:
 At this point you have written low-level device driver code, a bootloader,
 and pretty much replaced all of our code.  You've learned how to crush
 it under a barrage of automatic checks based on read-write equivalance
-and simple systematic exploration  so that will be surprised if the code
-ever breaks.
+and simple systematic exploration  so that you will be surprised if the
+code ever breaks.
 
 We are now going to switch gears to intensively implementing core OS
 functionality: threads, interrupts, virtual memory and file systems.

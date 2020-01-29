@@ -45,7 +45,6 @@ on both the pi and unix side will be written by you:
      Doing so gives you a second source of output, which will turn out
      to be very useful later when we do networking.
 
-***[HAVE NOT UPDATED THE LABS BELOW]***
 
   - [5-replay](5-replay/): in a twist on lab3, you will use Unix
      system calls to interpose between your Unix and pi bootloader code,
@@ -62,10 +61,12 @@ on both the pi and unix side will be written by you:
 
 ### Part 2: Threads and Interrupts, with Tricks:
 
-  - [7-threads](lab7-threads/): we build a simple, but functional
+  - [6-threads](6-threads/): we build a simple, but functional
   threads package.  You will write the code for non-preemptive 
   context switching:  Most people don't understand such things
   so, once again, you'll leave lab knowing something many do not.
+
+***[HAVE NOT UPDATED THE LABS BELOW]***
 
   - [8-interrupts](8-interrupts/): you will walk through a simple,
   self-contained implementation of pi interrupts (for timer-interrupts),

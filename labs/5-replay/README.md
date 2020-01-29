@@ -1,8 +1,5 @@
 ## Unix tricks to control processes
 
-***NOTE: this is still going heavy modification.  The basic idea will be the 
-same in the lab but some details my change.***
-
 This lab will show how to use Unix verbs (`fork`, `exec`, `waitpid`)
 and nouns (sockets, pipes, processes) to control processes and make them
 do tricks.

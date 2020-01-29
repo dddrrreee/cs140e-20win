@@ -22,6 +22,15 @@ void *kmalloc(unsigned nbytes) {
     unimplemented();
 }
 
+// address of returned pointer should be a multiple of
+// alignment.
+void *kmalloc_aligned(unsigned nbytes, unsigned alignment) {
+    if(alignment <= 4)
+        return kmalloc(nbytes);
+    demand(alignment % 4 == 0, weird alignment);
+    unimplemented();
+}
+
 /*
  * One-time initialization, called before kmalloc 
  * to setup heap. 

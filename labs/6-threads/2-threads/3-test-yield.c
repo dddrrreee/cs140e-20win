@@ -16,7 +16,7 @@ static void wait_usec(unsigned n) {
     demand(n < 100000, "unlikely large delay = %dusec!\n", n);
     unsigned start = timer_get_usec();
     while(1) {
-        if((start - timer_get_usec()) < n)
+        if((timer_get_usec() - start) < n)
             return;
         rpi_yield();
     }
@@ -28,7 +28,7 @@ void blink(void *arg) {
     struct pwm *p = arg;
 
     gpio_set_output(p->pin);
-    demand(p->duty > 0 && p->duty < 100, wierd duty cycle!);
+    demand(p->duty > 0 && p->duty <= 100, wierd duty cycle!);
     
     // how long we should be on out of 100 usec.
     unsigned on_usec = p->duty;
@@ -46,16 +46,11 @@ void notmain(void) {
     uart_init();
     kmalloc_init();
 
-    struct pwm t0,t1;
+    struct pwm t_75 = {.duty = 75, .pin = 20 },
+               t_25 = {.duty = 25, .pin = 21 };
 
-    t0.duty = 50;
-    t0.pin = 20;
-
-    t1.duty = 50;
-    t1.pin = 21;
-
-    rpi_fork(blink, &t0);
-    rpi_fork(blink, &t1);
+    rpi_fork(blink, &t_75);
+    rpi_fork(blink, &t_25);
     rpi_thread_start();
     panic("should never return!\n");
 

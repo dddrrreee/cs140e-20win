@@ -167,6 +167,8 @@ Context switching will involve inverting the code you wrote for Part 0.
 ----------------------------------------------------------------------
 ### Part 2: Make simple threads (60 minutes)
 
+***NOTE: rewriting this part and the thread test code***
+
 Congratulations!  You can now build a simple threading system.
 
 Implement:

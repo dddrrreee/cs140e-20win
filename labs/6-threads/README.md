@@ -18,16 +18,16 @@ Recall we split threads into two types:
 The trade-offs:
 
   - Cooperative threads make preserving large invariants easy: by
-     default, all code is a critical section, only broken up when you yield
-     [Atul et al].  Their downside is that if they don't yield "often enough"
-     they add large, difficult-to-debug latencies.  
+    default, all code is a critical section, only broken up when you
+    yield [Atul et al].  Their downside is that if they don't yield
+    "often enough" they add large, difficult-to-debug latencies.
 
   - Pre-emptive threads let you to eliminate the need to trust
-      that the threading code yields control in a well-behaved way, which
-      is why   multi-user OSes (Linux and MacOS) preempt user processes.
-      However, they make it much more difficult to write correct code.
-      (E.g., would your gpio implementation work if it was called
-      by multiple pre-emptive threads?  Uart?)
+    that the threading code yields control in a well-behaved way, which
+    is why   multi-user OSes (Linux and MacOS) preempt user processes.
+    However, they make it much more difficult to write correct code.
+    (E.g., would your gpio implementation work if it was called by
+    multiple pre-emptive threads?  Uart?)
 
 Generally, at a minimum, each thread has its own stack --- which has
 to be "large enough" so that it doesn't get overrun --- and the thread

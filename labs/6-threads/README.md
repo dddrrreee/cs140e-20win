@@ -4,9 +4,6 @@ title: Threads
 show_on_index: true
 ---
 
-***AM DOING A MASSIVE REWRITE OF THIS.  Will be done in a couple of hours***
-
-
 ## Writing a non-preemptive threads package
 
 ***MAKE SURE YOU DO THE [PRELAB](PRELAB.md) FIRST!***
@@ -24,26 +21,31 @@ Recall we split threads into two types:
     if their time slice expires, or a higher-priority thread becomes
     runnable, etc).
 
-Cooperative threads make preserving large invariants easy since, by
-default, all code is a critical section, only broken up when you yield
-[Atul et al].  Their downside is that if they don't yield "often enough"
-they add large, difficult-to-debug latencies.  Pre-emptive threads (we
-will do in a subsequent lab) allow you to eliminate the need to trust
-that the threading code yields control in a well-behaved way, which is
-why   multi-user OSes (Linux and MacOS) preempt user processes.
+The trade-offs:
+
+   - Cooperative threads make preserving large invariants easy: by
+     default, all code is a critical section, only broken up when you yield
+     [Atul et al].  Their downside is that if they don't yield "often enough"
+     they add large, difficult-to-debug latencies.  
+
+    - Pre-emptive threads let you to eliminate the need to trust
+      that the threading code yields control in a well-behaved way, which
+      is why   multi-user OSes (Linux and MacOS) preempt user processes.
+      However, they make it much more difficult to write correct code.
+      (E.g., would your gpio implementation work if it was called
+      by multiple pre-emptive threads?  Uart?)
 
 Generally, at a minimum, each thread has its own stack --- which has
 to be "large enough" so that it doesn't get overrun --- and the thread
 package has to provide an assembly routine to "context switch" from one
-thread to another:
+thread to another.  Context switching works by:
 
-   1. Saving all registers from the first onto its stack (or as we do,
+   1. Saving all registers from the first thread onto its stack (or as we do,
       into the thread structure itself).
-   2. Loading all registers for the second.
-   3. As the last step, changing the program counter value to resume
-      the new thread.
+   2. Loading all registers for the second from where they were saved.
+   3. Changing the program counter value to resume the new thread.
 
-The main trick you'll do is writing this context-switching code.
+The main magic you'll do today is writing this context-switching code.
 Context-switching doesn't require much work --- less than 15 instructions
 using special ARM instructions, but mistakes can be extremely hard
 to find.  So we'll break it down into several smaller pieces.
@@ -56,10 +58,9 @@ to find.  So we'll break it down into several smaller pieces.
 ----------------------------------------------------------------------
 ### Background: A crash course in ARM registers
 
-You should have read the ARM assembly chapter in the PRELAB; this is
+You should have read the ARM assembly chapter in the PRELAB
+(`docs/subroutines.hohl-arm-asm.pdf`); this is
 just a cliff-notes version.
-
-To context switch, we need to save all the callee-saved registers.
 
 Context-switching may sound mysterious, but mechanically it is simple: we
 just need to need to save all the registers in use.  The ARM has sixteen
@@ -68,23 +69,24 @@ using standard load and store instructions.  If you look through the
 `.list` files in any of the pi program directories, you'll see lots of
 examples of saving and loading registers.
 
-Even easier, because we are doing non-preemptive threads we don't
-have to save all the registers, just the "callee saved" ones.
-Most machines split registers in into two categories (Q: why?):
+Even easier, because we are doing non-preemptive threads we don't have to
+save all the registers, just the "callee saved" ones.  The ARM, like most
+modern architectures, splits registers in into two categories (Q: why?):
 
-  - "Callee-saved": must be saved by a procedure before use and
-     restored before returning to the calling routine.
+  - "Callee-saved": must be saved by a procedure before any use and
+    then restored before returning to the calling routine.
 
   - "Caller-saved": can be used as scratch registers by any procedure
-    used without saving/restoring them first.  As a result, if a
+    without saving/restoring them first.  The downside is that if a
     routine needs the contents of a caller-saved register preserved
-    across a function call it must save it before the call and restore
-    it afterwards.
+    across a function call it must save the register before the call
+    and restore it afterwards.
 
-Since we are doing non-preemptive threads, a thread only context switches
-if it explicitly calls `rpi_yield()` routine to yield. As a result we only
-need to save the "callee-saved" registers, since any live caller-saved
-registers must be already saved by the compiler.
+As we mentioned, a non-preemptive thread only context switches if it
+explicitly calls a thread yield procedure of some kind (in our case,
+`rpi_yield()`).  As a result we only need to save the "callee-saved"
+registers, since any live caller-saved registers must be already saved
+by the compiler.
 
 The ARM general-purpose registers:
    - `r0`---`r3`: caller-saved argument registers.
@@ -110,8 +112,8 @@ The ARM general-purpose registers:
      will return from a call.  Oddly, we do not have to save this value!
 
 So, to summarize, context-switching must save:
-    - `r4 --- r12, r13, r14`.  
 
+    - `r4 --- r12, r13, r14`.  
 
 For reference, the [ARM procedure call ABI](http://infocenter.arm.com/help/topic/com.arm.doc.ihi0042f/IHI0042F_aapcs.pdf) document:
 <table><tr><td>
@@ -133,21 +135,13 @@ This first part makes sure you have the basic tools to validate your
 understanding of assembly code by having you write a few assembly
 routines.  Being comfortable doing so will come in handy later.
 
-   1. Look up how to get the current `cpsr` in the `docs/armv6.pdf`
-   document (I'd suggest section A2-6 or A3) or the screen shot below,
-   and write code to do so.  (You can see examples of how to implement
-   assembly functions in the `.s` files in the `libpi` directory.)
-   Print whether you have interrupts disabled and what mode you are in
-   to verify you did so correctly.
+   1. Implement a simple assembly routine `test_csave(p,...)` that that
+   stores *all* general-purpose registers `cpsr` in the pointed-to memory
+   `p` using the ARM instruction `str` and explicit constant offsets
+   (i.e., there will be one instruction for each register saved).  Verify
+   that the values stored and the amount of space it used makes sense.
 
-   2. Implement a simple assembly routine `test_csave(p,...)` that that
-   stores *all* general-purpose registers and the `cpsr` in the pointed-to
-   memory `p` using the ARM instruction `str` and explicit constant
-   offsets (i.e., there will be one instruction for each register saved)
-   and returns a pointer to the last saved value.  Verify that the values
-   stored and the amount of space it used makes sense.
-
-   3. Write another version `test_csave_stmfd` using ARM's
+   2. Write another version `test_csave_stmfd` using ARM's
    "store multiple", (should be just a few lines)  and verify
    you get the same values as (2).  Note that `stmfd` stores
    registers so that the smallest is at the lowest address.   Useful [ARM
@@ -156,21 +150,6 @@ routines.  Being comfortable doing so will come in handy later.
 
 Don't be afraid to go through the ARM manual (`docs/armv6.pdf`)  or the 
 lectures we posed in lab7 (`../lab7-interrupts/docs/`).
-
-Examples of `cpsr`:
-<table><tr><td>
-  <img src="images/cpsr-examples.png"/>
-</td></tr></table>
-
-`cpsr` layout:
-<table><tr><td>
-  <img src="images/cpsr-layout.png"/>
-</td></tr></table>
-
-`mode` bits in CPSR:
-<table><tr><td>
-  <img src="images/cpsr-mode-bits.png"/>
-</td></tr></table>
 
 ----------------------------------------------------------------------
 ### Part 1: Cooperative context-switching (20 minutes)
@@ -185,24 +164,10 @@ Context switching will involve inverting the code you wrote for Part 0.
   behaviorally this is a no-op since your code should save and restore
   the state, and resume right after the call.
 
-##### A simplification: save all registers.
-
-Strictly speaking, since we are voluntarily context switching we do
-not have to save *all* registers, just the "callee-saved" registers
-since the code that calls `yield` must have already saved any needed
-caller-saved registers.
-
-Since we care about quickly writing a correct, simple threads system we
-actually won't make any distinction and will save all registers (the
-difference between some loads and stores and some extra if-statements
-is negligible).  This makes the context switching for non-pre-emptive
-and pre-emptive (next) the same.
-
 ----------------------------------------------------------------------
 ### Part 2: Make simple threads (60 minutes)
 
 Congratulations!  You can now build a simple threading system.
-
 
 Implement:
 
@@ -266,97 +231,20 @@ at a level most CS people do not.
 There's a lot more you can do.  We will be doing a bunch of this later
 in the class:
 
-  0. Change all the timer code to use your yield function rather than
+   0. save state onto the stack itself.
+
+  - Make versions of the `libpi` `delay` routines that use your function rather than
   busy wait.  Make sure to check if threads are enabled in `rpi_yield()`!
 
-  1. Have a `sleep_until_us(us)` to put the current thread to sleep with a 
+  - Have a `sleep_until_us(us)` to put the current thread to sleep with a 
   somewhat hard-deadline that it is woken up in `usec` micro-seconds.  Keep
   track of your cumulative error to see how well you're scheduling is doing.
 
-  2. Rewrite the sonar code to use threads.  Tune your code til it varies
-  the light smoothly.
-
-  3. Tune your threads package to be fast.  In particular, you can avoid
+  - Tune your threads package to be fast.  In particular, you can avoid
   context switching when a thread is run for the first time (there is
   no context to load) and you don't thave to save state when it exits
   (it's done).  You can also try tuning the interrupt handling code,
   since it is at least 2x slower than optimal.  (I'm embarrassed, but
   time = short.  Next year!)
 
-----------------------------------------------------------------------
-### Extension (hard) Make pre-emptive threads (60 minutes)
-
-Scheduling threads "pre-emptively" means we interrupt the current running
-thread (e.g., pre-empt it with a timer-interrupt) and switch to another
-thread *without* requiring the first thread voluntarily yields the CPU.
-Pre-emption has the following differences:
-
-  1. You must save *all* registers, not just callee-saved registers,
-  since when an interrupt happens all registers are live.  (For this lab
-  we don't care about this distinction since we already save everthing.)
-
-  2. Since all registers are live, how do you save them, when you can't
-  modify any register?   As discussed in `lab7` the ARM simplifies
-  this problem by using "banked registers," where it saves a copy when
-  an exception/interrupt occurs.  This helps in that it gives us some
-  scratch registers to work with.  It makes state saving a bit more
-  complicated since we can't access these registers using our normal
-  instructions.<br></br>
-  In our specific case, we will be in the interrupt handler and cannot
-  access the banked copies of registers `r14` and `r15`.  You will have
-  to use a special notation to save and restore these.
-
-  3. Similarly, when we save the registers we don't actually have the
-  stack pointer of the interrupted thread (it is banked), so  we save
-  to a scratch area.
-
-Recall banked registers:
-<table><tr><td>
-  <img src="images/banked-registers.png"/>
-</td></tr></table>
-
-And for `ldm` and `stm` you can indicate that the operation works on the
-banked registers, not those in the current context using the S bit:
-<table><tr><td>
-  <img src="images/ldm-stm.png"/>
-</td></tr></table>
-
-In terms of assembler syntax, to save banked copies of registers put a
-caret after the register list:
-
-    # ^ tells the assembler to emit S=1, which means we will store the #
-    unbanked copies of sp, lr.  stmia sp, {sp, lr}^
-
-#### What to do:
-
- 1. Modify the code in `interrupt-asm.s` to save the entire context
- to the interrupt stack.  **You must save it in the same format as the
- context switch code.**
-
- 2. In the interrupt handler, if you decide to switch to another thread,
- move the values you saved in (1) into the current thread's saved context,
- so that the suspended thread will be switched out correctly.
-
- 3. Make a new copy of the context switching code that you can call from
- the interrupt handler that will correctly return from the interrupt
- and lower the privilege level.
-
- 4. Make sure you `thread-test-both` works.  Write your own code to test
- that you can intermix pre-emptive and non-pre-emptive threads.
-
-#### Three possible extensions:
-   0. save state onto the stack itself.
-
-   1. Extension (easy): an implementation of your context switching code
-   (from 2) using the ARM `stmfd` and `ldmfd` instructions.
-
-   4. Extension (medium): re-implement your sonar code to have two
-   threads, one for PWM of the LED, one for the sonar device thread.
-   Make a new `sleep_us(us)` routine that will `rpi_yield()` the processor
-   if needed.
-
-   5. Extension (hard): An involuntary (pre-emptive) context switching
-   implementation that uses a modification of the timer interrupt
-   code from lab 7 to interrupt the current thread, pick a new one
-   (round-robin), and jump to it.
-
+   4. See how many PWM threads you can run in `3-yield-test`.

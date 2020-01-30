@@ -141,7 +141,7 @@ The ARM general-purpose registers:
 
 So, to summarize, context-switching must save:
 
-    - `r4 --- r12, r13, r14`.    Note: if you use `LDM` and `STM`
+  - `r4 --- r12, r13, r14`.    Note: if you use `LDM` and `STM`
       instructions,
       they cannot have the stack pointer in the register list (it can
       be used as the base).

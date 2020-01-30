@@ -229,11 +229,13 @@ lectures we posted in `6-threads/docs`.
 ### Part 3: context-switching.
 
 Now that you can save registers, it makes sense to restore them.
-Build a context switch routine `cswitch(uint_t *old, uint_t *new)` that:
+Using the starter code in `test-asm.S`
+build a context switch routine `cswitch(uint_t *old, uint_t *new)` that:
   1. Saves the callee-saved registers into the block pointed to by `old` (as
      above).
   2. Loads the callee-saved registers previously saved into the block
      pointed to by `new`.
+  3. Jumps back to the address in `lr`.
 
 Testing: `3-test-cswitch` has two parts:
   1. Checks that inserting calls that save and restore from the same

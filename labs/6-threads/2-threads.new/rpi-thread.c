@@ -113,10 +113,9 @@ void rpi_thread_start(void) {
     //  3. context switch to it, saving current state in
     //	    <scheduler_thread>
     scheduler_thread = th_alloc();
-    rpi_thread_t* next_thread;
 	while(cur_thread = Q_pop(&runq)) {
 		(*cur_thread->fn)(cur_thread->arg);
-		th_free(next_thread);
+		th_free(cur_thread);
 	}
 	//unimplemented();
     printk("rpithreads: done with all threads! returning\n");

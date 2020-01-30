@@ -284,13 +284,14 @@ switching on it, the right thing will happen (i.e., it will invoke to
      when its state is loaded via `rpi_cswitch` control will jump to
      a trampoline routine (written in assembly) with `code` with `arg`
      in known registers The trampoline will then branch-and-link to the
-     code with `arg` in
+     `code` with `arg` in `r0`.
 
    - The use of a trampoline lets us handle the problem of missing
      `rpi_exit` calls.  The problem: If the thread code does not call
      `rpi_exit` explicitly but instead returns, the value in the `lr`
      register that it jumps to will be nonsense.  Our hack: have our
      trampoline that calls the thread code simply call `rpi_exit` if the
+     intial call to `code` returns.
 
     - To help debug problems: you can initially have the
       trampoline code you write (`rpi_init_trampoline`) initially just

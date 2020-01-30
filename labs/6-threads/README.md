@@ -293,10 +293,10 @@ switching on it, the right thing will happen (i.e., it will invoke to
      trampoline that calls the thread code simply call `rpi_exit` if the
      intial call to `code` returns.
 
-    - To help debug problems: you can initially have the
-      trampoline code you write (`rpi_init_trampoline`) initially just
-      call out to C code to print out its values so you can sanity check
-      that they make sense.
+   - To help debug problems: you can initially have the
+     trampoline code you write (`rpi_init_trampoline`) initially just
+     call out to C code to print out its values so you can sanity check
+     that they make sense.
 
 Checking:
    1. When you run `3-test` it should work and print `SUCCESS`.

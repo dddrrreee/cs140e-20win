@@ -5,11 +5,22 @@
 
 @ return the current stack pointer.
 MK_FN(rpi_get_sp)
+	mov r0, r13
 	bx lr
 
 @empty stub routines.  use these, or make your own.
 MK_FN(rpi_cswitch)
-    bx lr
+    
+	stmfd r0!,{r4-r11}
+	str r0, [r2]
+	str r1, [r3]
+	stmfd sp!, {r3,r14}
+	bl rpi_init_trampoline
+	ldmia sp!, {r3,r14}
+	ldr r1, [r3]
+	ldr r0, [r1]
+	ldmia r0!,{r4-r11}
+	bx lr
 
 @ [Make sure you can answer: why do we need to do this?]
 @

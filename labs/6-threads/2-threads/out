@@ -1,0 +1,2 @@
+make[1]: Nothing to be done for `all'.
+arm-none-eabi-gcc -Og -Wall -nostdlib -nostartfiles -ffreestanding -mcpu=arm1176jzf-s -mtune=arm1176jzf-s  -std=gnu99 -I/Users/brianjun/Desktop/school/Winter1920/CS140E/cs140e-20win/libpi -I. -ggdb -Wno-unused-function -Wno-unused-variable    -c -o rpi-thread.o rpi-thread.c

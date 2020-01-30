@@ -36,7 +36,16 @@ rpi_thread_t *rpi_fork(void (*code)(void *arg), void *arg) {
     rpi_thread_t *t = th_alloc();
 
     // do the brain-surgery on the new thread stack here.
-    unimplemented();
+	asm volatile (
+		"mov r3, %[thread] \n\t"
+		"ldr r2, [r3] \n\t"
+		"stmfd r2!, {r0-r15} \n\t"
+		"str r0, [r2] \n\t"
+		: // output
+		:[thread] "r"(&(t->stack))
+		 // input
+	); 
+	
 
     Q_append(&runq, t);
     return t;
@@ -53,7 +62,12 @@ void rpi_exit(int exitcode) {
 	 * 3. otherwise we are done, switch to the scheduler thread 
 	 * so we call back into the client code.
 	 */
-	unimplemented();
+	 memset(cur_thread, 0, sizeof(cur_thread));
+	 if(!Q_empty(&runq)) {
+		 rpi_cswitch(cur_thread->reg_save_area, Q_pop(&runq)->reg_save_area);
+	 } else {
+		rpi_cswitch(cur_thread->reg_save_area, scheduler_thread->reg_save_area);
+	 }
 }
 
 // yield the current thread.
@@ -63,7 +77,13 @@ void rpi_yield(void) {
 	// otherwise: 
 	//	1. put current thread on runq.
 	// 	2. context switch to the new thread.
-	unimplemented();
+	rpi_thread_t* next_thread;
+	if(!(next_thread = Q_pop(&runq))) {
+		return;
+	} else {
+		Q_append(&runq, cur_thread);
+		rpi_cswitch(cur_thread->reg_save_area, next_thread->reg_save_area); 
+	}
 }
 
 /*
@@ -86,7 +106,9 @@ void rpi_thread_start(void) {
     //  3. context switch to it, saving current state in
     //	    <scheduler_thread>
     scheduler_thread = th_alloc();
-    unimplemented();
+    rpi_thread_t* next_thread = th_alloc();
+	next_thread = Q_pop(&runq);
+	rpi_cswitch(scheduler_thread->reg_save_area, next_thread->reg_save_area);
     printk("rpithreads: done with all threads! returning\n");
 }
 
@@ -97,18 +119,21 @@ void rpi_thread_start(void) {
 // put the current thread on a blocked queue: resume in 
 // exactly // <usec> micro-seconds.  not before, not after.
 // should give low-error resumption times.
+/*
 void rpi_exact_sleep(uint32_t usec) {
     unimplemented();
-}
+} */
 
 // fork a thread that guarantees it will 
 // only run for <usec> until blocking.  this allows
 // us to check for bad behavior / scheduling conflicts.
+/*
 rpi_thread_t *
 rpi_fork_bounded(void (*code)(void *arg), void *arg) {
     unimplemented();
-}
+} */
 
+/*
 struct rpi_thread_stats {
     unsigned hit_deadlines,  // number of sleeps we were off on.
                 missed_deadlines,  // number of sleeps we were off on.
@@ -118,4 +143,4 @@ struct rpi_thread_stats {
 };
 struct rpi_thread_stats rpi_get_stats(void) {
     unimplemented();
-}
+} */

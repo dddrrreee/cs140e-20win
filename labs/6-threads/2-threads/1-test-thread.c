@@ -22,6 +22,7 @@ void notmain() {
 	thread_sum = thread_count = 0;
 
 	for(int i = 0; i < n; i++)  {
+    	printk("Index %d\n", i);
         int *x = kmalloc(sizeof *x);
         *x = i;
 		rpi_fork(thread_code, x);

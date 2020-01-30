@@ -1,4 +1,4 @@
-SUBDIRS= 1-kmalloc 2-threads
+SUBDIRS= 1-kmalloc 2-threads.new
 
 .PHONY: all check clean
 all check clean: $(SUBDIRS)

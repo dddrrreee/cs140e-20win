@@ -2,18 +2,21 @@
 #include "rpi-thread.h"
 
 
-// if our threads are fast enough you can run a bunch of these
-// and not see weird flickers.
-void trivial(unsigned a0, unsigned stored_sp, unsigned sp) {
-    printk("trivial thread: code=%x, stored sp=%x sp=%x\n", a0,stored_sp,sp);
-    clean_reboot();
+void trivial(void* arg) {
+    printk("trivial thread: arg=%d\n", (unsigned)arg);
+    // clean_reboot();
+    // comment this out to test your implicit exit
+    rpi_exit(0);
 }
 
 void notmain(void) {
     uart_init();
     kmalloc_init();
 
-    rpi_fork(trivial, 0);
+    // make this > 1 to test
+    int n = 1;
+    for(int i = 0; i < n; i++)
+        rpi_fork(trivial, (void*)i);
     rpi_thread_start();
     printk("SUCCESS\n");
     clean_reboot();

@@ -3,7 +3,7 @@ MAKEFLAGS +=  --no-print-directory
 
 # we've had some make issues going cross windows/mac/linux, so we just do brute stupid
 # to make things work: no fancy rules, just always recompile.
-NAME = test-thread
+NAME = test-kmalloc
 
 # check that your path is defined.
 ifndef CS140E_PATH
@@ -17,47 +17,36 @@ CFLAGS += -Wno-unused-function -Wno-unused-variable
 # if you want to compile everything in a directory, do something like this.
 #   SOURCES := $(wildcard ./*.c)
 #   OBJS := $(patsubst %.c, %.o, $(SOURCES))
-PROGS := 1-test-thread 3-test-yield 5-test-ping-pong
-PROG_BIN := $(patsubst %, %.bin, $(PROGS))
-OBJS := rpi-thread.o thread-asm.o circular.o  test-asm.o
+OBJS := $(NAME).o kmalloc.o
 
-# add all the .h's as dependencies, libpi and the makefile.
-DEPS := $(wildcard ./*.h) $(LPI) ./Makefile
+# if you want to add all the .h's as dependencies:
+#   DEPS := $(wildcard ./*.h) $(LPI)
+DEPS := $(LPI) ./Makefile 
 
-# uncomment the different tests.
-all: libpi $(OBJS)   4-test-exit.bin #3-test-cswitch.bin  #4-test-exit.bin 5-test-ping-pong 
+all: libpi $(OBJS) $(NAME).bin run
 
 libpi: 
-	@ # @make -s -C $(LPP)
-	@ make -C $(LPP)
-
-fake:
-	@make -f ./Makefile.unix NAME=equiv-check.fake
+	@make -s -C $(LPP)
 
 $(OBJS): $(DEPS)
 
 %.o: %.S
-	$(CC) -c $(CPP_ASFLAGS) $< -o $@
+	$(CC) -c $(CPP_FLAGS) $< -o $@
 
 # <LPI> will get rebuilt if anything changes, so we don't need any other
 # dependencies.
-%.bin: %.o $(MEMMAP) $(OBJS) $(LPI) ./Makefile
-	$(LD) $(START) $< $(OBJS) -T $(LPP)/memmap -o $@.elf  $(LPI)
-	$(OD) -D  -S $@.elf > $@.list
-	$(OCP) $@.elf -O binary $@.bin
-	my-install ./$@.bin
+$(NAME).bin: $(MEMMAP) $(OBJS) $(LPI) ./Makefile
+	$(LD) $(START) $(OBJS) -T $(LPP)/memmap -o $(NAME).elf  $(LPI)
+	@$(OD) -D $(NAME).elf > $(NAME).list
+	$(OCP) $(NAME).elf -O binary $(NAME).bin
 
 run:
 	my-install $(NAME).bin
 
 tags: 
-	ctags *.[chSs] $(LPP)/*.[ch] $(LPP)/*.[chSs]
+	ctags *.[chSs] $(LPP)/*/*.[chSs] $(LPP)/*.[ch]
 
 clean:
 	rm -rf $(BUILD_DIR) $(NAME) *~ tags *.o *.bin *.elf *.list *.img Makefile.bak 
 
-cleanall:
-	make -C $(LPP) clean
-	make clean
-
-.PHONY: libpi all run tags clean  cleanall
+.PHONY: libpi all run tags clean  fake

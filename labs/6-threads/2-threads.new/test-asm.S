@@ -31,11 +31,10 @@ MK_FN(check_callee_save)
     @ values we can print them and check everything got
     @ written.
 	stmfd r0!, {r13}
-	stmfd r0!, {r4-r12, r14} 
-   	str r4, [r0]
+	stmfd r0!, {r4-r11, r14} 
 	
 	@ call print_and_die
-	bl print_and_die
+	@ bl print_and_die
 
 @
 @ simple context switch:
@@ -43,8 +42,21 @@ MK_FN(check_callee_save)
 @
 MK_FN(cswitch)
     @ put your save code here
+	@stmia r0!, {r4-r12}
+	str r4, [r0]
+	str r5, [r0, #4]
+	str r6, [r0, #8]
+	str r7, [r0, #12]
+	str r8, [r0, #16]
+	str r9, [r0, #20]
+	str r10, [r0, #24]
+	str r11, [r0, #28]
+	str r12, [r0, #32]
+	str r14, [r0, #36]
+	str r13, [r0, #40]
 
-    @ kill all the regs to verify save/restore works.
+
+	@ kill all the regs to verify save/restore works.
     mov r4, #4
     mov r5, #5
     mov r6, #6
@@ -58,4 +70,17 @@ MK_FN(cswitch)
     mov lr, #14
     
     @ put your restore code here.
-    bx lr
+	@ldmia r1!, {r4-r12}
+	ldr r4, [r1]
+	ldr r5, [r1, #4]
+	ldr r6, [r1, #8]
+	ldr r7, [r1, #12]
+	ldr r8, [r1, #16]
+	ldr r9, [r1, #20]
+	ldr r10, [r1, #24]
+	ldr r11, [r1, #28]
+	ldr r12, [r1, #32]
+	ldr r14, [r1, #36]
+	ldr r13, [r1, #40]
+	
+	bx lr

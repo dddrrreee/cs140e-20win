@@ -56,11 +56,12 @@ rpi_thread_t *rpi_fork(void (*code)(void *arg), void *arg) {
      * must set up initial stack: 
      *  - set LR, SP, and store <code> and <arg> where trampoline can get it.
      */
-    void rpi_init_trampoline(void);
-
+    t->reg_save_area[0] = (unsigned) code;
+	t->reg_save_area[1] = (unsigned) arg;
+	void rpi_init_trampoline(void);
+	t->reg_save_area[REG_LR_OFF] = (unsigned) &rpi_init_trampoline;
+	t->reg_save_area[REG_SP_OFF] = (unsigned) &t->stack[THREAD_MAXSTACK - 2];
     //unimplemented();
-	t->fn = code;
-	t->arg = arg;
     Q_append(&runq, t);
     return t;
 }
@@ -76,6 +77,15 @@ void rpi_exit(int exitcode) {
 	 * 3. otherwise we are done, switch to the scheduler thread 
 	 * so we call back into the client code.
 	 */
+	rpi_thread_t* old_thread = cur_thread;
+	th_free(cur_thread);
+
+	if(!Q_empty(&runq)) {
+		cur_thread = Q_pop(&runq);
+	} else {
+		cur_thread = scheduler_thread;
+	}
+	rpi_cswitch(old_thread->reg_save_area, cur_thread->reg_save_area);
 	return;
 }
 
@@ -86,6 +96,15 @@ void rpi_yield(void) {
 	// otherwise: 
 	//	1. put current thread on runq.
 	// 	2. context switch to the new thread.
+	rpi_thread_t* next_thread;
+	if(Q_empty(&runq)) {
+		return;
+	} else {
+		rpi_thread_t* old_thread = cur_thread;
+		Q_append(&runq, cur_thread);
+		cur_thread = Q_pop(&runq);
+		rpi_cswitch(old_thread->reg_save_area, cur_thread->reg_save_area);
+	}
 	return;
 }
 
@@ -106,17 +125,13 @@ void rpi_thread_start(void) {
     rpi_internal_check();
 
     //unimplemented();
-    //return;
-
     //  1. create a new fake thread 
     //  2. dequeue a thread from the runq
     //  3. context switch to it, saving current state in
     //	    <scheduler_thread>
     scheduler_thread = th_alloc();
-	while(cur_thread = Q_pop(&runq)) {
-		(*cur_thread->fn)(cur_thread->arg);
-		th_free(cur_thread);
-	}
+	cur_thread = Q_pop(&runq);
+	rpi_cswitch(scheduler_thread->reg_save_area, cur_thread->reg_save_area);
 	//unimplemented();
     printk("rpithreads: done with all threads! returning\n");
 }

@@ -17,15 +17,15 @@ CFLAGS += -Wno-unused-function -Wno-unused-variable
 # if you want to compile everything in a directory, do something like this.
 #   SOURCES := $(wildcard ./*.c)
 #   OBJS := $(patsubst %.c, %.o, $(SOURCES))
-PROGS := 1-test-thread 3-test-yield
+PROGS := 1-test-thread 3-test-yield 4-test-ping-pong
 PROG_BIN := $(patsubst %, %.bin, $(PROGS))
-OBJS := rpi-thread.o thread-asm.o
+OBJS := rpi-thread.o thread-asm.o circular.o  test-asm.o
 
-# if you want to add all the .h's as dependencies:
+# add all the .h's as dependencies, libpi and the makefile.
 DEPS := $(wildcard ./*.h) $(LPI) ./Makefile
-# DEPS := $(LPI) ./Makefile 
 
-all: libpi $(OBJS) $(PROG_BIN)
+# uncomment the different tests.
+all: libpi $(OBJS) 1-test-thread.bin # 2-test.bin  3-test-cswitch.bin 4-test-exit.bin 
 
 libpi: 
 	@ # @make -s -C $(LPP)
@@ -45,12 +45,13 @@ $(OBJS): $(DEPS)
 	$(LD) $(START) $< $(OBJS) -T $(LPP)/memmap -o $@.elf  $(LPI)
 	$(OD) -D  -S $@.elf > $@.list
 	$(OCP) $@.elf -O binary $@.bin
+	my-install ./$@.bin
 
 run:
 	my-install $(NAME).bin
 
 tags: 
-	ctags *.[chSs] */*.[chSs]
+	ctags *.[chSs] $(LPP)/*.[ch] $(LPP)/*.[chSs]
 
 clean:
 	rm -rf $(BUILD_DIR) $(NAME) *~ tags *.o *.bin *.elf *.list *.img Makefile.bak 

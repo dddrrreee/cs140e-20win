@@ -4,10 +4,16 @@
 
 Big picture:  by the end of this lab you will have a very simple
 round-robin threading package for "cooperative" (i.e., non-preemptive)
-threads.
+threads.  
+
+The main operations (see `rpi-thread.[ch]`):
+  1. `rpi_fork(code, arg)`: to create a new thread, put it on the `runq`.
+  2. `rpi_yield()`: yield control to another thread.
+  3. `rpi_exit(int)`: kills the current thread.
+  4. `rpi_thread_start()`: starts the threading system for the first time.
+      Returns when there are threads left to run.
 
 Recall we split threads into two types:
-
   - Non-preemptive threads run until they 
     explicitly yield the processor.
 
@@ -16,7 +22,6 @@ Recall we split threads into two types:
     runnable, etc).
 
 The trade-offs:
-
   - Cooperative threads make preserving large invariants easy: by
     default, all code is a critical section, only broken up when you
     yield [Atul et al].  Their downside is that if they don't yield
@@ -48,6 +53,34 @@ to find.  So we'll break it down into several smaller pieces.
 
    1. You have a working `kmalloc` implementation.
    2. You pass the tests in the 2-threads` directory.
+
+----------------------------------------------------------------------
+### Hints
+
+While all this is exciting, a major sad is that a single bug can lead
+to your code jumping off into hyperspace.  This is hard to debug.
+So before you write a bunch of code:
+  1. Try to make it into small, simple, testable pieces.
+  2. Print all sorts of stuff so you can sanity check!  (e.g., the value
+  of the stack pointer, the value of the register you just loaded).
+  Don't be afraid to call C code from assembly to do so.
+
+The single biggest obstacle I've seen people make when writing assembly is
+that when they get stuck, they wind up staring passively at instructions
+for a long time, trying to discern what it does or why it is behaving
+"weird."
+
+  - Instead of treating the code passively, be aggressive: your computer
+    cannot fight back, and if you ask questions in the form of code
+    it must answer.  When you get unsure of something, write small
+    assembly routines to clarify.  For example, can't figure out why
+    `LDMIA` isn't working?  Write a routine that uses it to store a
+    single register.  Can't figure out if the stack grows up or down?
+    take addresses of local variables in the callstack print them (or
+    look in the `*.list` files).
+
+   - Being active will speed up things, and give you a way to
+    ferret out the answer to corner case questions you have.
 
 ----------------------------------------------------------------------
 ### Background: A crash course in ARM registers
@@ -91,8 +124,9 @@ The ARM general-purpose registers:
       be saved before we can use their contents since the caller assumes
       their values will be preserved across calls.  
 
-   - `r13` : stack pointer (`sp`).  While you are saving state, you
-      will be using the stack pointer `sp`.  Be careful when you save
+   - `r13` : stack pointer (`sp`).  Today it doesn't matter, but in the 
+      general case where you save registers onto the sack,
+      you will be using the stack pointer `sp`.  Be careful when you save
       this register.  (How to tell if the stack grows up or down?)
 
    - `r14` : link register (`lr`), holds the address of the instruction
@@ -107,7 +141,10 @@ The ARM general-purpose registers:
 
 So, to summarize, context-switching must save:
 
-    - `r4 --- r12, r13, r14`.  
+  - `r4 --- r12, r13, r14`.    Note: if you use `LDM` and `STM`
+      instructions,
+      they cannot have the stack pointer in the register list (it can
+      be used as the base).
 
 For reference, the [ARM procedure call ABI](http://infocenter.arm.com/help/topic/com.arm.doc.ihi0042f/IHI0042F_aapcs.pdf) document:
 <table><tr><td>
@@ -123,22 +160,65 @@ You can find a bunch of of information in the ARM Manual:
 </td></tr></table>
 
 ----------------------------------------------------------------------
-### Part 0: using assembly to validate your understanding (30 minutes)
+### Part 1: getting run-to-completion threads working (20 minutes)
 
-This first part makes sure you have the basic tools to validate your
-understanding of assembly code by having you write a few assembly
-routines.  Being comfortable doing so will come in handy later.
+I've tried to break down the lab into isolated pieces so you can test
+each one.  The first is to get a general feel for the `rpi_thread`
+interfaces by getting "run-to-completion" (RTC) threads working: these
+execute to completion without blocking.
 
-   1. Implement a simple assembly routine `test_csave(p,...)` that that
-   stores *all* general-purpose registers in the pointed-to memory
-   `p` using the ARM instruction `str` and explicit constant offsets
-   (i.e., there will be one instruction for each register saved).  Verify
-   that the values stored and the amount of space it used makes sense.
+RTC threads are an important special case that cover a surprising
+number of cases.  Since they don't block, you can run them 
+as deferred function calls.   They should be significantly faster
+than normal threads since:
+  1. you don't need to context switch into them.
+  2. you don't need to context switch out of them.
+  3. you won't have to fight bugs from assembly coding.
+Most interrupt handlers will fall into this category.
 
-   2. Write another version `test_csave_stmfd` using ARM's
-   "store multiple", (should be just a few lines)  and verify
-   you get the same values as (2).  Note that `stmfd` stores
-   registers so that the smallest is at the lowest address.   Useful [ARM
+What to change:
+  1. `rpi_exit` just return immediately (not correct in general, but ok for
+     our test).
+  2. `rpi_yield` should just return immediately.
+  3. `rpi_fork` create a thread and put it in the run-queue.
+  4. `rpi_thread_start` remove threads in FIFO order, run each function, free the 
+     thread block.
+
+With these changes, `1-test-thread` should complete successfully.
+
+----------------------------------------------------------------------
+### Part 2: assembly and saving state (30 minutes)
+
+Our next step is to start writing assembly code and build up the 
+context-switching code in pieces.  
+
+##### Step 0: hello world in assembly
+
+To get started, write a simple assembly routine `store_one_asm(p,u)`
+in `test-asm.S` that stores `u` into `*p`.    When you run `2-test`
+the first test should work (the second will fail until the next part). 
+
+##### Step 1: save registers
+
+Next, we build a routine that correctly saves callee-saved registers.
+If you look in `test-asm.S` at `check_callee_save`:
+  1. Write the code to load a known constant into each register --- with
+     the exception of the stack pointer --- that you will
+     save so you can check their saved values.
+  2. Write the code to store each callee-saved register into the given block of memory
+     in ascending order register number.
+  3. The code then 
+     calls `print_and_die` with a pointer to the block as the first
+     argument.
+
+When you run the test, each printed register other than the stack pointer
+should match its expected value (the location for `r4` should hold
+`4` etc).
+
+
+Note that the bulk register save and restore instructions store the smallest
+registers so that the smallest is at the lowest address; also, don't 
+include the stack pointer in the register list!   Useful [ARM
    doc](http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.dui0473m/dom1359731152499.html)
    or [this](https://www.heyrick.co.uk/armwiki/STM).
 
@@ -146,76 +226,83 @@ Don't be afraid to go through the ARM manual (`docs/armv6.pdf`) or the
 lectures we posted in `6-threads/docs`.
 
 ----------------------------------------------------------------------
-### Part 1: Cooperative context-switching (20 minutes)
+### Part 3: context-switching.
 
-Context switching will involve inverting the code you wrote for Part 0.
+Now that you can save registers, it makes sense to restore them.
+Using the starter code in `test-asm.S`
+build a context switch routine `cswitch(uint_t *old, uint_t *new)` that:
+  1. Saves the callee-saved registers into the block pointed to by `old` (as
+     above).
+  2. Loads the callee-saved registers previously saved into the block
+     pointed to by `new`.
+  3. Jumps back to the address in `lr`.
 
-  1. Implement `rpi_cswitch(cur,next)` (see `rpi-thread.h`), which saves
-  the current registers to `cur`, and loads all the values from `next`.
-
-  2. To make your code easy to test, make sure your `rpi_cswitch`
-  code works when you pass the current thread as both arguments ---
-  behaviorally this is a no-op since your code should save and restore
-  the state, and resume right after the call.
+Testing: `3-test-cswitch` has two parts:
+  1. Checks that inserting calls that save and restore from the same
+     block (e.g., calling  `cswitch(p,p)`) does not change the behavior of code.
+  2. Check that reloading from a previously saved block the code to jump backwards
+     and re-execute as expected.  (How does this test work?)
 
 ----------------------------------------------------------------------
-### Part 2: Make simple threads (60 minutes)
+### Part 4: Make a full threads package.
 
-***NOTE: rewriting this part and the thread test code***
-
-Congratulations!  You can now build a simple threading system.
-
-Implement:
-
-  1. `rpi_fork(code, arg)`: to create a new thread, put it on the `runq`.
+Now we make your RTC threads work with context switching.
+Make the following changes:
 
 
-  2. `rpi_yield()`: yield control to another thread.
+  - `rpi_start_thread` will context switch into the first thread it
+     removes from the run queue.  Doing so will require creating a
+     dummy thread so that when there are no more runnable threads,
+     `rpi_cswitch` will transfer control back and we can return back
+     to the main program.  (If you run into problems, try first just
+     rebooting when there are no runnable threads.)
 
-  3. `rpi_exit(int)`: kills the current thread.
+  - `rpi_fork` should setup the thread's register save area so that an
+     initial context switch will work.  (Discussed more below.)
 
-  4. `rpi_thread_start()`: starts the threading system.
+  - `rpi_exit` if it can dequeue a runnable thread, context switch
+     into it.  Otherwise resume the initial start thread created in
+     step 1.
+
+  - Move your `cswitch` code into `rpi_cswitch` in `thread-asm.S`
+
+     Make sure you verify that your `rpi_cswitch` code works when you
+     pass the current thread as both arguments --- behaviorally this
+     is a no-op since your code should save and restore the state,
+     and resume right after the call.
+
+  - Change `rpi_yield` so that it works as expected.
+
 
 Given that you have context-switching, the main tricky thing is figuring
-out how to setup a thread for the first time so that when you run context
+out how to setup a newly created thread so that when you run context
 switching on it, the right thing will happen (i.e., it will invoke to
-`code(arg)`).  The standard way to do this is by manually storing values
-onto the thread's stack (sometimes called "brain-surgery") so that when
-its state is loaded via `rpi_cswitch` control will jump to a trampoline
-routine (written in assembly) with `code` with `arg` in known registers
-The trampoline will then branch-and-link to the code with `arg` in
-`r0`.  We use a trampoline so that if `code` returns, we can then call
-`rpi_thread_exit()`.
+`code(arg)`).
 
-While all this is exciting, a major sad is that a single bug can lead
-to your code jumping off into hyperspace.  This is hard to debug.
-So before you write a bunch of code:
+   - The standard way to do this is by manually storing values
+     onto the thread's stack (sometimes called "brain-surgery") so that
+     when its state is loaded via `rpi_cswitch` control will jump to
+     a trampoline routine (written in assembly) with `code` with `arg`
+     in known registers The trampoline will then branch-and-link to the
+     `code` with `arg` in `r0`.
 
-  1. Try to make it into small, simple, testable pieces.
+   - The use of a trampoline lets us handle the problem of missing
+     `rpi_exit` calls.  The problem: If the thread code does not call
+     `rpi_exit` explicitly but instead returns, the value in the `lr`
+     register that it jumps to will be nonsense.  Our hack: have our
+     trampoline that calls the thread code simply call `rpi_exit` if the
+     intial call to `code` returns.
 
-  2. Print all sorts of stuff so you can sanity check!  (e.g., the value
-  of the stack pointer, the value of the register you just loaded).
-  Don't be afraid to call C code from assembly to do so.
+   - To help debug problems: you can initially have the
+     trampoline code you write (`rpi_init_trampoline`) initially just
+     call out to C code to print out its values so you can sanity check
+     that they make sense.
 
-To break down the pieces:
-
-  0. Initially: Have `rpi_thread_start()` just reboot when there are no
-  more threads.
-
-  1. Have the trampoline code you write (`rpi_init_trampoline`) initially
-  just call out to C code to print out its values so you can sanity check
-  that they make sense.
-
-  2. Then only create a single thread and make sure it can run and `rpi_exit`
-  explicitly.
-
-  3. Then make sure if it doesn't exit it will do so implicitly.
-
-  4. Then sure it can `rpi_yield` to itself.
-
-  5. Then change `rpi_thread_start()` to create a dummy thread so that
-  when there are no more runnable threads, `rpi_cswitch` will transfer
-  control back and we can return to its callsite in `part2`.
+Checking:
+   1. When you run `3-test` it should work and print `SUCCESS`.
+   2. You should also be able to run `1-test` now that your yield and exit are not
+      broken.
+   3. Finally you should be able to run two LEDs in `4-test-yield`.
 
 Congratulations!  Now you have a simple, but working thread implementation
 and understand the most tricky part of the code (context-switching)
@@ -227,7 +314,7 @@ at a level most CS people do not.
 There's a lot more you can do.  We will be doing a bunch of this later
 in the class:
 
-  - save state onto the stack itself.
+  - Save state onto the stack itself.
 
   - Make versions of the `libpi` `delay` routines that use your function rather than
   busy wait.  Make sure to check if threads are enabled in `rpi_yield()`!
@@ -243,4 +330,4 @@ in the class:
   since it is at least 2x slower than optimal.  (I'm embarrassed, but
   time = short.  Next year!)
 
-   - See how many PWM threads you can run in `3-yield-test`.
+   - See how many PWM threads you can run in `4-yield-test`.

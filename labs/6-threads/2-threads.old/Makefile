@@ -3,7 +3,7 @@ MAKEFLAGS +=  --no-print-directory
 
 # we've had some make issues going cross windows/mac/linux, so we just do brute stupid
 # to make things work: no fancy rules, just always recompile.
-NAME = test-kmalloc
+NAME = test-thread
 
 # check that your path is defined.
 ifndef CS140E_PATH
@@ -17,36 +17,46 @@ CFLAGS += -Wno-unused-function -Wno-unused-variable
 # if you want to compile everything in a directory, do something like this.
 #   SOURCES := $(wildcard ./*.c)
 #   OBJS := $(patsubst %.c, %.o, $(SOURCES))
-OBJS := $(NAME).o kmalloc.o
+PROGS := 1-test-thread 3-test-yield 4-test-ping-pong
+PROG_BIN := $(patsubst %, %.bin, $(PROGS))
+OBJS := rpi-thread.o thread-asm.o circular.o
 
 # if you want to add all the .h's as dependencies:
-#   DEPS := $(wildcard ./*.h) $(LPI)
-DEPS := $(LPI) ./Makefile 
+DEPS := $(wildcard ./*.h) $(LPI) ./Makefile
+# DEPS := $(LPI) ./Makefile 
 
-all: libpi $(OBJS) $(NAME).bin run
+all: libpi $(OBJS) $(PROG_BIN)
 
 libpi: 
-	@make -s -C $(LPP)
+	@ # @make -s -C $(LPP)
+	@ make -C $(LPP)
+
+fake:
+	@make -f ./Makefile.unix NAME=equiv-check.fake
 
 $(OBJS): $(DEPS)
 
 %.o: %.S
-	$(CC) -c $(CPP_FLAGS) $< -o $@
+	$(CC) -c $(CPP_ASFLAGS) $< -o $@
 
 # <LPI> will get rebuilt if anything changes, so we don't need any other
 # dependencies.
-$(NAME).bin: $(MEMMAP) $(OBJS) $(LPI) ./Makefile
-	$(LD) $(START) $(OBJS) -T $(LPP)/memmap -o $(NAME).elf  $(LPI)
-	@$(OD) -D $(NAME).elf > $(NAME).list
-	$(OCP) $(NAME).elf -O binary $(NAME).bin
+%.bin: %.o $(MEMMAP) $(OBJS) $(LPI) ./Makefile
+	$(LD) $(START) $< $(OBJS) -T $(LPP)/memmap -o $@.elf  $(LPI)
+	$(OD) -D  -S $@.elf > $@.list
+	$(OCP) $@.elf -O binary $@.bin
 
 run:
 	my-install $(NAME).bin
 
 tags: 
-	ctags *.[chSs] $(LPP)/*/*.[chSs] $(LPP)/*.[ch]
+	ctags *.[chSs] */*.[chSs]
 
 clean:
 	rm -rf $(BUILD_DIR) $(NAME) *~ tags *.o *.bin *.elf *.list *.img Makefile.bak 
 
-.PHONY: libpi all run tags clean  fake
+cleanall:
+	make -C $(LPP) clean
+	make clean
+
+.PHONY: libpi all run tags clean  cleanall

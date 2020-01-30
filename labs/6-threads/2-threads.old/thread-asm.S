@@ -39,4 +39,6 @@ MK_FN(kmalloc)
     bx lr
 MK_FN(kmalloc_init)
     bx lr
+MK_FN(kmalloc_aligned)
+    bx lr
 #endif

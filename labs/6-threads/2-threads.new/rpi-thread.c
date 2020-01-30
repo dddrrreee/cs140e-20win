@@ -58,8 +58,9 @@ rpi_thread_t *rpi_fork(void (*code)(void *arg), void *arg) {
      */
     void rpi_init_trampoline(void);
 
-    unimplemented();
-
+    //unimplemented();
+	t->fn = code;
+	t->arg = arg;
     Q_append(&runq, t);
     return t;
 }
@@ -75,7 +76,7 @@ void rpi_exit(int exitcode) {
 	 * 3. otherwise we are done, switch to the scheduler thread 
 	 * so we call back into the client code.
 	 */
-	unimplemented();
+	return;
 }
 
 // yield the current thread.
@@ -85,7 +86,7 @@ void rpi_yield(void) {
 	// otherwise: 
 	//	1. put current thread on runq.
 	// 	2. context switch to the new thread.
-	unimplemented();
+	return;
 }
 
 /*
@@ -104,15 +105,20 @@ void rpi_thread_start(void) {
         return;
     rpi_internal_check();
 
-    unimplemented();
-    return;
+    //unimplemented();
+    //return;
 
     //  1. create a new fake thread 
     //  2. dequeue a thread from the runq
     //  3. context switch to it, saving current state in
     //	    <scheduler_thread>
     scheduler_thread = th_alloc();
-    unimplemented();
+    rpi_thread_t* next_thread;
+	while(cur_thread = Q_pop(&runq)) {
+		(*cur_thread->fn)(cur_thread->arg);
+		th_free(next_thread);
+	}
+	//unimplemented();
     printk("rpithreads: done with all threads! returning\n");
 }
 
@@ -133,7 +139,7 @@ void rpi_internal_check(void) {
     //      walk through the run queue making sure the stack pointer
     //     and ra pointer makes sense.
     if(!Q_empty(&runq)) {
-        unimplemented();
+        //unimplemented();
         return;
     }
     printk("thread: internal check passed\n");

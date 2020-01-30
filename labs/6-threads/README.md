@@ -330,4 +330,4 @@ in the class:
   since it is at least 2x slower than optimal.  (I'm embarrassed, but
   time = short.  Next year!)
 
-   - See how many PWM threads you can run in `3-yield-test`.
+   - See how many PWM threads you can run in `4-yield-test`.

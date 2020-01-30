@@ -17,9 +17,9 @@ CFLAGS += -Wno-unused-function -Wno-unused-variable
 # if you want to compile everything in a directory, do something like this.
 #   SOURCES := $(wildcard ./*.c)
 #   OBJS := $(patsubst %.c, %.o, $(SOURCES))
-PROGS := 1-test-thread 3-test-yield
+PROGS := 1-test-thread 3-test-yield 4-test-ping-pong
 PROG_BIN := $(patsubst %, %.bin, $(PROGS))
-OBJS := rpi-thread.o thread-asm.o
+OBJS := rpi-thread.o thread-asm.o circular.o
 
 # if you want to add all the .h's as dependencies:
 DEPS := $(wildcard ./*.h) $(LPI) ./Makefile

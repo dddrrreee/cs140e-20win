@@ -1,4 +1,15 @@
-/* trivial tests for threads package.  */
+/*
+ * first basic test: will succeed even if you have not implemented context switching
+ * as long as you:
+ *  - simply have rpi_exit(0) and rpi_yield() return rather than context switch to 
+ *    another thread.
+ *  - [even more basic if you have issues: have rpi_fork simply run immediately]
+ * 
+ * this test is useful to make sure you have the rough idea of how the threads 
+ * should work.  you should rerun when you have your full package working to 
+ * ensure you get the same result.
+ */
+
 #include "rpi.h"
 #include "rpi-thread.h"
 
@@ -8,8 +19,11 @@ static unsigned thread_count, thread_sum;
 static void thread_code(void *arg) {
     unsigned *x = arg;
 	printk("in thread %p, with %x\n", rpi_cur_thread()->tid, *x);
+    rpi_yield();
 	thread_count ++;
+    rpi_yield();
 	thread_sum += *x;
+    rpi_yield();
     rpi_exit(0);
 }
 

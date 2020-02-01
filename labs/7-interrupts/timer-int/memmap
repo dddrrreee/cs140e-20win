@@ -1,0 +1,23 @@
+SECTIONS
+{
+    /*
+     * cs107e uses this:
+     *      .text 0x8000 :  { start.o(.text*)  *(.text*) } 
+     * which makes linking in start.o awkward if you don't copy it into
+     * each dir.
+     *
+     * XXX: I cannot make text.boot work if we link start into libpi.a 
+     */
+    .text 0x8000 :  { KEEP(*(.text.boot))  *(.text*) }
+    .data : { *(.data*) } 
+    .rodata : { *(.rodata*) }
+    .bss : {
+        __bss_start__ = .;
+        *(.bss*)
+        *(COMMON)
+        . = ALIGN(8);
+        __bss_end__ = .;
+        . = ALIGN(8);
+        __heap_start__ = .;
+    }
+}

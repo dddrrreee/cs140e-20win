@@ -75,9 +75,7 @@ functionality: threads, interrupts, virtual memory and file systems.
   context switching:  Most people don't understand such things
   so, once again, you'll leave lab knowing something many do not.
 
-***[HAVE NOT UPDATED THE LABS BELOW]***
-
-  - [8-interrupts](8-interrupts/): you will walk through a simple,
+  - [7-interrupts](7-interrupts/): you will walk through a simple,
   self-contained implementation of pi interrupts (for timer-interrupts),
   kicking each line until you understand what, how, why.  You will
   use these to then implement a version of `gprof` (Unix statistical
@@ -91,6 +89,9 @@ functionality: threads, interrupts, virtual memory and file systems.
   If we did on Unix could spend weeks or more fighting various corner
   cases and have a result that is much much much slower and, worse,
   in terms of insight.
+
+
+***[HAVE NOT UPDATED THE LABS BELOW]***
 
   - [9-preemptive-threads](9-preemptive-threads): you will use the
   timer-code in the previous lab to implement pre-emptive threads along

@@ -196,6 +196,22 @@ static int read_exact_fail(int fd, void *data, unsigned n, int can_fail_p) {
     unimplemented();
 }
 
+void close_open_fds_except(int fd){
+	struct rlimit l;
+
+	no_fail(getrlimit(RLIMIT_NOFILE, &l));
+	int i;
+	for(i = 3; i < l.rlim_cur; i++) {
+		if (i != fd) {
+			close(i);
+		}
+	}
+}
+
+void close_open_fds(void) {
+	close_open_fds_except(-1);
+}
+
 
 // should give it a log to emit into, but.
 int replay_unix(endpt_t *u, log_ent_t *log, unsigned n, int fail_i) {
@@ -211,20 +227,30 @@ int replay_unix(endpt_t *u, log_ent_t *log, unsigned n, int fail_i) {
 
         if(e->sender == PI_OUTPUT) {
             c = e->v;
+			//output("Sender %hhu, payload; %d\n", e->sender, e->v);
             if(fail_i == sent_bytes) {
                 c = corrupt_byte(c);
                 output("CORRUPTED byte %d\n", fail_i);
                 corrupted_p = 1;
             }
             write_exact(u->fd, &c, 1);
+            //output("In PI\n");
             sent_bytes++;
         } else {
-            unimplemented();
-        }
-    }
-    unimplemented();
+			// If endpoint sender is Unix
+			// Check if we can read:
+			// If not, then waitpid
+			// If yes, then read and see if we got something out
+			 if(!can_read(u->fd)) {
+				waitpid(pid, &status, WNOHANG);
+			 } else {
+				 exact_read(u->fd, &c, 1);
 
-    // have to spin for some number of iterations checking for child 
+			}
+		}
+    //unimplemented();
+    
+	// have to spin for some number of iterations checking for child 
     // exit.
     for(int i = 0; i < 10; i++) {
         if(handle_child_exit(u->pid, corrupted_p))

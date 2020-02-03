@@ -25,7 +25,7 @@ OBJS := rpi-thread.o thread-asm.o circular.o  test-asm.o
 DEPS := $(wildcard ./*.h) $(LPI) ./Makefile
 
 # uncomment the different tests.
-all: libpi $(OBJS)   4-test-exit.bin #3-test-cswitch.bin  #4-test-exit.bin 5-test-ping-pong 
+all: libpi $(OBJS)   1-test-thread.bin  # 4-test-exit.bin #3-test-cswitch.bin  #4-test-exit.bin 5-test-ping-pong 
 
 libpi: 
 	@ # @make -s -C $(LPP)

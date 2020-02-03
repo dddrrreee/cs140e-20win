@@ -72,7 +72,6 @@ int main(int argc, char *argv[]) {
     }
 
     // these are the corruption runs.
-#if 0
     for(int i = 0; i < ncorrupt; i++) {
         if(i < 4)
             continue;
@@ -86,6 +85,5 @@ int main(int argc, char *argv[]) {
         output("-------------------TRIAL %d was a success-----------------------------\n",i);
     }
     output("we checked %d corruption trials and all failed as expected\n", ncorrupt);
-#endif
     return 0;
 }

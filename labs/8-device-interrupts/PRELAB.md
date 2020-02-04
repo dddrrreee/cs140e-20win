@@ -13,7 +13,7 @@ This lab has a bunch of moving parts.  The main pieces we need:
       commands (we have an old version of the chip I bought off ebay,
       so some of these won't work).
 ----------------------------------------------------------------------------
-## A cycle-based software uart
+#### Part 1: A cycle-based software uart
 
 You'll need to finish up your software UART implementation from lab 4.
 You'll be using this to talk to the ESP8266.   You'll make two changes:
@@ -88,7 +88,7 @@ after I get the rest of the lab working :)
 
 
 ----------------------------------------------------------------------------
-## Helper functions for GPIO interrupts.
+#### Part 2: Implement helper functions for GPIO interrupts.
 
 If you keep hacking on embedded stuff, the single most common activities
 your code will do is (1) setup a hardware device and (2) then configure
@@ -118,10 +118,12 @@ However, just as with timer interrupts, enabling is a two-step process: we first
 enable the specific GPIO interrupt(s) we care about using the first two routines
 above, and then tell the pi that we care about GPIO interrupts generally.  If you 
 look on page 113:
-  - We want to enable `gpio_int[0]`, which is `49` in terms of general interrupts.   
-    (we use `gpio[0]` since we are using a GPIO pin that is less than 32).
-  - To set this, we bitwise-or a 1 to the `(49-32)` position in `Enable_IRQs_2`
-  (which covers interrupts `[32-64)`).
+  - We want to enable `gpio_int[0]`, which is `49` in terms of general
+    interrupts.  (we use `gpio[0]` since we are using a GPIO pin that
+    is less than 32).
+
+  - To set this, we bitwise-or a 1 to the `(49-32)` position in
+    `Enable_IRQs_2` (which covers interrupts `[32-64)`).
 
 
 This appears magic, especially since the documents are not clear.  But,

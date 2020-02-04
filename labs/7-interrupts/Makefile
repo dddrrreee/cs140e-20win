@@ -1,4 +1,4 @@
-SUBDIRS=  gprof timer-int
+SUBDIRS=  2-gprof timer-int 1-syscall 
 
 .PHONY: all check clean
 all check clean: $(SUBDIRS)

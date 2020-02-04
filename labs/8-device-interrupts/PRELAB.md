@@ -13,7 +13,7 @@ This lab has a bunch of moving parts.  The main pieces we need:
    2. The helper routines to do GPIO interrupts.
 
    3. Reading through the ESP8266 PDF files in `docs/`.  You need to read 
-      the examples (`4b-esp8266_at_command_examples_en.pdf`)
+      the examples (`examples-esp8266.pdf`)
       to see how to setup the ESP as a tcp server and
       sending/receiving tcp packets.  The other documents have more 
       commands (we have an old version of the chip I bought off ebay,

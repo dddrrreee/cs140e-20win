@@ -90,14 +90,16 @@ functionality: threads, interrupts, virtual memory and file systems.
   cases and have a result that is much much much slower and, worse,
   in terms of insight.
 
-  - [8-int-devices](8-int-devices): we do networking, using interrupts.
+  - [8-device-interrupts](8-device-interrupts): we setup GPIO interrupts,
+    then use this to build networking on the esp8266 wireless device.
     You will modify your previous labs so that you have an interrupt-based
-    UART.  You will then use this to connect and control the ESP8266
-    that we give out in class and ping other pi's.
+    software UART implementation.  You will then use this to connect
+    and control the ESP8266 that we give out in class and ping other pi's.
 
     Without interrupts, it's difficult to get networking working, since
-    our UARTs have limited space and, thus, unless our code checks them
-    at exactly the right time incoming messages will vaporize.
+    our GPIO pins (and our UART options) have limited space and, thus,
+    unless our code checks them at exactly the right time, incoming
+    messages will vaporize.
 
 ***[HAVE NOT UPDATED THE LABS BELOW]***
 

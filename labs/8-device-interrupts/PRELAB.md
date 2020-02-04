@@ -104,6 +104,7 @@ Change your `my-install` to use the first one, and `pi-cat` to use
 the latter.  Then, as long as you plug in your uart devices in the right
 order (the main pi UART first, the other used to communicate with your
 software UART second) then everything should just work.
+
 ----------------------------------------------------------------------------
 #### Part 2: Implement helper functions for GPIO interrupts.
 

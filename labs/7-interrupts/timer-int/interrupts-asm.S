@@ -4,6 +4,7 @@
  * Code for interrupt handling.  Refer to armisa.pdf in docs/ for what
  * the opcodes mean.
  */
+#include "rpi-asm.h"
 
 /*
  * Enable/disable interrupts.
@@ -64,12 +65,11 @@ _interrupt_table_end:
 
 @ only handler that should run since we only enable general interrupts
 interrupt_asm:
-  @ mov sp, #0x8000 @ what dwelch uses: bad if int handler uses deep stack
-  mov sp, #0x9000000  @ i believe we have 512mb - 16mb, so this should be safe
+  mov sp, #INT_STACK_ADDR   @ i believe we have 512mb - 16mb, so this should be safe
   sub   lr, lr, #4
 
   push  {r0-r12,lr}         @ XXX: pushing too many registers: only need caller
-  @ vpush {s0-s15}	    @ uncomment if want to save caller-saved fp regs
+  @ vpush {s0-s15}	        @ uncomment if want to save caller-saved fp regs
 
   mov   r0, lr              @ Pass old pc
   bl    interrupt_vector    @ C function

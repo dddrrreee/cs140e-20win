@@ -17,34 +17,25 @@
 #define RPI_BASIC_ACCESS_ERROR_0_IRQ    (1 << 7)
 
 // bcm2835, p112   [starts at 0x2000b200]
-typedef struct {
-    uint32_t    IRQ_basic_pending,  // 0x200
-                IRQ_pending_1,      // 0x204
-                IRQ_pending_2,      // 0x208
-                FIQ_control,        // 0x20c
-                Enable_IRQs_1,      // 0x210
-                Enable_IRQs_2,      // 0x214
-                Enable_Basic_IRQs,  // 0x218
-                Disable_IRQs_1,     // 0x21c
-                Disable_IRQs_2,     // 0x220
-                Disable_Basic_IRQs; // 0x224
-} rpi_irq_controller_t;
+enum { 
+    IRQ_Base            = 0x2000b200,
+    IRQ_basic_pending   = IRQ_Base+0,       // 0x200
+    IRQ_pending_1       = IRQ_Base+4,       // 0x204
+    IRQ_pending_2       = IRQ_Base+8,       // 0x208
+    FIQ_control         = IRQ_Base+0xc,     // 0x20c
+    Enable_IRQs_1       = IRQ_Base+0x10,    // 0x210
+    Enable_IRQs_2       = IRQ_Base+0x14,    // 0x214
+    Enable_Basic_IRQs   = IRQ_Base+0x18,    // 0x218
+    Disable_IRQs_1      = IRQ_Base+0x1c,    // 0x21c
+    Disable_IRQs_2      = IRQ_Base+0x20,    // 0x220
+    Disable_Basic_IRQs  = IRQ_Base+0x24,    // 0x224
+};
 
-volatile rpi_irq_controller_t* RPI_GetIRQController(void);
-
-// and this with IRQ_basic_pending to see if it's a timer interrupt.
+// bit-wise AND this with IRQ_basic_pending to see if it's a timer interrupt.
 #define RPI_BASIC_ARM_TIMER_IRQ         (1 << 0)
 
 void system_enable_interrupts(void);
 void system_disable_interrupts(void);
-
-// location of these registers.
-#define INTERRUPT_ENABLE_1  0x2000b210
-#define INTERRUPT_ENABLE_2  0x2000b214
-#define INTERRUPT_DISABLE_1 0x2000b21c
-#define INTERRUPT_DISABLE_2 0x2000b220
-
 void int_init(void);
 
 #endif 
-

@@ -8,9 +8,9 @@
 void int_init(void) {
     // put interrupt flags in known state. 
     //  BCM2835 manual, section 7.5
-    PUT32(INTERRUPT_DISABLE_1, 0xffffffff);
-    PUT32(INTERRUPT_DISABLE_2, 0xffffffff);
-    mb();
+    PUT32(Disable_IRQs_1, 0xffffffff);
+    PUT32(Disable_IRQs_2, 0xffffffff);
+    dev_barrier();
 
     /*
      * Copy in interrupt vector table and FIQ handler _table and _table_end

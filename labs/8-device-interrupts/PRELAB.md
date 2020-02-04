@@ -1,5 +1,10 @@
 ## Lab 8:  device interrupts and networking.
 
+We're going to get networking up, and use interrupts to make it 
+robust.  We'll be using the [ESP8266](https://en.wikipedia.org/wiki/ESP8266)
+chip, which you can buy for $2 or less on ebay and related sites.
+
+
 This lab has a bunch of moving parts.  The main pieces we need:
 
    1. A working software UART implementation.  Hopefully this is a minor

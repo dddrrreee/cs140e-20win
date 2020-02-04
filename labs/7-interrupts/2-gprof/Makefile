@@ -12,6 +12,7 @@ endif
 
 include $(CS140E_PATH)/libpi/includes.mk
 
+
 # if you want to compile everything in a directory, do something like this.
 #   SOURCES := $(wildcard ./*.c)
 #   OBJS := $(patsubst %.c, %.o, $(SOURCES))
@@ -21,39 +22,46 @@ OBJS := $(NAME).o \
      $(TI)/interrupts-c.o   \
      $(TI)/timer-interrupt.o
 
-# if you want to add all the .h's as dependencies:
-#   DEPS := $(wildcard ./*.h) $(LPI)
-DEPS := $(LPI) ./Makefile 
-CFLAGS += -I../timer-int
+CFLAGS += -Wno-unused-function -Wno-unused-variable  -I$(TI)
 
-all: libpi $(OBJS) $(NAME).bin # fake
+
+# add all the .h's as dependencies, libpi and the makefile.
+DEPS := $(wildcard ./*.h) $(LPI) ./Makefile
+
+# uncomment the different tests.
+all: libpi $(OBJS) $(NAME).bin
 
 libpi: 
-	@make -s -C $(LPP)
+	@ # @make -s -C $(LPP)
+	@ make -C $(LPP)
 
 fake:
 	@make -f ./Makefile.unix NAME=equiv-check.fake
 
 $(OBJS): $(DEPS)
 
+%.o: %.S
+	$(CC) -c $(CPP_ASFLAGS) $< -o $@
+
 # <LPI> will get rebuilt if anything changes, so we don't need any other
 # dependencies.
-$(NAME).bin: $(MEMMAP) $(OBJS) $(LPI) ./Makefile
-	$(LD) $(START) $(OBJS) -T $(LPP)/memmap -o $(NAME).elf  $(LPI)
-	@$(OD) -D $(NAME).elf > $(NAME).list
-	$(OCP) $(NAME).elf -O binary $(NAME).bin
+%.bin: %.o $(MEMMAP) $(OBJS) $(DEPS)
+	$(LD) $(START) $(OBJS) -T $(LPP)/memmap -o $*.elf  $(LPI)
+	$(OD) -D  -S $*.elf > $*.list
+	$(OCP) $*.elf -O binary $*.bin
+	my-install ./$*.bin
 
 run:
 	my-install $(NAME).bin
 
 tags: 
-	ctags *.[chSs] */*.[chSs]
+	ctags *.[chSs] $(LPP)/*.[ch] $(LPP)/*.[chSs]
 
 clean:
 	rm -rf $(BUILD_DIR) $(NAME) *~ tags *.o *.bin *.elf *.list *.img Makefile.bak  *.d
 
 cleanall:
+	make -C $(LPP) clean
 	make clean
-	make -f ./Makefile.unix NAME=$(NAME).fake clean
-	make -C ../../../libpi-fake clean
-.PHONY: libpi all run tags clean  fake
+
+.PHONY: libpi all run tags clean  cleanall

@@ -3,7 +3,7 @@ MAKEFLAGS +=  --no-print-directory
 
 # we've had some make issues going cross windows/mac/linux, so we just do brute stupid
 # to make things work: no fancy rules, just always recompile.
-NAME = timer
+NAME = syscall
 
 # check that your path is defined.
 ifndef CS140E_PATH
@@ -12,12 +12,13 @@ endif
 
 include $(CS140E_PATH)/libpi/includes.mk
 
-CFLAGS += -Wno-unused-function -Wno-unused-variable 
+CFLAGS += -Wno-unused-function -Wno-unused-variable  -I$(TI)
 
 # if you want to compile everything in a directory, do something like this.
 #   SOURCES := $(wildcard ./*.c)
 #   OBJS := $(patsubst %.c, %.o, $(SOURCES))
-OBJS := $(NAME).o interrupts-asm.o interrupts-c.o timer-interrupt.o
+TI := ../timer-int
+OBJS := $(NAME).o interrupts-asm.o $(TI)/interrupts-c.o  syscall-asm.o
 
 # add all the .h's as dependencies, libpi and the makefile.
 DEPS := $(wildcard ./*.h) $(LPI) ./Makefile
@@ -41,7 +42,7 @@ $(OBJS): $(DEPS)
 # dependencies.
 %.bin: %.o $(MEMMAP) $(OBJS) $(DEPS)
 	$(LD) $(START) $(OBJS) -T $(LPP)/memmap -o $*.elf  $(LPI)
-	$(OD) -D  -S $*.elf > $*.list
+	$(OD) -D  $*.elf > $*.list
 	$(OCP) $*.elf -O binary $*.bin
 	my-install ./$*.bin
 

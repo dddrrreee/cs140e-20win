@@ -66,14 +66,41 @@ different ways to mitigate these problems over the next couple of weeks.
 
 Turn-in:
 
-  1.  Look through the code in `timer-int`, compile it, run it.  Make sure
-  you can answer the questions in the comments.  We'll walk through it
-  in lab.
+  1.  `timer-int`: give the shortest time between timer interrupts you can 
+      make, and two ways to make the code crash.
 
-  2. Implement `gprof` (in the `gprof` subdirectory).   You should run it
+
+  2. Build a simple system call: show your `1-syscall` works.
+
+  3. Implement `gprof` (in the `2-gprof` subdirectory).   You should run it
   and show that the results are reasonable.
 
-### Using interrupts to build a profiler.
+### Part 0: timer interrupts.
+
+Look through the code in `timer-int`, compile it, run it.  Make sure
+you can answer the questions in the comments.  We'll walk through it
+in class.
+
+### Part 1: make a simple system call.
+
+One we can get timer exceptions, we (perhaps surprisingly) have enough infrastructure
+to make trivial system calls.   Since we are already running in supervisor mode,
+these are not that useful as-is, but making them now will show how trivial 
+they actually are.  In particular, look in `1-syscall` and write the needed code
+in:
+  1. `interrupts-asm.S`: you should be able to largely rip off the timer interrupt
+     code to forward system call.  NOTE: a huge difference is that we are
+     already running at supervisor level, so all registers are live.  You need
+     to handle this differently.
+
+  2. `syscall.c`: finish the system call vector code (should just be a few lines).
+     You want to act on system call 1 and reject all other calls with a `-1`.
+   
+
+This doesn't take much code, but you will have to think carefully about which
+registers need to be saved, etc.
+
+### Part 2: Using interrupts to build a profiler.
 
 The nice thing about doing everything from scratch is that simple things are simple
 to do.  We don't have to fight a big OS that can't get out of its own way.   

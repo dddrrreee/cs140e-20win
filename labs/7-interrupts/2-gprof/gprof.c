@@ -46,12 +46,13 @@ static volatile unsigned period;
 
 // client has to define this.
 void interrupt_vector(unsigned pc) {
-    unsigned pending = get32(&RPI_GetIRQController()->IRQ_basic_pending);
+    dev_barrier();
+    unsigned pending = GET32(IRQ_basic_pending);
 
-    // if this isn't true, could be a GPU interrupt: just return.
+    // if this isn't true, could be a GPU interrupt (as discussed in Broadcom):
+    // just return.  [confusing, since we didn't enable!]
     if((pending & RPI_BASIC_ARM_TIMER_IRQ) == 0)
         return;
-
     /* 
      * Clear the ARM Timer interrupt - it's the only interrupt we have
      * enabled, so we want don't have to work out which interrupt source
@@ -59,7 +60,7 @@ void interrupt_vector(unsigned pc) {
      *
      * Q: if we delete?
      */
-    put32(&RPI_GetArmTimer()->IRQClear, 1);
+    PUT32(arm_timer_IRQClear, 1);
     cnt++;
 
     gprof_inc(pc);

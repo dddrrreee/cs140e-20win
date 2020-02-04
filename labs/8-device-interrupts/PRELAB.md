@@ -160,7 +160,7 @@ make it easier to do your `read-modify-write` of enabled pin events:
         }
 
 More complete discussion of the routines is in `gpio.h` but to make sure you
-don't miss it:
+don't miss it the comments are cut-and-paste below:
 
     // gpio_int_rising_edge and gpio_int_falling_edge (and any other) should
     // call this routine (you must implement) to setup the right GPIO event.

@@ -7,8 +7,11 @@ This lab has a bunch of moving parts.  The main pieces we need:
 
    2. The helper routines to do GPIO interrupts.
 
-   3. Reading through the ESP8266 PDF files in `docs/`.
-
+   3. Reading through the ESP8266 PDF files in `docs/`.  You need to read 
+      the examples file to see how to setup the ESP as a tcp server and
+      sending/receiving tcp packets.  The other documents have more 
+      commands (we have an old version of the chip I bought off ebay,
+      so some of these won't work).
 ----------------------------------------------------------------------------
 ## A cycle-based software uart
 

@@ -6,4 +6,4 @@ YOUR_OBJS =
 
 # these are initial .o's we give you: to use your own, remove them
 # and add yours
-EXTRA_OBJS= cs140e-objs/uart.o cs140e-objs/gpio.o 
+EXTRA_OBJS= cs140e-objs/uart.o cs140e-objs/gpio.o  cs140e-objs/kmalloc.o

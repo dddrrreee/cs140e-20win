@@ -12,7 +12,7 @@
 
 #define panic(msg, args...) do { 					\
 	(printk)("PANIC:%s:%s:%d:" msg "\n", __FILE__, __FUNCTION__, __LINE__, ##args); \
-	rpi_reboot();							\
+	clean_reboot();							\
 } while(0)
 
 #define assert(bool) do { if((bool) == 0) panic(#bool); } while(0)
@@ -35,7 +35,7 @@
                 printk("ERROR:%s:%s:%d: "                      \
                         "FALSE(<" _XSTRING(_expr) ">): " _XSTRING(_msg) "\n",\
                         __FILE__, __FUNCTION__, __LINE__, ##args);              \
-                rpi_reboot();\
+                clean_reboot();\
         }                                                               \
 } while(0)
 

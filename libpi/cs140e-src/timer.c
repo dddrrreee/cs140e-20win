@@ -7,9 +7,17 @@ void delay_cycles(unsigned ticks) {
         asm("add r1, r1, #0");
 }
 
+// no dev barrier.
+unsigned timer_get_usec_raw(void) {
+    return GET32(0x20003004);
+}
+
 // in usec
 unsigned timer_get_usec(void) {
-    return GET32(0x20003004);
+    dev_barrier();
+    unsigned u = timer_get_usec_raw();
+    dev_barrier();
+    return u;
 }
 
 void delay_us(unsigned us) {

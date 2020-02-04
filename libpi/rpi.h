@@ -78,7 +78,11 @@ void delay_ms(unsigned ms) ;
 
 // returns time in usec.
 // NOTE: this can wrap around!   do not do direct comparisons.
+// this does a memory barrier.
 unsigned timer_get_usec(void) ;
+// this does no memory barrier.
+unsigned timer_get_usec_raw(void);
+
  
 // returns time in nanosec.
 // NOTE: this can wrap around!   do not do direct comparisons.

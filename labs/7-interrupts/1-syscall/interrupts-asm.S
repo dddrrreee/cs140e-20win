@@ -87,11 +87,31 @@ software_interrupt_asm:
     @ runs at system level (p.a2-5): assumes we have a sp
     @ implement: 
     @   - save regs
-    @   - need to figure out what lr points to,
+	push {lr}
+
+	push {r1-r12}
+    
+	sub lr, lr, #4
+	
+	@   - need to figure out what lr points to,
+	mov r2, lr
+
     @   - mov the original r0 into r1
-    @   - mov the pointer to the syscall inst into r0
-    @   - call
+    mov r1, r0
+	
+	@ - mov the pointer to the syscall inst into r0
+    mov r0, lr 
+
+	@   - call
+	bl syscall_vector
+
     @   - restore regs
+	pop {r1-r12}
+
+	pop {lr}
+
+	ldm sp!, {pc}^
+
     @   - return from the exception.
     movs pc, lr
 

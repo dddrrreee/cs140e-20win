@@ -19,7 +19,7 @@ int syscall_vector(unsigned pc, uint32_t r0) {
     uint32_t inst, sys_num;
 
     // figure out the instruction and the system call number.
-    unimplemented();
+    sys_num = *(unsigned*)pc & 0xFFFFFF; 
 
     switch(sys_num) {
     case 1: 

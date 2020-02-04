@@ -129,7 +129,7 @@ static uint8_t corrupt_byte(uint8_t c) {
 static int handle_child_exit(int pid, int can_fail_p) {
 	int status;
 	int r;
-	usleep(500);
+	usleep(1000);
     r = waitpid(pid, &status, WNOHANG);
 	if(r < 0){
 		 ;//sys_die(waitpid, failed);
@@ -222,6 +222,8 @@ int replay_unix(endpt_t *u, log_ent_t *log, unsigned n, int fail_i) {
     int sent_bytes = 0;
 
     uint8_t c;
+	int status;
+
     for(int i = 0; i < n; i++) {
         log_ent_t *e = &log[i];
 
@@ -237,18 +239,22 @@ int replay_unix(endpt_t *u, log_ent_t *log, unsigned n, int fail_i) {
             //output("In PI\n");
             sent_bytes++;
         } else {
+			c = e->v;
 			// If endpoint sender is Unix
 			// Check if we can read:
 			// If not, then waitpid
 			// If yes, then read and see if we got something out
 			 if(!can_read(u->fd)) {
-				waitpid(pid, &status, WNOHANG);
-			 } else {
-				 exact_read(u->fd, &c, 1);
-
-			}
+				if(1 == handle_child_exit(u->pid, corrupted_p)) {
+					return corrupted_p;
+				} 
+			 }
+			 else {
+				read_exact(u->fd, &c, 1);
+			 }
 		}
-    //unimplemented();
+	}
+	//unimplemented();
     
 	// have to spin for some number of iterations checking for child 
     // exit.

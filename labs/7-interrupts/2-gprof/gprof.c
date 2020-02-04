@@ -17,23 +17,60 @@
  *	- gprof_dump will print out all samples.
  */
 
+#define HIST_SIZE 8192
+
+typedef struct {
+    unsigned pc_entry;
+    unsigned hit_count;
+} hist_t;
+
+static hist_t* gprof_hist;
+static int frontstop = -1;
+
 // allocate table.
 //    few lines of code
 static unsigned gprof_init(void) {
-    unimplemented();
+    // Allocate memory from heap
+    gprof_hist = kmalloc_aligned(HIST_SIZE * sizeof(hist_t), 8);
+    int i;
+    
+    // Clear out histogram with loop
+    for(i = 0; i < HIST_SIZE; i++) {
+        gprof_hist[i].pc_entry = 0;
+        gprof_hist[i].hit_count = 0;
+    }
+    return (unsigned) gprof_hist;
 }
 
 // increment histogram associated w/ pc.
 //    few lines of code
 static void gprof_inc(unsigned pc) {
-    unimplemented();
+    // Iterate through and find the associated PC
+    int i;
+    for(i = 0; i <= frontstop; i++) {
+        if(gprof_hist[i].pc_entry == pc) {
+            gprof_hist[i].hit_count += 1;
+            return;
+        }
+    }
+
+    // Did not find PC so add it
+    frontstop++;
+    gprof_hist[frontstop].pc_entry = pc;
+    gprof_hist[frontstop].hit_count = 1;
 }
 
 // print out all samples whose count > min_val
 //
 // make sure sampling does not pick this code up!
 static void gprof_dump(unsigned min_val) {
-    unimplemented();
+    int i;
+    for(i = 0; i < frontstop; i++) {
+        if(gprof_hist[i].hit_count > min_val) {
+            printk("PC %x has %d hits\n", gprof_hist[i].pc_entry,
+                    gprof_hist[i].hit_count);
+        }
+    }
 }
 
 
@@ -88,8 +125,8 @@ void notmain() {
     printk("gonna enable ints globally!\n");
 
     // Q: if you move these below interrupt enable?
-    gprof_init();
     kmalloc_init();
+    gprof_init();
 
     // Q: if you don't do?
     printk("gonna enable ints globally!\n");

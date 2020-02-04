@@ -2,8 +2,8 @@
 # (the makefile will figure out how to produce it).
 #
 # if you add gpio.o or uart.o remove it from EXTRA_OBJS
-YOUR_OBJS =
+YOUR_OBJS = uart.o gpio.o kmalloc.o
 
 # these are initial .o's we give you: to use your own, remove them
 # and add yours
-EXTRA_OBJS= cs140e-objs/uart.o cs140e-objs/gpio.o  cs140e-objs/kmalloc.o
+EXTRA_OBJS=

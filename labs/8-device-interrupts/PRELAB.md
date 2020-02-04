@@ -87,6 +87,13 @@ I will hopefully check in some checksums you can verify against late tonight
 after I get the rest of the lab working :)
 
 
+Hint: To make it easier to test your software UART, I would add two routines:
+  1. `find_ttyusb_first`: returns the first created tty-USB.
+  2. `find_ttyusb_last`: returns the last created tty-USB.
+Change your `my-install` to use the first one, and `pi-cat` to use 
+the latter.  Then, as long as you plug in your uart devices in the right
+order (the main pi UART first, the other used to communicate with your
+software UART second) then everything should just work.
 ----------------------------------------------------------------------------
 #### Part 2: Implement helper functions for GPIO interrupts.
 

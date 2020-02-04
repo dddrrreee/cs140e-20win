@@ -1,9 +1,6 @@
 #include "rpi.h"
 #include "rpi-interrupts.h"
 
-
-
-
 // initialize global interrupt state.
 void int_init(void) {
     // put interrupt flags in known state. 
@@ -51,4 +48,3 @@ void prefetch_abort_vector(unsigned pc) {
 void data_abort_vector(unsigned pc) {
 	UNHANDLED("data abort", pc);
 }
-

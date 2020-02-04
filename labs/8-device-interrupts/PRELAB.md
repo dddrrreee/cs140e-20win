@@ -17,13 +17,13 @@ This lab has a bunch of moving parts.  The main pieces we need:
 
 You'll need to finish up your software UART implementation from lab 4.
 You'll be using this to talk to the ESP8266.   You'll make two changes:
-   1. Since the ESP8266 is a cut rate device, I'm not sure how much we
-      can rely on it being rebust in the face of errors.  Thus, you
-      should switch to making your sw-uart cycle based.
+ 1. Since the ESP8266 is a cut rate device, I'm not sure how much we
+    can rely on it being rebust in the face of errors.  Thus, you
+    should switch to making your sw-uart cycle based.
 
-   2. Since the GPIO pins you use for your sw-UART routine do not buffer this
-      means that we will lose any input if we do not read "soon enough".  Thus,
-      make two routines: 
+ 2. Since the GPIO pins you use for your sw-UART routine do not buffer this
+    means that we will lose any input if we do not read "soon enough".  Thus,
+    make two routines: 
 
         // read from uart <u>, storing the results in <buf> until either
         //    1. you read character <end>
@@ -36,11 +36,11 @@ You'll be using this to talk to the ESP8266.   You'll make two changes:
         //    2. you ran out of buffer space.
         int sw_uart_gets_timeout(sw_uart *u, uint8_t *buf, uint32_t nbytes, uint32_t timeout);
 
-      Between these routines, we can do simple input processing of the ESP without
-      using interrupts (as an initial cut).
+    Between these routines, we can do simple input processing of the ESP without
+    using interrupts (as an initial cut).
 
-      In order to minimize the chance we lose characters, include these below the
-      implementations of your putc and getc so those routines can be inlined.
+    In order to minimize the chance we lose characters, include these below the
+    implementations of your putc and getc so those routines can be inlined.
 
 ***IMPORTANT***:
   - If you already have a working micro-second version,

@@ -88,8 +88,8 @@ void notmain() {
     printk("gonna enable ints globally!\n");
 
     // Q: if you move these below interrupt enable?
-    gprof_init();
     kmalloc_init();
+    gprof_init();
 
     // Q: if you don't do?
     printk("gonna enable ints globally!\n");

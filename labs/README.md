@@ -90,12 +90,23 @@ functionality: threads, interrupts, virtual memory and file systems.
   cases and have a result that is much much much slower and, worse,
   in terms of insight.
 
+  - [8-device-interrupts](8-device-interrupts): we setup GPIO interrupts,
+    then use this to build networking on the esp8266 wireless device.
+    You will modify your previous labs so that you have an interrupt-based
+    software UART implementation.  You will then use this to connect
+    and control the ESP8266 that we give out in class and ping other pi's.
+
+    Without interrupts, it's difficult to get networking working, since
+    our GPIO pins (and our UART options) have limited space and, thus,
+    unless our code checks them at exactly the right time, incoming
+    messages will vaporize.
 
 ***[HAVE NOT UPDATED THE LABS BELOW]***
 
   - [9-preemptive-threads](9-preemptive-threads): you will use the
   timer-code in the previous lab to implement pre-emptive threads along
   with locks and some simple checking code.
+
 
   - [10-ESP](10-esp-int/): in the capstone lab, we implement an
   interrupt-based UART channel and use this to control the ESP 8266

@@ -19,4 +19,7 @@
 .globl fn_name;             \
 fn_name:
 
+#define CYC_PER_USEC 700
+#define PI_MHz  (700*1000*1000UL)
+
 #endif

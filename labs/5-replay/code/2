@@ -129,12 +129,12 @@ static uint8_t corrupt_byte(uint8_t c) {
 static int handle_child_exit(int pid, int can_fail_p) {
 	int status;
 	int r;
-	usleep(1000);
+	usleep(500);
    
 	r = waitpid(pid, &status, WNOHANG);
 	
 	if (r < 0) {
-		printf("Unix did not exit cleanly\n");
+		//printf("Unix did not exit cleanly\n");
 	} else if (r == 0){
 		printf("Unix has not stopped yet\n");
 		return 0;
@@ -152,7 +152,7 @@ static int handle_child_exit(int pid, int can_fail_p) {
 		}
 	}
 
-	printf("Finally Unix did not exit cleanly with status %d\n", WEXITSTATUS(status));
+	// printf("Finally Unix did not exit cleanly with status %d\n", WEXITSTATUS(status));
 	return -1;
 
 }

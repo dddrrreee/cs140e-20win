@@ -1,1 +1,191 @@
+found it! iter=3056, ncorrupt=15
+pi-install pid = 37635
+my-install: tty-usb=</tmp/fake-dev> program=<hello.bin> about to boot
+******************sending 3024 bytes
+bootloader: Done.
+listening on ttyusb=</tmp/fake-dev>
+hello world
+
+DONE!!!
+
+
+Saw done
+
+bootloader: pi exited.  cleaning up
+-------------------TRIAL 4 about to run-----------------------------
+going to try to corrupt 4
+pi-install pid = 37636
+my-install: tty-usb=</tmp/fake-dev> program=<hello.bin> about to boot
+******************sending 3024 bytes
+CORRUPTED byte 4
+Not the right code
+interpose.c:read_exact_can_fail2:207:expected a read of 1 bytes, got 0
+-------------------TRIAL 4 was a success-----------------------------
+-------------------TRIAL 5 about to run-----------------------------
+going to try to corrupt 5
+pi-install pid = 37637
+my-install: tty-usb=</tmp/fake-dev> program=<hello.bin> about to boot
+******************sending 3024 bytes
+CORRUPTED byte 5
+Not the right code
+interpose.c:read_exact_can_fail2:207:expected a read of 1 bytes, got 0
+-------------------TRIAL 5 was a success-----------------------------
+-------------------TRIAL 6 about to run-----------------------------
+going to try to corrupt 6
+pi-install pid = 37638
+my-install: tty-usb=</tmp/fake-dev> program=<hello.bin> about to boot
+******************sending 3024 bytes
+CORRUPTED byte 6
+Not the right code
+interpose.c:read_exact_can_fail2:207:expected a read of 1 bytes, got 0
+-------------------TRIAL 6 was a success-----------------------------
+-------------------TRIAL 7 about to run-----------------------------
+going to try to corrupt 7
+pi-install pid = 37639
+my-install: tty-usb=</tmp/fake-dev> program=<hello.bin> about to boot
+******************sending 3024 bytes
+CORRUPTED byte 7
+Not the right code
+interpose.c:read_exact_can_fail2:207:expected a read of 1 bytes, got 0
+-------------------TRIAL 7 was a success-----------------------------
+-------------------TRIAL 8 about to run-----------------------------
+going to try to corrupt 8
+pi-install pid = 37640
+my-install: tty-usb=</tmp/fake-dev> program=<hello.bin> about to boot
+******************sending 3024 bytes
+CORRUPTED byte 8
+Checksums don't match
+interpose.c:read_exact_can_fail2:207:expected a read of 1 bytes, got 0
+-------------------TRIAL 8 was a success-----------------------------
+-------------------TRIAL 9 about to run-----------------------------
+going to try to corrupt 9
+pi-install pid = 37641
+my-install: tty-usb=</tmp/fake-dev> program=<hello.bin> about to boot
+******************sending 3024 bytes
+CORRUPTED byte 9
+Checksums don't match
+interpose.c:read_exact_can_fail2:207:expected a read of 1 bytes, got 0
+-------------------TRIAL 9 was a success-----------------------------
+-------------------TRIAL 10 about to run-----------------------------
+going to try to corrupt 10
+pi-install pid = 37642
+my-install: tty-usb=</tmp/fake-dev> program=<hello.bin> about to boot
+******************sending 3024 bytes
+CORRUPTED byte 10
+Checksums don't match
+interpose.c:read_exact_can_fail2:207:expected a read of 1 bytes, got 0
+-------------------TRIAL 10 was a success-----------------------------
+-------------------TRIAL 11 about to run-----------------------------
+going to try to corrupt 11
+pi-install pid = 37643
+my-install: tty-usb=</tmp/fake-dev> program=<hello.bin> about to boot
+******************sending 3024 bytes
+CORRUPTED byte 11
+Checksums don't match
+interpose.c:read_exact_can_fail2:207:expected a read of 1 bytes, got 0
+-------------------TRIAL 11 was a success-----------------------------
+-------------------TRIAL 12 about to run-----------------------------
+going to try to corrupt 12
+pi-install pid = 37644
+my-install: tty-usb=</tmp/fake-dev> program=<hello.bin> about to boot
+******************sending 3024 bytes
+CORRUPTED byte 12
+BOOT SUCCESS not received
+-------------------TRIAL 12 was a success-----------------------------
+-------------------TRIAL 13 about to run-----------------------------
+going to try to corrupt 13
+pi-install pid = 37645
+my-install: tty-usb=</tmp/fake-dev> program=<hello.bin> about to boot
+******************sending 3024 bytes
+CORRUPTED byte 13
+BOOT SUCCESS not received
+-------------------TRIAL 13 was a success-----------------------------
+-------------------TRIAL 14 about to run-----------------------------
+going to try to corrupt 14
+pi-install pid = 37646
+my-install: tty-usb=</tmp/fake-dev> program=<hello.bin> about to boot
+******************sending 3024 bytes
+CORRUPTED byte 14
+BOOT SUCCESS not received
+-------------------TRIAL 14 was a success-----------------------------
+we checked 15 corruption trials and all failed as expected
+Unix has not stopped yet
+Unix has not stopped yet
+Unix has not stopped yet
+Unix has not stopped yet
+Unix has not stopped yet
 Unix exited cleanly with status 0
+Unix has not stopped yet
+Unix has not stopped yet
+Unix has not stopped yet
+Unix has not stopped yet
+Unix did not exit cleanly with status 1
+Unix did not exit cleanly
+Unix exited cleanly with status 0
+Unix has not stopped yet
+Unix has not stopped yet
+Unix has not stopped yet
+Unix has not stopped yet
+Unix did not exit cleanly with status 1
+Unix did not exit cleanly
+Unix exited cleanly with status 0
+Unix has not stopped yet
+Unix has not stopped yet
+Unix has not stopped yet
+Unix did not exit cleanly with status 1
+Unix did not exit cleanly
+Unix exited cleanly with status 0
+Unix has not stopped yet
+Unix has not stopped yet
+Unix has not stopped yet
+Unix did not exit cleanly with status 1
+Unix did not exit cleanly
+Unix exited cleanly with status 0
+Unix has not stopped yet
+Unix has not stopped yet
+Unix has not stopped yet
+Unix did not exit cleanly with status 1
+Unix did not exit cleanly
+Unix exited cleanly with status 0
+Unix has not stopped yet
+Unix has not stopped yet
+Unix has not stopped yet
+Unix did not exit cleanly with status 1
+Unix did not exit cleanly
+Unix exited cleanly with status 0
+Unix has not stopped yet
+Unix has not stopped yet
+Unix has not stopped yet
+Unix has not stopped yet
+Unix did not exit cleanly with status 1
+Unix did not exit cleanly
+Unix exited cleanly with status 0
+Unix has not stopped yet
+Unix has not stopped yet
+Unix has not stopped yet
+Unix has not stopped yet
+Unix has not stopped yet
+Unix did not exit cleanly with status 1
+Unix did not exit cleanly
+Unix exited cleanly with status 0
+Unix has not stopped yet
+Unix has not stopped yet
+Unix has not stopped yet
+Unix has not stopped yet
+Unix has not stopped yet
+Unix has not stopped yet
+Unix did not exit cleanly with status 1
+Unix has not stopped yet
+Unix has not stopped yet
+Unix has not stopped yet
+Unix has not stopped yet
+Unix has not stopped yet
+Unix has not stopped yet
+Unix did not exit cleanly with status 1
+Unix has not stopped yet
+Unix has not stopped yet
+Unix has not stopped yet
+Unix has not stopped yet
+Unix has not stopped yet
+Unix has not stopped yet
+Unix did not exit cleanly with status 1

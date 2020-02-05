@@ -8,7 +8,8 @@ int read_exact_can_fail(int fd, void *data, unsigned n) {
     assert(n);
     int got;
     if((got = read(fd, data, n)) < 0)
-        sys_die(read, read_exact failed);
+        return -1;
+		//sys_die(read, read_exact failed);
     if(got != n) {
         debug("expected a read of %d bytes, got %d\n", n, got);
         return 0;

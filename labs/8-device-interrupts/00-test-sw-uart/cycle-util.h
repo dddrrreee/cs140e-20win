@@ -1,3 +1,4 @@
+// engler, cs140e: simple utilities for using the cycle counters.
 #ifndef __CYCLE_UTIL_H__
 #define __CYCLE_UTIL_H__
 #include "rpi.h"
@@ -25,7 +26,11 @@ write_cyc_until(unsigned pin, unsigned v, unsigned start, unsigned ncycles) {
     delay_ncycles(start,ncycles);
 }   
 
-// we can't do this when faking things out, so redefine it.
+// We don't seem to need this, so removing for the moment.  can
+// drop in and experiment.
+//
+// we can't do direct loads and stores when faking things out, 
+// so redefine it when running on Unix
 // #ifdef RPI_UNIX
 #if 1
 #   define GPIO_READ_RAW gpio_read
@@ -41,7 +46,6 @@ write_cyc_until(unsigned pin, unsigned v, unsigned start, unsigned ncycles) {
         return (*gpio_lev0 >> off) & 1;
     }
 #endif
-
 
 // wait until <pin>=<v> or until we spin for <ncycles>
 static inline int 

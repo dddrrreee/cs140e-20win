@@ -1,3 +1,5 @@
+// engler, cs140e: software uart interface.  the extra routines are mainly for 
+// trying to read input fast enough without interrupts.
 #ifndef __SW_UART_H__
 #define __SW_UART_H__
 

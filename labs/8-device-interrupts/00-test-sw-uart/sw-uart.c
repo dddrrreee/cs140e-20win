@@ -1,5 +1,6 @@
 /*
- * reimplement your sw-uart code below using cycles.   helpers are in <cycle-util.h>
+ * engler, cs140e: reimplement your sw-uart code below using cycles.   
+ * useful helpers are in <cycle-util.h>
  */ 
 #include "rpi.h"
 #include "sw-uart.h"

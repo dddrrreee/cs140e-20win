@@ -2,6 +2,13 @@
 
 ***MAKE SURE YOU DO THE [PRELAB](PRELAB.md) FIRST!***
 
+***STILL MODIFYING THIS FILE DRASTICALLY***
+
+Check-off:
+  1. Your `gpio` code passes the cksum tests.
+  2. You can do loop back `putc/getc` with interrupts
+  3. You have a simple ping-pong between you and your partner over the esp8266.
+
 ------------------------------------------------------------------------
 ### Part 1: Implement raw GPIO interrupt handling.
 

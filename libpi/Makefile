@@ -14,12 +14,12 @@ endif
 include includes.mk
 
 # if you get source from other directories, add them to vpath too.
-VPATH := .:libc/:cs140e-src/:my-src:
+VPATH := .:libc/:cs140e-src/:my-src:cs140e-interrupt
 START= cs140e-start
 
 # grab everything in libc and src
-SOURCES     := $(wildcard ./libc/*.c  ./cs140e-src/*.c  ./my-src/*.c)
-ASM_SOURCES := $(wildcard ./libc/*.S  ./cs140e-src/*.S)
+SOURCES     := $(wildcard ./libc/*.c  ./cs140e-src/*.c  ./my-src/*.c ./cs140e-interrupt/*.c)
+ASM_SOURCES := $(wildcard ./libc/*.S  ./cs140e-src/*.S ./cs140e-interrupt/*.S ./my-src/*.S)
 OUR_OBJS := $(patsubst %.c, %.o, $(SOURCES)) $(patsubst %.S, %.o, $(ASM_SOURCES))
 
 # this is where your code is.

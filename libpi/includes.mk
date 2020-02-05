@@ -19,7 +19,10 @@ endif
 
 # CFLAGS = -O -Wall -nostdlib -nostartfiles -ffreestanding  -march=armv6 -std=gnu99 -I$(CS140E_LIBPI_PATH) -I.
 
-CFLAGS = -Og -Wall -nostdlib -nostartfiles -ffreestanding -mcpu=arm1176jzf-s -mtune=arm1176jzf-s  -std=gnu99 -I$(CS140E_LIBPI_PATH) -I. -ggdb -Wno-pointer-sign
+INC = -I$(CS140E_LIBPI_PATH) -I.  -I$(CS140E_LIBPI_PATH)/cs140e-src -I$(CS140E_LIBPI_PATH)/cs140e-interrupt
+
+CFLAGS = -Og -Wall -nostdlib -nostartfiles -ffreestanding -mcpu=arm1176jzf-s -mtune=arm1176jzf-s  -std=gnu99 $(INC) -ggdb -Wno-pointer-sign
+
 ASFLAGS = --warn --fatal-warnings  -mcpu=arm1176jzf-s -march=armv6zk
 
-CPP_ASFLAGS =  -nostdlib -nostartfiles -ffreestanding   -Wa,--warn -Wa,--fatal-warnings -Wa,-mcpu=arm1176jzf-s -Wa,-march=armv6zk   -I$(CS140E_LIBPI_PATH) -I.
+CPP_ASFLAGS =  -nostdlib -nostartfiles -ffreestanding   -Wa,--warn -Wa,--fatal-warnings -Wa,-mcpu=arm1176jzf-s -Wa,-march=armv6zk   $(INC)

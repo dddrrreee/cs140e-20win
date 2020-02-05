@@ -36,12 +36,12 @@ You'll be using this to talk to the ESP8266.   You'll make two changes:
         //    1. you read character <end>
         //    2. you run out of buffer space.
         // returns number of characters read (including the last one).
-        int sw_uart_gets_until(sw_uart *u, uint8_t *buf, uint32_t nbytes, uint8_t end);
+        int sw_uart_gets_until(sw_uart_t *u, uint8_t *buf, uint32_t nbytes, uint8_t end);
 
         // read from uart <u>, storing the results in <buf> until:
         //    1. you have not received any input in <timeout> usec.
         //    2. you ran out of buffer space.
-        int sw_uart_gets_timeout(sw_uart *u, uint8_t *buf, uint32_t nbytes, uint32_t timeout);
+        int sw_uart_gets_timeout(sw_uart_t *u, uint8_t *buf, uint32_t nbytes, uint32_t timeout);
 
     Between these routines, we can do simple input processing of the ESP without
     using interrupts (as an initial cut).
@@ -67,7 +67,7 @@ The general implementation strategy:
     repeatedly compounding (which happens if you just blindly delay
     irrespective of when you start delaying).
 
-You can use the following two building blocks:
+You can use the following two building blocks (these are in `00-test-sw-uart/cycle-util.h`):
 
     // delay <n> cycles assuming we started counting cycles at time
     // <start>.  

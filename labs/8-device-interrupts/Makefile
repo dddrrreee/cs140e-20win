@@ -1,4 +1,4 @@
-SUBDIRS= 
+SUBDIRS= 00-test-sw-uart   01-test-gpio-int 
 
 .PHONY: all check clean
 all check clean: $(SUBDIRS)

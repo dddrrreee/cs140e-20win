@@ -1215,7 +1215,7 @@ Disassembly of section .text:
 
 Disassembly of section .bss:
 
-00000000 <buf.4135>:
+00000000 <buf.4145>:
 	...
 
 Disassembly of section .debug_info:
@@ -5663,17 +5663,17 @@ Disassembly of section .text:
 
 Disassembly of section .rodata:
 
-00000000 <__FUNCTION__.4187>:
+00000000 <__FUNCTION__.4197>:
    0:	74696d65 	strbtvc	r6, [r9], #-3429	; 0xd65
    4:	00000000 	andeq	r0, r0, r0
 
-00000008 <__FUNCTION__.4135>:
+00000008 <__FUNCTION__.4145>:
    8:	5f697072 	svcpl	0x00697072
    c:	5f746573 	svcpl	0x00746573
   10:	7074756f 	rsbsvc	r7, r4, pc, ror #10
   14:	00007475 	andeq	r7, r0, r5, ror r4
 
-00000018 <__FUNCTION__.4209>:
+00000018 <__FUNCTION__.4219>:
   18:	705f6176 	subsvc	r6, pc, r6, ror r1	; <UNPREDICTABLE>
   1c:	746e6972 	strbtvc	r6, [lr], #-2418	; 0x972
   20:	0000006b 	andeq	r0, r0, fp, rrx
@@ -9539,17 +9539,17 @@ Disassembly of section .bss:
 
 Disassembly of section .rodata:
 
-00000000 <__FUNCTION__.4131>:
+00000000 <__FUNCTION__.4141>:
    0:	6c616d6b 	stclvs	13, cr6, [r1], #-428	; 0xfffffe54
    4:	00636f6c 	rsbeq	r6, r3, ip, ror #30
 
-00000008 <__FUNCTION__.4138>:
+00000008 <__FUNCTION__.4148>:
    8:	6c616d6b 	stclvs	13, cr6, [r1], #-428	; 0xfffffe54
    c:	5f636f6c 	svcpl	0x00636f6c
   10:	67696c61 	strbvs	r6, [r9, -r1, ror #24]!
   14:	0064656e 	rsbeq	r6, r4, lr, ror #10
 
-00000018 <__FUNCTION__.4143>:
+00000018 <__FUNCTION__.4153>:
   18:	6c616d6b 	stclvs	13, cr6, [r1], #-428	; 0xfffffe54
   1c:	5f636f6c 	svcpl	0x00636f6c
   20:	74696e69 	strbtvc	r6, [r9], #-3689	; 0xe69
@@ -13154,17 +13154,17 @@ Disassembly of section .bss:
 
 Disassembly of section .rodata:
 
-00000000 <__FUNCTION__.4131>:
+00000000 <__FUNCTION__.4141>:
    0:	6c616d6b 	stclvs	13, cr6, [r1], #-428	; 0xfffffe54
    4:	00636f6c 	rsbeq	r6, r3, ip, ror #30
 
-00000008 <__FUNCTION__.4138>:
+00000008 <__FUNCTION__.4148>:
    8:	6c616d6b 	stclvs	13, cr6, [r1], #-428	; 0xfffffe54
    c:	5f636f6c 	svcpl	0x00636f6c
   10:	67696c61 	strbvs	r6, [r9, -r1, ror #24]!
   14:	0064656e 	rsbeq	r6, r4, lr, ror #10
 
-00000018 <__FUNCTION__.4143>:
+00000018 <__FUNCTION__.4153>:
   18:	6c616d6b 	stclvs	13, cr6, [r1], #-428	; 0xfffffe54
   1c:	5f636f6c 	svcpl	0x00636f6c
   20:	74696e69 	strbtvc	r6, [r9], #-3689	; 0xe69

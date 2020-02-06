@@ -12,15 +12,38 @@ void sw_uart_putc(sw_uart_t *uart, unsigned char c) {
     uint32_t n = uart->cycle_per_bit,
              u = n,
              s = cycle_cnt_read();
+	
+	// get start conditions
+	unsigned end = n;
+	unsigned start = cycle_cnt_read();
 
-    unimplemented();
+	// lower line (line idling)
+	write_cyc_until(tx, 0, start, end);
+	end += n; 
+	write_cyc_until(tx, c & 1, start, end);
+	end += n; 
+	write_cyc_until(tx, c & 2, start, end);
+	end += n; 
+	write_cyc_until(tx, c & 4, start, end);
+	end += n; 
+	write_cyc_until(tx, c & 8, start, end);
+	end += n; 
+	write_cyc_until(tx, c & 16, start, end);
+	end += n; 
+	write_cyc_until(tx, c & 32, start, end);
+	end += n; 
+	write_cyc_until(tx, c & 64, start, end);
+	end += n; 
+	write_cyc_until(tx, c & 128, start, end);
+	end += n; 
+	write_cyc_until(tx, 1, start, end);
 }
 
 // usec: does not have to be that accurate since the time is just for timeout.
-static inline int wait_until_usec(int pin, int v, unsigned timeout_usec) {
+static inline int wait_until_usec(int rx, int v, unsigned timeout_usec) {
     unsigned start = timer_get_usec_raw();
     while(1) {
-        if(gpio_read(pin) == v)
+        if(gpio_read(rx) == v)
             return 1;
         if(timer_get_usec_raw() - start > timeout_usec)
             return 0;
@@ -47,10 +70,37 @@ int sw_uart_getc_timeout(sw_uart_t *uart, int timeout_usec) {
 
     // wait one period + 1/2 to get in the middle of the next read.
     delay_ncycles(s, n + 1*u);
-
-    unimplemented();
-
-    // make sure you wait for a stop bit: otherwise the next read may fail.
+	
+	s += u;
+    c |= (gpio_read(rx) >> rx);
+    delay_ncycles(s, u);
+	s += u; 
+    c |= (gpio_read(rx) >> rx) << 1;
+    delay_ncycles(s, u);
+	s += u;
+    c |= (gpio_read(rx) >> rx) << 2;
+    delay_ncycles(s, u);
+	s += u;
+    c |= (gpio_read(rx) >> rx) << 3;
+    delay_ncycles(s, u);
+	s += u;
+    c |= (gpio_read(rx) >> rx) << 4;
+    delay_ncycles(s, u);
+	s += u;
+    c |= (gpio_read(rx) >> rx) << 5;
+    delay_ncycles(s, u);
+	s += u;
+    c |= (gpio_read(rx) >> rx) << 6;
+    delay_ncycles(s, u);
+	s += u;
+    c |= (gpio_read(rx) >> rx) << 7;
+    //delay_ncycles(s, u);
+	//s += u;
+    
+	// make sure you wait for a stop bit: otherwise the next read may fail.
+    while(!wait_until_usec(rx, 0, timeout_usec))
+        return -1;
+	// delay_ncycles(s, n);
 
     return (int)c;
 }
@@ -64,8 +114,13 @@ int sw_uart_gets_until(sw_uart_t *u, uint8_t *buf, uint32_t nbytes, uint8_t end,
     buf[0] = 0;
 
     int i;
+	uint8_t char_in;
     for(i = 0; i < nbytes-1; i++) {
-        unimplemented();
+        if((char_in = (uint8_t)sw_uart_getc_timeout(u, usec_timeout)) != end) {
+			buf[i] = char_in;
+		} else {
+			break;
+		}
     }
     buf[i] = 0;
     return i;
@@ -82,7 +137,7 @@ int sw_uart_gets_timeout(sw_uart_t *u, uint8_t *buf,
 
     int i;
     for(i = 0; i < nbytes-1; i++) {
-        unimplemented();
+        buf[i] = (uint8_t) sw_uart_getc_timeout(u, usec_timeout);
     }
     buf[i] = 0;
     return i;

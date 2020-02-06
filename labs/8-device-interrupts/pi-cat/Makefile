@@ -7,7 +7,7 @@ CFLAGS = -Wall -Werror -g  -O -I$(LIBUNIX)
 CC = gcc
 OBJS = $(NAME).o
 
-all : libunix pi-cat tags # run # tags 
+all : libunix pi-cat #tags # run # tags 
 
 libunix:
 	make -C $(LIBUNIX)

@@ -4,8 +4,8 @@ MAKEFLAGS +=  --no-print-directory
 # we've had some make issues going cross windows/mac/linux, so we just do brute stupid
 # to make things work: no fancy rules, just always recompile.
 #NAME := 0-circular-example
-NAME := 1-gpio-int-ex
-#NAME := 2-sw-uart-analyzer
+#NAME := 1-gpio-int-ex
+NAME := 2-logic-analyzer
 
 # check that your path is defined.
 ifndef CS140E_PATH

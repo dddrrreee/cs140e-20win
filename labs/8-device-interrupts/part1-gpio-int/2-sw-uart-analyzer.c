@@ -14,11 +14,21 @@
 #include "timer-interrupt.h"
 #include "libc/circular.h"
 
+volatile unsigned time_buffer [1024];
+volatile time_index = 0;
+
 enum { out_pin = 21, in_pin = 20 };
+
 
 // client has to define this.
 void interrupt_vector(unsigned pc) {
-    unimplemented();
+    dev_barrier();
+
+	if(is_gpio_int(GPIO_INT0) || is_gpio_int(GPIO_INT1)) {
+		time_buffer[time_index] = cycle_cnt_read();
+		time_index++;
+	}
+	gpio_event_clear(in_pin);
 }
 
 void notmain() {
@@ -34,11 +44,28 @@ void notmain() {
     system_enable_interrupts();
 
     // setup sw uart
+	sw_uart_t u = sw_uart_init(20, 21, 115200);
 
-    printk("do a sw_uart_putc and record the evants in a circular buffer\n");
-    printk("do a sw_uart_get and record the evants in a circular buffer\n");
-    printk("    (must modify so that you do a gpio_write to signal output\n");
-    unimplemented();
+    //printk("do a sw_uart_putc and record the evants in a circular buffer\n");
+	
+	time_buffer[time_index] = cycle_cnt_read();
+	time_index++;
+
+	sw_uart_putc(u, 'f');
+
+    //printk("do a sw_uart_get and record the evants in a circular buffer\n");
+    time_buffer[time_index] = cycle_cnt_read();
+	time_index++; 
+	char in_char = sw_uart_getc(u);
+	
+	//printk("    (must modify so that you do a gpio_write to signal output\n");
+    
+	time_buffer[time_index] = cycle_cnt_read();
+	time_index++;
+	gpio_write(out_pin, 1);
+
+	printk("putc time: %d", time_buffer[0] - time_buffer[1];);
+	printk("putc time: %d", time_buffer[2] - time_buffer[3]
 
     printk("SUCCESS!\n");
     clean_reboot();

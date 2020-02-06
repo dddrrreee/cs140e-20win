@@ -108,6 +108,31 @@ software UART second) then everything should just work.
 ----------------------------------------------------------------------------
 #### Part 2: Implement helper functions for GPIO interrupts.
 
+
+###### checksums 
+
+In the interests of time, my checksums for this part:
+
+ 1. The log for `simple-gpio-test.c` tests is in `simple-gpio-test.log` and
+    the checksums:
+
+        ./simple-gpio-test | cksum
+        1544148739 867
+        ./simple-gpio-test | grep -v dev_barrier | cksum
+        3918492509 567
+
+ 2. The `full-gpio-test.c` tests:
+
+        ./full-gpio-test | cksum
+        431248375 21128
+        ./full-gpio-test | grep -v dev_barrier | cksum
+        3594934752 11528
+
+Note, if you got different checksums, that is not necessarily wrong.   
+In particular we might have different use of `dev_barriers`.
+
+###### background
+
 If you keep hacking on embedded stuff, the single most common activities
 your code will do is (1) setup a hardware device and (2) then configure
 device interrupts over GPIO pins (e.g., in response to setting them high,
@@ -162,8 +187,6 @@ The interrupt handler works by checking if an event happened, and then using the
 
 As with timer interrupts, you need to clear the event that generated
 the interrupt (using `gpio_event_clear`).
-
-I will post checksums for my functions later tonight.
 
 To make your code cleaner, I'd suggest using something like the following to
 make it easier to do your `read-modify-write` of enabled pin events:

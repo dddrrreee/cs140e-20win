@@ -1,5 +1,3 @@
-// trivial test of putk: this is the easiest one, since the uart hardware
-// is pretty tolerant of errors.
 #include "rpi.h"
 
 volatile unsigned* DISABLE_IRQS_1 = (void*)0x2000B21C;
@@ -44,3 +42,6 @@ void notmain(void) {
 
     clean_reboot();
 }
+
+
+

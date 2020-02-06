@@ -2,11 +2,14 @@
 
 Implement the various routines in `gpio-int.c`.
 
-Will add a Unix checksum setup later tonight.
+You should run the two fake programs:
+  1. `simple-gpio-test`.   My log for this is in `simple-gpio-test.log`
 
-Should be able to run:
-   1. `0-fake-test.c` these are fake tests: 0, 1, 2, 3.
-   2. `1-int-test.c` you should be able to get an interrupt and figure out which
-      way it goes (this is in the lab itself).
+  2. `full-gpio-test`.  My log for this is in `full-gpio-test.log`.
 
+I used memory barriers around each different device (the interrupt
+controller and the GPIO code).  If you disagree (and some of you will!)
+let me know!
 
+When you are done, either put your code with the rest in `libpi/gpio.c` or
+copy it to `libpi/my-src`.

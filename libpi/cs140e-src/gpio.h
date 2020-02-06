@@ -52,8 +52,8 @@ void gpio_set_off(unsigned pin);
 // pin you are setting with the existing pin values.  (otherwise you will
 // lose their configuration).  you also need to enable the right IRQ.   make
 // sure to use device barriers!!
+enum { GPIO_INT0 = 49, GPIO_INT1, GPIO_INT2, GPIO_INT3 };
 int is_gpio_int(unsigned gpio_int);
-
 
 // p97 set to detect rising edge (0->1) on <pin>.
 // as the broadcom doc states, it  detects by sampling based on the clock.

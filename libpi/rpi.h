@@ -187,6 +187,7 @@ void cb_init(void);
 #   define PUT32(addr,val) put32((void*)(unsigned long)addr, val)
 #   define GET32(addr) get32((void*)(unsigned long)addr)
 #   include "demand.h"
+#   include <assert.h>
 #endif
 
 #endif

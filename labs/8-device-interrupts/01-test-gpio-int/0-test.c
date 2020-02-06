@@ -1,5 +1,3 @@
-// trivial test of putk: this is the easiest one, since the uart hardware
-// is pretty tolerant of errors.
 #include "rpi.h"
 
 // need to setup interrupts, then call interrupt handler.
@@ -13,3 +11,6 @@ void notmain(void) {
 
     clean_reboot();
 }
+
+
+

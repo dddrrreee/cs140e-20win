@@ -27,7 +27,7 @@ OBJS := $(patsubst %.c, %.o, $(SOURCES))
 
 # LIB_UNIX is defined for cases where we share the same code b/n 
 # the pi and your UNIX laptop
-CFLAGS = -Og -Wall -Wno-unused-function -Werror -DLIB_UNUX -I.
+CFLAGS = -Og -Wall -Wno-unused-function -Werror -DLIB_UNUX -I. -g
 CC = gcc
 
 LIB_BASE= support.unix

@@ -19,6 +19,9 @@
 //  - device name.
 // panic's if 0 or more than 1.
 char *find_ttyusb(void);
+char *find_ttyusb_first(void);
+char *find_ttyusb_last(void);
+
 
 // read in file <name>
 // returns:
@@ -117,6 +120,10 @@ int can_read_timeout(int fd, unsigned usec);
 int can_read(int fd);
 
 int open_fake_tty(char **fake_dev_name);
+
+// return a strdup's string.
+char *strcatf(const char *fmt, ...);
+
 
 // put your prototypes in here.
 #include "libunix-extra.h"

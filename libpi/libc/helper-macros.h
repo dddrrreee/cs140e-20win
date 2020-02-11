@@ -122,4 +122,21 @@
 // <lhs> <---- get32(<rhs>): use if <rhs> has the wrong type.
 #define assign32_T(_lhs, _rhs) ((_lhs) = u32_to_T(typeof(_lhs), GET32(_rhs)))
 
+
+#if 0
+// example usage
+typedef struct fake_dev {
+    uint32_t a;
+    uint32_t b;
+} fake_dev_t;
+
+#include "libc/helper-macros.h"
+void check_dev_offsets(void) {
+    check_off_static(fake_dev_t, a, 0, 4);
+    check_off_static(fake_dev_t, b, 7, 4);
+}
 #endif
+
+#endif
+
+

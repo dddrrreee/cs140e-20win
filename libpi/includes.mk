@@ -4,6 +4,7 @@ ARM = arm-none-eabi
 CC = $(ARM)-gcc
 LD  = $(ARM)-ld
 AS  = $(ARM)-as
+AR = $(ARM)-ar
 OD  = $(ARM)-objdump
 OCP = $(ARM)-objcopy
 CS140E_LIBPI_PATH = $(CS140E_PATH)/libpi

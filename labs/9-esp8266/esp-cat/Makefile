@@ -1,4 +1,4 @@
-NAME= pi-cat
+NAME= esp-cat
 
 LIBUNIX=$(CS140E_PATH)/libunix
 LU = $(LIBUNIX)/lib-support.unix.a
@@ -7,7 +7,7 @@ CFLAGS = -Wall -Werror -g  -O -I$(LIBUNIX)
 CC = gcc
 OBJS = $(NAME).o
 
-all : libunix pi-cat #tags # run # tags 
+all : libunix $(NAME) #tags # run # tags 
 
 libunix:
 	make -C $(LIBUNIX)
@@ -16,7 +16,7 @@ tags:
 	ctags *.[ch]
 
 run:
-	./pi-cat
+	./$(NAME)
 
 $(NAME):  $(OBJS)   $(LU)
 	$(CC) $(CFLAGS) $(OBJS) -o $@ -lm $(LU)

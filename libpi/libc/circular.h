@@ -2,13 +2,14 @@
 #define __CQ_H__
 
 // simple lock-free circular queue.
-#ifndef LINUX
+#ifndef RPI_UNIX
 #   include "rpi.h"
 #else
 #   define printk printf
 #   include <assert.h>
 #   include <stdio.h>
 #   include <stdlib.h>
+#   include <string.h>
 #   include "demand.h"
 #endif
 
@@ -17,11 +18,11 @@
 // if we want to store records?
 //
 // TODO:
-//  - possibly should just include all the code in the header so it gets inlined.
 //  - also should extend so it works with threads.
 //  - should symex test this.   "How to write code to execute on a symbolic CPU"
 //
 // could simplify the interface if we wanted to only allow < 32bit valuesto be stored.
+
 
 // make the code templatized on this? (ala fraser and hanson)  
 typedef unsigned char cqe_t;
@@ -48,64 +49,50 @@ typedef struct {
     unsigned errors_fatal_p:1;
 } cq_t;
 
-void cq_init(cq_t *q, unsigned errors_fatal_p);
-
-static inline int cq_empty(cq_t *q);
-static inline int cq_full(cq_t *q);
-
-// returns 0 if no space.
-static inline int cq_push(cq_t *q, cqe_t e);
-
-// unimplemented: yields cpu / spins until there is space.
-static inline void cq_push_blocking(cq_t *q, cqe_t e);
-
-static inline int cq_peek(cq_t *q, cqe_t *e);
-
-// FIFO pop: blocks until there is an element.
-cqe_t cq_pop(cq_t *q);
-
-void cq_pop_n(cq_t *q, void *data, unsigned n);
-
-int cq_pop_n_noblk(cq_t *q, void *data, unsigned n);
-
-int cq_push_n(cq_t *q, void *data, unsigned n);
-
-// FIFO pop, non-blocking: 0 on fail, 1 on success (and e is written to)
-static inline int cq_pop_nonblock(cq_t *q, cqe_t *e);
-
-void cq_print(cq_t *c);
 
 /*************************************************************************************
 * inline these so they can be used when we bit-bang off the UART with no interrupts.
 */
+
 static inline int cq_empty(cq_t *q) { return q->head == q->tail; }
 
 // if adding 1 to head = tail, then we have no space.
-static inline int cq_full(cq_t *q) { return (q->head+1) % CQ_N == q->tail; }
+static inline int cq_full(cq_t *q) { return (q->head+1) % (CQ_N) == q->tail; }
 
-static inline unsigned cq_nelem(cq_t *q) { return (q->head - q->tail) % CQ_N; }
-static inline unsigned cq_nspace(cq_t *q) { return CQ_N - cq_nelem(q); }
+static inline unsigned cq_nelem(cq_t *q) { return (q->head - q->tail) % (CQ_N); }
+static inline unsigned cq_nspace(cq_t *q) { return (CQ_N) - cq_nelem(q); }
 
-// not blocking: wait: this never calls getc?
+// not blocking: requires interrupts.
 static inline int cq_pop_nonblock(cq_t *c, cqe_t *e) {
     if(cq_empty(c))
         return 0;
     unsigned tail = c->tail;
     *e = c->c_buf[tail];
-    c->tail = (tail+1)%CQ_N;
+    c->tail = (tail+1)% (CQ_N);
     return 1;
 }
+// blocking: called from non-interrupt code.
+static inline cqe_t cq_pop(cq_t *c) {
+    cqe_t e = 0;
 
-// non-blocking push.
+	// wait til interrupt puts something here: if interrupts not enabled,
+    // this will deadlock: need to yield.
+    while(!cq_pop_nonblock(c,&e))
+        panic("will deadlock: interrupts not enabled [FIXME]\n");
+    return e;
+}
+
+// non-blocking push: returns 0 if full.
 static inline int cq_push(cq_t *c, cqe_t x) {
     unsigned head = c->head;
     if(cq_full(c)) 
         return 0;
     c->c_buf[head] = x;
-    c->head = (head + 1) % CQ_N;
+    c->head = (head + 1) % (CQ_N);
     return 1;
 }
 
+// non-destructively peek at the first character (if any).
 static inline int cq_peek(cq_t *c, cqe_t *e) {
     if(cq_empty(c))
         return 0;
@@ -113,6 +100,66 @@ static inline int cq_peek(cq_t *c, cqe_t *e) {
     return 1;
 }
 
+static inline void cq_pop_n(cq_t *c, void *data, unsigned n) {
+    cqe_t *p = data;
+    for(int i = 0; i < n; i++)
+        p[i] = cq_pop(c);
+}
+static inline int cq_pop_n_noblk(cq_t *q, void *data, unsigned n) {
+    if(cq_nelem(q) < n)
+        return 0;
+    cq_pop_n(q,data,n);
+    return 1;
+}
+
 // non-destructively peek ahead <n> entries.
-int cq_peek_n(cq_t *c, cqe_t *v, unsigned n);
+static inline int cq_peek_n(cq_t *c, cqe_t *v, unsigned n) {
+    int sz = cq_nelem(c);
+    if(n > sz)
+        return 0;
+    unsigned tail = c->tail;
+    if(!cq_pop_n_noblk(c, v, n))
+        return 0;
+    c->tail = tail;
+    assert(sz == cq_nelem(c));
+    return 1;
+}
+
+
+static inline int cq_push_n(cq_t *c, void *data, unsigned n) {
+    cqe_t *p = data;
+
+    if(cq_nspace(c) < n)
+        return 0;
+    for(int i = 0; i < n; i++)
+        if(!cq_push(c, p[i]))
+            panic("not handling this\n");
+    if(n)
+        assert(!cq_empty(c));
+    return 1;
+}
+
+/**********************************************************************
+ * initialization.
+ */
+static inline void cq_print(cq_t *c) {
+    debug("cq print: head=%d, tail=%d, nelem=%d, empty=%d\n", 
+                c->head, c->tail, cq_nelem(c), cq_empty(c));
+}
+static inline void cq_ok(cq_t *c) {
+    if(c->fence != 0x12345678)
+        panic("fence is corrupted\n");
+}
+static inline void cq_init(cq_t *c, unsigned errors_fatal_p) {
+    memset(c, 0, sizeof *c);
+    c->fence = 0x12345678;
+    c->head = c->tail = 0;
+    c->overflow = 0;
+    c->errors_fatal_p = errors_fatal_p;
+    assert(cq_empty(c));
+    assert(!cq_full(c));
+    assert(cq_nelem(c) == 0);
+    cqe_t e = 0x12;
+    assert(cq_pop_nonblock(c,&e) == 0 && e == 0x12);
+}
 #endif

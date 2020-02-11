@@ -1,0 +1,42 @@
+# should not duplicate these makefiles.  aiya.
+
+# ESP_OBJS = esp-parse.o   esp-commands.o esp-lex.o
+ESPLIB = libesp-unix.a
+
+SOURCES := $(wildcard ./esp-*.c)
+# SOURCES := esp-commands.c esp-lex.c  esp-parse.c    unix-support.c esp-run.c
+SOURCES += unix-support.c
+
+CC = gcc
+
+LIBUNIX_PATH := $(CS140E_PATH)/libunix
+CFLAGS := -Wall -Werror -g -Wno-unused-function -Wno-unused-variable  
+INC_FLAGS := -I. -I$(LIBUNIX_PATH) -DRPI_UNIX -I$(LIBUNIX_PATH)/..
+CFLAGS += $(INC_FLAGS)
+
+# just make all .o's depend on everything.  simple.
+# SOURCES := $(wildcard ./*.c)
+HDRS := $(wildcard ./*.h)
+DEPS := $(HDRS)
+
+BUILD_DIR := unix-objs
+OBJS := $(patsubst %.c, $(PREFIX)/%.o, $(SOURCES))
+OBJS := $(foreach o, $(OBJS), $(BUILD_DIR)/$(notdir $o)) 
+
+all :  $(ESPLIB)
+
+$(BUILD_DIR)/%.o: %.c $(DEPS) 
+	mkdir -p $(BUILD_DIR)
+	$(CC) $(CFLAGS) -c $< -o $(BUILD_DIR)/$(notdir $*).o
+
+$(ESPLIB): $(OBJS) 
+	ar cr  $@ $(OBJS) 
+
+tags:
+	ctags *.[ch] $(LIBUNIX_PATH)/*.[ch]
+
+clean :
+	rm -f *.o *.a *~ Makefile.bak  
+	rm -rf $(BUILD_DIR)
+
+.PHONY: clean tags all $(BUILD_DIR) 

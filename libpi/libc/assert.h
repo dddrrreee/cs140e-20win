@@ -10,6 +10,8 @@
 #define debug(msg, args...) do { } while(0)
 #endif
 
+#define output printk
+
 #define panic(msg, args...) do { 					\
 	(printk)("PANIC:%s:%s:%d:" msg "\n", __FILE__, __FUNCTION__, __LINE__, ##args); \
 	clean_reboot();							\

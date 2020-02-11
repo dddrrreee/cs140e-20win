@@ -177,6 +177,13 @@ void dummy(unsigned);
 // for initializing using the control block.
 void cb_init(void);
 
+
+// simple bootloader: given a channel, loads the code,
+// then returns address to jump to.
+// could return an error if failed, right now just panic.
+struct vdev;
+uint32_t load_code(struct vdev *v);
+
 #include "cs140e-src/gpio.h"
 
 // extra student-defined libc prototypes.

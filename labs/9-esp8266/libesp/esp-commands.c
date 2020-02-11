@@ -118,7 +118,7 @@ int esp_connect_to_wifi(esp_t *e) {
     assert(e->wifi && e->password);
     // double init
     assert(!e->active_p);
-    unimplemented():
+    unimplemented();
 }
 
 
@@ -139,7 +139,7 @@ int esp_start_tcp_client(esp_t *e, const char *server_ip, unsigned portn) {
 int esp_start_tcp_server(esp_t *e, unsigned portnum) {
     assert(!e->active_p);
     
-    unimplement();
+    unimplemented();
 
     
 #if 0
@@ -156,14 +156,15 @@ int esp_start_tcp_server(esp_t *e, unsigned portnum) {
     ;
 #endif
 
-    if(!result)
-        return 0;
+
+
     e->handle_ooo_msg = handle_ooo_server;
     e->active_p = 1;
     return 1;
 }
 
 int esp_connect(esp_t *e) {
+    unsigned ch = 0;
     unimplemented();
     return ch;
 }

@@ -1,0 +1,21 @@
+engler-ThinkPad-T550:~ % netcat 127.0.0.1 4444
+hello
+foo
+bar
+pwde
+ldldld
+whooooo
+jjj
+
+
+nkPad-T550:~/Dropbox/class/cs240/quizes/spr19/q1 % netcat -l 4444
+hello
+foo
+bar
+pwde
+ldldld
+whooooo
+jjj
+
+netcat 192.168.4.1 4444
+

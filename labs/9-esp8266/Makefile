@@ -1,4 +1,4 @@
-SUBDIRS= esp-cat
+SUBDIRS= esp-cat unix-esp
 
 .PHONY: all check clean
 all check clean: $(SUBDIRS)

@@ -36,6 +36,18 @@ int esp_write_exact(lex_t *l, const void *buf, unsigned n) {
     if((r=write(l->h, buf, n)) != n)
         panic("could not write <%d> bytes, have: %d\n",  n,r);
 
+    if(log_fd) {
+        char *prompt = "\nUNIX SENT: ";
+
+        write(log_fd, prompt, strlen(prompt));
+        for(int i = 0; i < n; i++) {
+            unsigned ch =  ((const char *)buf)[i];
+            if(!isprint(ch) && ch != '\n')
+                ch = ' ';
+            write(log_fd, &ch, 1);
+        }
+    }
+
     return n;
 }
 

@@ -1,15 +1,7 @@
-Need to get the lectures.
-networking.
-interrupts for the old one.
-
 ### Part 0:  switch your bootloader to use the software UART.
 
 Make sure your `replay` code from lab 5 still works.  We will be using
 it to check the code here.
-
-(This will run raw between the two, right?)
-(UGh.   This is why you want a ptty: we will have to modify the server.)
-(Do the same trick: if it's open, pass in.)
 
 ### Part 0:  switch your bootloader to use the software UART.
 
@@ -25,8 +17,8 @@ So, instead, we are going to just use the sw-uart code only for
 bootloading code and later printing debugging output.  Isolating the
 use of sw-uart input to a one-time startup should be much better for
 efficiency.  Also, since the bootloader is organized as a send-reply
-protocol, we know when input will arrive (and will only do so when we
-ask for it), which makes it both easier to get timing right and more
+protocol, we know when input will arrive (and it will only do so when
+we ask for it), which makes it both easier to get timing right and more
 obvious when things go wrong.
 
 Our first step is to re-structure the bootloader so that it can work

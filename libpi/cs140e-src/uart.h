@@ -31,5 +31,6 @@ struct aux_periphs {
 };
 
 // never use this directly!
-struct aux_periphs *uart_get(void);
+static inline struct aux_periphs *uart_get(void) { return (void*)0x20215040; return uart; }
+
 #endif

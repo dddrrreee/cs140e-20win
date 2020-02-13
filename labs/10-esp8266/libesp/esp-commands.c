@@ -34,7 +34,6 @@ int wait_for_conn(esp_t *e, unsigned *ch) {
         output("no connection\n");
         ;
     }
-    // fuck: if it's not a connect, what are you going to do?
     while(!is_connect(e, ch))
         ;
     return 1;

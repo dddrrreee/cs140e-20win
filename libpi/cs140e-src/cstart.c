@@ -1,4 +1,12 @@
 #include "rpi.h"
+#include "sw-uart.h"
+#include "control-block.h"
+
+static sw_uart_t console_uart;
+static int internal_sw_putchar(int c) {
+    sw_uart_putc(&console_uart, c);
+    return c;
+}
 
 void _cstart() {
     extern int __bss_start__, __bss_end__;
@@ -10,6 +18,16 @@ void _cstart() {
     while( bss < bss_end )
         *bss++ = 0;
 
+    control_blk_t *cb = cb_get_block();
+    if(cb) {
+        if(cb->console_dev == PUTC_SW_UART) {
+            rpi_putchar = internal_sw_putchar;
+            console_uart = cb->sw_uart;
+            sw_uart_printk(&console_uart, "about to print on regular printf\n");
+            printk("success!\n");
+        }
+    }
     notmain(); 
 	rpi_reboot();
 }
+

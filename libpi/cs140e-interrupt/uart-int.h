@@ -22,5 +22,4 @@ extern volatile unsigned n_uart_interrupts;
 
 int uart_has_data_int(void);
 
-
 #endif

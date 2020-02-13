@@ -135,6 +135,8 @@ void dev_barrier(void);
 // cache enable
 void enable_cache(void) ;
 void disable_cache(void) ;
+void flush_all_caches(void);
+
 
 unsigned rpi_get_model(void);
 int rpi_get_memsize(unsigned *s);

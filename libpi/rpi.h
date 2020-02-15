@@ -27,6 +27,8 @@
 
 // change these two function pointers to control where pi output goes.
 extern int (*rpi_putchar)(int c);
+void rpi_reset_putc(void);
+void rpi_set_putc(int (*fp)(int));
 
 // int putk(const char *msg);
 extern int (*putk)(const char *p);

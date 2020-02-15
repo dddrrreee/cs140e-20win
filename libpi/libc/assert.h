@@ -13,6 +13,7 @@
 #define output printk
 
 #define panic(msg, args...) do { 					\
+    rpi_reset_putc();\
 	(printk)("PANIC:%s:%s:%d:" msg "\n", __FILE__, __FUNCTION__, __LINE__, ##args); \
 	clean_reboot();							\
 } while(0)
@@ -34,6 +35,7 @@
 //      if <_msg> contains a ',' you'll have to put it in quotes.
 #define demand(_expr, _msg, args...) do {                                        \
         if(!(_expr)) {                                                  \
+                rpi_reset_putc();\
                 printk("ERROR:%s:%s:%d: "                      \
                         "FALSE(<" _XSTRING(_expr) ">): " _XSTRING(_msg) "\n",\
                         __FILE__, __FUNCTION__, __LINE__, ##args);              \

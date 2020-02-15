@@ -101,16 +101,14 @@ functionality: threads, interrupts, virtual memory and file systems.
     unless our code checks them at exactly the right time, incoming
     messages will vaporize.
 
+  - [10-ESP](10-esp8266/): (note: do not do `9-esp8266` the code is not
+   useful.)  You use the $2 esp8266 to add networking.   The initial lab
+   just makes the esp work on your laptop using the provided library.
+   The homework has you migrate it to your pi so you can communicate /
+   control other pi's.  The code depends on having an interrupt-based 
+   UART channel.
+
 ***[HAVE NOT UPDATED THE LABS BELOW]***
-
-  - [9-preemptive-threads](9-preemptive-threads): you will use the
-  timer-code in the previous lab to implement pre-emptive threads along
-  with locks and some simple checking code.
-
-
-  - [10-ESP](10-esp-int/): in the capstone lab, we implement an
-  interrupt-based UART channel and use this to control the ESP 8266
-  wireless chip, which you can use to communicate with other pi's.
 
 ### Part 3: file systems.
 
@@ -147,21 +145,14 @@ functionality: threads, interrupts, virtual memory and file systems.
 
 #### Part 5: processes
 
-  - [16-syscall](16-syscall):
-    today we're going to build a simple system call.  Once we have this
-    in place, we can then make user-level processes --- without it,
-    they would not even be able to call `exit()`.
-
-    As a secondary purpose, this lab will get you more comfortable
-    with interrupts since it will require you do invasive surgery on the
-    timer-interrupt code from `lab7-interrupts` in order to repurpose it
-    to support system calls.
-
-  - [17-user-level](17-user-level): today you will make user level
+  - [16-processes](16-user-level): today you will make user level
     processes.  This will combine the virtual memory, system calls, and
     threads into a capstone implementation.  You will use this ability to
     your fuse-FS support multiprocessing, so that you can have multiple
     programs running at the same time.
+
+  - Additional labs that we can fit in to make the above more real and more
+    integrated.
 
 ### Optional labs:
 

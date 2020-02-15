@@ -85,7 +85,7 @@ char **log_list_all(const char *dirname, const char *prefix);
 // run program <cmd ...>
 void run_system(const char *cmd, ...);
 
-uint32_t crc32(const void *buf, unsigned size);
+uint32_t our_crc32(const void *buf, unsigned size);
 
 // create file <name>: truncates if already exists.
 int create_file(const char *name);
@@ -110,6 +110,7 @@ int child_clean_exit_noblk(int pid, int *status);
 int write_exact_can_fail(int fd, const void *data, unsigned n);
 int write_exact(int fd, const void *data, unsigned n);
 int read_exact(int fd, void *data, unsigned n);
+int read_timeout(int fd, void *data, unsigned n, unsigned timeout);
 
 
 void start_watchdog(int watch_pid);

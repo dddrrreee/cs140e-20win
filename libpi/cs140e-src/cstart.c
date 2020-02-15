@@ -18,6 +18,8 @@ void _cstart() {
     while( bss < bss_end )
         *bss++ = 0;
 
+#if 1
+    // this links in so much stuff.  need to fix.
     control_blk_t *cb = cb_get_block();
     if(cb) {
         if(cb->console_dev == PUTC_SW_UART) {
@@ -27,6 +29,7 @@ void _cstart() {
             printk("success!\n");
         }
     }
+#endif
     notmain(); 
 	rpi_reboot();
 }

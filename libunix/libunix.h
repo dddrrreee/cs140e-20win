@@ -85,7 +85,7 @@ char **log_list_all(const char *dirname, const char *prefix);
 // run program <cmd ...>
 void run_system(const char *cmd, ...);
 
-uint32_t crc32(const void *buf, unsigned size);
+uint32_t our_crc32(const void *buf, unsigned size);
 
 // create file <name>: truncates if already exists.
 int create_file(const char *name);

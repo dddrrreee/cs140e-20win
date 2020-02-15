@@ -60,6 +60,6 @@ static uint32_t crc32_inc(const void *buf, unsigned size, uint32_t crc) {
     return crc ^ ~0U;
 }
 
-uint32_t crc32(const void *buf, unsigned size) {
+uint32_t our_crc32(const void *buf, unsigned size) {
     return crc32_inc(buf,size,0);
 }

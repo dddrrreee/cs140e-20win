@@ -35,7 +35,7 @@
 
 #include "../shared-code/simple-boot.h"
 
-#include "libunix.h"
+#include "../../../libunix/libunix.h"
 
 // hack-y state machine to indicate when we've seen the special string
 // 'DONE!!!' from the pi telling us to shutdown.

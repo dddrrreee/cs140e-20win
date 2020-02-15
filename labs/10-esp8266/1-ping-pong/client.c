@@ -13,7 +13,7 @@
 #include "libesp.h"
 #include "libunix.h"
 
-static const char *network = "engler123";
+static const char *network = "juan";
 static const char *password = "12345678";
 
 void esp_main(lex_t *l) {
@@ -33,10 +33,10 @@ void esp_main(lex_t *l) {
 
     esp_set_verbose(0);
     while(1) {
-        esp_debug("going to receive\n");
+        unsigned ch = 0;
+		esp_debug("going to receive\n");
         char buf[1024];
-        unsigned ch, n = esp_is_recv(&e, &ch, buf, sizeof buf);
-        buf[n] = 0;
+		sprintf(buf, "https://apple.com");
         output("client ch=%d received: <%s>, going to ack\n", ch, buf);
         if(!esp_send(&e, 0, buf, strlen(buf)))
             panic("cannot send!!\n");

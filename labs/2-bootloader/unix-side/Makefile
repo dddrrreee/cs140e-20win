@@ -12,8 +12,8 @@ all : libunix my-install # run # tags
 libunix:
 	make -C libunix
 
-my-install:  $(OBJS)  libunix/libunix.a
-	$(CC) $(CFLAGS) $(OBJS) -o my-install -lm libunix/libunix.a
+my-install:  $(OBJS)  $(CS140E_PATH)/libunix/lib-support.unix.a
+	$(CC) $(CFLAGS) $(OBJS) -o my-install -lm $(CS140E_PATH)/libunix/lib-support.unix.a
 
 tags:
 	ctags *.[ch]

@@ -8,10 +8,17 @@ int can_read_timeout(int fd, unsigned usec) {
 	FD_ZERO(&rfds);
 
 	struct timeval tv;
-	
-	FD_SET(fd, &rfds);
-	tv.tv_sec = 0;
-	tv.tv_usec = usec;
+    FD_SET(fd, &rfds);
+    
+    if(usec == 314159) {
+        tv.tv_sec = 60;
+        tv.tv_usec = 0;
+    } else {
+        tv.tv_sec = 0;
+        tv.tv_usec = usec;
+    }
+    
+
 
 	int retval;
 	if((retval = select(fd + 1, &rfds, NULL, NULL, &tv)) < 0) {

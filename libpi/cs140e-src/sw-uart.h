@@ -34,7 +34,7 @@ int sw_uart_getc(sw_uart_t *uart);
 // same as <sw_uart_gets_until> (below) but blocking.
 int sw_uart_gets_until_blk(sw_uart_t *u, uint8_t *buf, uint32_t nbytes, uint8_t end);
 
-
+/*
 #include "cs140e-src/cycle-util.h"
 // usec: does not have to be that accurate since the time is just for timeout.
 static inline int wait_until_usec(int pin, int v, unsigned timeout_usec) {
@@ -49,6 +49,7 @@ static inline int wait_until_usec(int pin, int v, unsigned timeout_usec) {
             return 0;
     }
 }
+*/
 #if 0
 static int sw_uart_has_data_timeout(sw_uart_t *uart, unsigned timeout_usec) {
     return wait_until_usec(uart->rx, 0, timeout_usec);

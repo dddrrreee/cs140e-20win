@@ -25,7 +25,7 @@ int default_handle_out_of_order_msg(esp_t *e) {
 // cleaner to use a function pointer, but we use flags since
 // lab is short.
 static int handle_ooo_server(esp_t *e) {
-    lex_panic(e->l, "unimplemented: you should handle other messages.\n");
+    //lex_panic(e->l, "unimplemented: you should handle other messages.\n");
     return 1;
 }
 static int handle_ooo_client(esp_t *e) {
@@ -118,7 +118,11 @@ int esp_connect_to_wifi(esp_t *e) {
     assert(e->wifi && e->password);
     // double init
     assert(!e->active_p);
-    unimplemented();
+    at_cmdv(e, "AT+CWMODE=3");
+	at_cmdv(e, "AT+CWJAP=%s,%s", e->ssid, e->password);
+	//unimplemented();
+	//return at_cmdv(e, "AT+CIPSTART=\"%s\", \"%s\", \"%d\" ", "TCP", e->wifi, 8080); 
+	
 }
 
 
@@ -128,7 +132,15 @@ int esp_connect_to_wifi(esp_t *e) {
 int esp_start_tcp_client(esp_t *e, const char *server_ip, unsigned portn) {
     assert(!e->active_p);
 
-    unimplemented();
+/*
+        at_cmdv(e, "AT+CWSAP=\"%s\",\"%s\",5,3", e->wifi, e->password)
+        // should only get an OK
+        && at_cmd(e, "AT+CWMODE=3", "OK")
+        // prints out extra stuff
+        && at_cmd_extra(e, "AT+CIFSR", "OK")
+
+		&& at_cmd(e, "AT+CIPSERVER=1", "OK");
+*/
 
 
     e->handle_ooo_msg = handle_ooo_client;
@@ -139,7 +151,9 @@ int esp_start_tcp_client(esp_t *e, const char *server_ip, unsigned portn) {
 int esp_start_tcp_server(esp_t *e, unsigned portnum) {
     assert(!e->active_p);
     
-    unimplemented();
+	at_cmd(e, "AT+CIPMUX=1", "OK");
+
+	at_cmdv(e, "AT+CIPSERVER=1,%u", portnum);
 
     
 #if 0
@@ -165,18 +179,68 @@ int esp_start_tcp_server(esp_t *e, unsigned portnum) {
 
 int esp_connect(esp_t *e) {
     unsigned ch = 0;
-    unimplemented();
-    return ch;
+	char buf [4096];
+	char buf_cmd [4096];
+	char buf_rep [4096]; 
+
+	int status = esp_read(e->l, buf, 4096, 314159);
+	
+	if(status < 0) {
+		printf("Invalid\n");
+		return -1;
+	} else if (status == 0) {
+		printf("ESP timed out\n");
+		return 0;
+	} else {
+		while(status <= 1) {
+			status += esp_read(e->l, buf_cmd, 4096, 314159);
+		}
+		ch = status;
+		printf("Status: %d\n", status);
+		printf("Buf:%s\n", buf);
+
+		int i;
+		for(i = 0; i < status; i++) {
+			if(buf_cmd[i] == ','){
+				buf_cmd[i] = ' ';
+			}
+		}
+
+		int j = 0;
+		for (i = 0; i < status; i++){
+			if(buf_cmd[i] == ' ') {
+				;
+			} else {
+				buf_rep[j++] = buf_cmd[i];
+			}
+		}
+		printf("Buf:%s\n", buf_rep);
+	}
+	
+	return buf[0];
 }
 
 int esp_send(esp_t *e, unsigned ch, const void *data, unsigned n) {
     assert(n < ESP_MAX_PKT);
-    unimplemented();
+    
+	at_cmdv(e, "AT+CIPSEND=%u,%u", ch, n); 
+
+	match_tok(e->l, ">");
+
+	esp_write_exact(e->l, data, n);
+	
+	match_line(e->l, "Recv %u bytes", &n);
+	
+	match_line(e->l, "SEND OK");
+
     return n;
 }
 
 // return bytes received.
 int esp_recv(esp_t *e, unsigned ch, void *data, unsigned n) {
-    unimplemented();
+	// create char buffer
+	// get non-blank lien e->l, 
+	
+	unimplemented();
 }
 

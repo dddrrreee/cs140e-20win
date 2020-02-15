@@ -1,0 +1,7 @@
+make -C /Users/brianjun/Desktop/school/Winter1920/CS140E/cs140e-20win/libpi
+make[1]: Nothing to be done for `all'.
+arm-none-eabi-gcc -Og -Wall -nostdlib -nostartfiles -ffreestanding -mcpu=arm1176jzf-s -mtune=arm1176jzf-s  -std=gnu99 -I/Users/brianjun/Desktop/school/Winter1920/CS140E/cs140e-20win/libpi -I.  -I/Users/brianjun/Desktop/school/Winter1920/CS140E/cs140e-20win/libpi/cs140e-src -I/Users/brianjun/Desktop/school/Winter1920/CS140E/cs140e-20win/libpi/cs140e-interrupt -ggdb -Wno-pointer-sign -Wno-unused-function -Wno-unused-variable    -c -o 1-gpio-int-ex.o 1-gpio-int-ex.c
+arm-none-eabi-ld /Users/brianjun/Desktop/school/Winter1920/CS140E/cs140e-20win/libpi/cs140e-start.o 1-gpio-int-ex.o  -T /Users/brianjun/Desktop/school/Winter1920/CS140E/cs140e-20win/libpi/memmap -o 1-gpio-int-ex.elf  /Users/brianjun/Desktop/school/Winter1920/CS140E/cs140e-20win/libpi/libpi.a
+arm-none-eabi-objdump -D   1-gpio-int-ex.elf > 1-gpio-int-ex.list
+arm-none-eabi-objcopy 1-gpio-int-ex.elf -O binary 1-gpio-int-ex.bin
+my-install ./1-gpio-int-ex.bin

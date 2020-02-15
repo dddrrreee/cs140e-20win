@@ -24,7 +24,7 @@ volatile unsigned* ENABLE_IRQS_2 = (void*)0x2000B214;
 // sure to use device barriers!!
 int is_gpio_int(unsigned gpio_int) {
 	// assert(gpio_int >= GPIO_INT0 && gpio_int <= GPIO_INT3);
-	if(get32(IRQ_PENDING_2) & 1<<(gpio_int-GPIO_INT0 + 1)> 0) {
+	if(get32(IRQ_PENDING_2) > 0) {
 		return 1;
 	}
 	return 0;

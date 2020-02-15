@@ -1,0 +1,38 @@
+# should not duplicate these makefiles.  aiya.
+
+# ESP_OBJS = esp-parse.o   esp-commands.o esp-lex.o
+ESPLIB = libesp-pi.a
+
+SOURCES := $(wildcard ./esp-*.c)
+# SOURCES := esp-commands.c esp-lex.c  esp-parse.c    unix-support.c esp-run.c
+SOURCES += pi-support.c
+
+include $(CS140E_PATH)/libpi/includes.mk
+CFLAGS += -Wno-unused-function -Wno-unused-variable -DRPI_OS
+
+# just make all .o's depend on everything.  simple.
+# SOURCES := $(wildcard ./*.c)
+HDRS := $(wildcard ./*.h)
+DEPS := $(HDRS) $(LPI)
+
+BUILD_DIR := pi-objs
+OBJS := $(patsubst %.c, $(PREFIX)/%.o, $(SOURCES))
+OBJS := $(foreach o, $(OBJS), $(BUILD_DIR)/$(notdir $o)) 
+
+all :  $(ESPLIB)
+
+$(BUILD_DIR)/%.o: %.c $(DEPS) 
+	mkdir -p $(BUILD_DIR)
+	$(CC) $(CFLAGS) -c $< -o $(BUILD_DIR)/$(notdir $*).o
+
+$(ESPLIB): $(OBJS) 
+	$(AR) crf  $@ $(OBJS) 
+
+tags:
+	ctags *.[ch] $(LPP)/*.[Ssch] $(LPP)/*/*.[Ssch]
+
+clean :
+	rm -f *.o *.a *~ Makefile.bak  
+	rm -rf $(BUILD_DIR)
+
+.PHONY: clean tags all $(BUILD_DIR) 

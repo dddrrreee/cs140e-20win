@@ -65,6 +65,7 @@ int uart_has_data(void);
 // 0 = no space, 1 = space for at least 1 byte
 int uart_can_putc(void);
 
+int uart_can_getc(void);
 /***************************************************************************
  * simple timer functions.
  */

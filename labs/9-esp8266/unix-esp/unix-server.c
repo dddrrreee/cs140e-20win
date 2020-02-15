@@ -12,7 +12,7 @@
 // static const char *network = "engler123";
 
 // do your own network id, using email most likely
-static const char *network = 0;
+static const char *network = "bjun2@stanford.edu";
 static const char *password = "12345678";
 
 int main(int argc, char *argv[]) { 
@@ -51,7 +51,7 @@ int main(int argc, char *argv[]) {
     // print out any data we receive.
     for(int i = 0; i < 10; i++)  {
         // send hello here.
-        unimplemented();
+        esp_send(&e, 0, "Hello", 5);
         sleep(1);
     }
     return 0;

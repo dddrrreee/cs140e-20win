@@ -1,22 +1,39 @@
 // engler, cs140e.
+// alot of code duplication.   feel free to remove!
 #include <assert.h>
 #include <fcntl.h>
 #include <string.h>
+
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+
 
 #include "libunix.h"
 
 #define _SVID_SOURCE
 #include <dirent.h>
 static const char *ttyusb_prefixes[] = {
-	"ttyUSB",	// linux
-	"cu.SLAB_USB", // mac os
-	0
+    "ttyUSB",    // linux
+    "cu.SLAB_USB", // mac os
+    0
 };
 
 static int filter(const struct dirent *d) {
-    // scan through the prefixes, returning 1 when you find a match.
-    // 0 if there is no match.
-    return 0 == strncmp(ttyusb_prefixes[1], d->d_name, strlen(ttyusb_prefixes[1]));
+    for(const char **p = ttyusb_prefixes; *p; p++)
+        if(strncmp(*p,d->d_name, strlen(*p)) == 0)
+            return 1;
+    return 0;
+}
+
+static struct dirent **find_ttyusb_helper(int *n) {
+    struct dirent **namelist;
+    *n = scandir("/dev", &namelist, filter, alphasort);
+    if(*n < 0)
+        sys_die(scandir, "scandir failed: impossilbe?");
+    if(*n == 0)
+        panic("did not find any tty in /dev\n");
+    return namelist;
 }
 
 // find the TTY-usb device (if any) by using <scandir> to search for
@@ -26,40 +43,67 @@ static int filter(const struct dirent *d) {
 // panic's if 0 or more than 1.
 //
 char *find_ttyusb(void) {
-
-    // use <alphasort> in <scandir>
-    // return a malloc'd name so doesn't corrupt.
-    // CP2102 enumerates in /dev
-    const char* dev_path = "/dev/";
-    
-    // scandir will take care of memory allocation; just need to free
-    struct dirent** scan_buf;
-    
-    // use scandir to find the directory
-    int status = scandir(dev_path, &scan_buf, &filter, alphasort);
-    
-    // check status returned by scandir
-    if(status < 0) {
-		die("Some other error has occurred");
-	} else if(status == 0) {
-        die("No CP2102 bridges found");
-    } else if (status > 1){
-        die("Multiple CP2102 bridges found");
-    } else {
-		;
-	}
-    
-    // there should only be one directory returned
-    //int fd = open((scan_buf[0])->d_name, O_RDWR);
-    
-    // write full path to serial bridge
-	//output("%s\n", scan_buf[0]->d_name);
-	// Stack allocate, sprintf, and then strdup	
-	//p = (char*) malloc(strlen(dev_path) + 1 + strlen(scan_buf[0]->d_name) + 1);
-    //strcpy(p, dev_path);
-	//strcat(p, scan_buf[0]->d_name);
-    
-	char buf [1024];
-	snprintf(buf, 1024, "%s%s", dev_path,scan_buf[0]->d_name); 
-    return strdup(buf);
+    int n;
+    struct dirent **namelist = find_ttyusb_helper(&n);
+    if(n > 1) {
+        output("found more than one tty?\n");
+        while (n-- > 0)
+            output("%s\n", namelist[n]->d_name);
+        exit(1);
+    }
+    char *p =  strcatf("/dev/%s", namelist[0]->d_name);
+    debug("FOUND: <%s>\n", p);
+    return p;
 }
+
+static unsigned get_modtime(const char *name) {
+    struct stat s;
+    char buf[1024];
+    sprintf(buf, "/dev/%s", name);
+    if(stat(buf, &s) < 0)
+        sys_die(stat, "died on <%s>\n", buf);
+    return s.st_ctime;
+}
+
+char *find_ttyusb_last(void) {
+    int n;
+    struct dirent **namelist = find_ttyusb_helper(&n);
+    assert(n>0);
+
+    struct dirent *last = namelist[0];
+    if(n > 0) {
+        unsigned max_mod = get_modtime(last->d_name);
+        for(int i  = 0; i < n; i++) {
+            unsigned mod = get_modtime(namelist[i]->d_name);
+            if(mod > max_mod) {
+                max_mod = mod;
+                last = namelist[i];
+            }
+        }
+    }
+    char *p =  strcatf("/dev/%s", last->d_name);
+    debug("FOUND: <%s>\n", p);
+    return p;
+}
+
+char *find_ttyusb_first(void) {
+    int n;
+    struct dirent **namelist = find_ttyusb_helper(&n);
+    assert(n>0);
+
+    struct dirent *first = namelist[0];
+    if(n > 0) {
+        unsigned min_mod = get_modtime(first->d_name);
+        for(int i  = 1; i < n; i++) {
+            unsigned mod = get_modtime(namelist[i]->d_name);
+            if(mod < min_mod) {
+                min_mod = mod;
+                first = namelist[i];
+            }
+        }
+    }
+    char *p =  strcatf("/dev/%s", first->d_name);
+    debug("FOUND: <%s>\n", p);
+    return p;
+}
+

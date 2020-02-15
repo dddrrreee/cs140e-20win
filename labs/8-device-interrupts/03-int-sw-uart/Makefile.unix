@@ -1,0 +1,51 @@
+MFLAGS =  --no-print-directory 
+# MAKEFLAGS += --warn-undefined-variables
+
+NAME = hello
+SRC := $(wildcard ./*.c)
+
+# check that your path is defined.
+ifndef CS140E_PATH
+$(error CS140E_PATH is not set)
+endif
+
+# where libpi is.
+LPI = $(CS140E_PATH)/libpi
+# where the fake lib pi is
+FLPI = $(CS140E_PATH)/libpi-fake
+# where libunix is.
+LUNIX = $(CS140E_PATH)/labs/2-bootloader/unix-side/libunix/
+
+CC=gcc
+CFLAGS = -Wall -g -Og -std=gnu99  -Werror -Wno-unused-function 
+CFLAGS += -I$(LPI) -I$(LUNIX) -DRPI_UNIX -I$(FLPI)
+
+# test lib
+TLIB = $(FLPI)/libpi-test.a
+
+# might need other libs too -lm -lutil, etc
+LIBS= $(TLIB)
+
+# make fake lib pi first, then progs
+all: libfake $(NAME) 
+
+# don't worry about deps: always run make
+libfake:
+	@make -C $(FLPI)
+
+#################################################################
+# we manually list out every target and run command to try to keep
+# the Makefile understdandable and hard to screw up.
+# 
+# <TLIB> will get triggered if anything changes, so we don't need any
+# other dependencies
+
+# we don't want .o b/c will hit the pi stuff.
+$(NAME): $(SRC) $(TLIB)
+	$(CC) $(CFLAGS) $(SRC) -o $@ $(LIBS)
+
+clean:
+	rm -f *.o *~  *.bak $(NAME) *.out blink
+	make -C $(FLPI) clean
+
+.PHONY: all clean libfake

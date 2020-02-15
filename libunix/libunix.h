@@ -110,6 +110,7 @@ int child_clean_exit_noblk(int pid, int *status);
 int write_exact_can_fail(int fd, const void *data, unsigned n);
 int write_exact(int fd, const void *data, unsigned n);
 int read_exact(int fd, void *data, unsigned n);
+int read_timeout(int fd, void *data, unsigned n, unsigned timeout);
 
 
 void start_watchdog(int watch_pid);

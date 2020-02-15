@@ -15,11 +15,17 @@ void uart_clear_int(hw_uart_t *uart);
 unsigned *const uart_get_aux_irq(void) ;
 
 int uart_getc_int(void);
+int uart_putc_int(int c);
 // int uart_putc_int(uint8_t c);
 int uart_interrupt_handler(void);
 
 extern volatile unsigned n_uart_interrupts;
 
 int uart_has_data_int(void);
+
+// flush all of the interrupt put Q to the UART.  interrupts must
+// be disabled.
+void uart_int_flush_all(void);
+
 
 #endif

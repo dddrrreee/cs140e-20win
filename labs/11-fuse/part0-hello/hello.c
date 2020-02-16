@@ -13,7 +13,7 @@
 #include "demand.h"
 
 
-static const char *hello_str = "Hello World!\n", *hello_path = "/hello";
+static const char *hello_str = "hello cs140e: today let us do a short lab!\n", *hello_path = "/hello";
 
 static int hello_open(const char *path, struct fuse_file_info *fi) {
     if(strcmp(path, hello_path) != 0)

@@ -3,7 +3,6 @@
 #include <assert.h>
 
 #include "libunix.h"
-/*
 int write_exact_can_fail(int fd, const void *data, unsigned n) {
 	assert(n);
 	int n_out;
@@ -19,7 +18,8 @@ int write_exact(int fd, const void* data, unsigned n) {
 	}
 	return n;
 }
-*/
+
+/*
 #if 0
 int write_exact(int fd, const void *data, unsigned n) {
     unimplemented();
@@ -47,3 +47,4 @@ int write_exact(int fd, const void *data, unsigned n) {
 }
 
 #endif
+*/

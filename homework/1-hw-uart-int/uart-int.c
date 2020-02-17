@@ -171,6 +171,8 @@ void notmain() {
     
     system_enable_interrupts();
 
+	dev_barrier();
+
 #if 0
     // easiest test: just use the hw-uart.
     my_puts("going to test using the hw-uart only:\n");

@@ -20,7 +20,12 @@ A few places:
 I found it useful to:
    1. Clone the FUSE github repo: `git clone git@github.com:libfuse/libfuse.git`.
    2. Look through the examples in `libfuse/example`.
-   3. The `passthrough.c` file system is a good place to start.
+   3. The `passthrough.c` file system is a good place to start. 
+   4. If you're going to compile the libfuse examples you need `meson`
+      (`pip3 install --user meson`) and `ninja` (which seems to get
+      pulled in when you use `meson`).
 
 To make the reading more goal-directed, start with `0-hello` and 
 work through the example. 
+
+

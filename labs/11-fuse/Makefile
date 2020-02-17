@@ -1,4 +1,4 @@
-SUBDIRS=  part0-hello
+SUBDIRS=  0-hello
 
 .PHONY: all check clean
 all check clean: $(SUBDIRS)

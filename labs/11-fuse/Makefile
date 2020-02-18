@@ -1,4 +1,4 @@
-SUBDIRS=  0-hello
+SUBDIRS=  0-hello 0-my-install
 
 .PHONY: all check clean
 all check clean: $(SUBDIRS)

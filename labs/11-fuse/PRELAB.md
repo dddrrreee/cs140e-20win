@@ -9,7 +9,24 @@ So you don't miss it, for coding:
 
   2. Make sure your `my-install` works (see part 3 below).
 
-DO NOT WAIT TO DO THIS TIL LAB.  You will be very far behind.
+Absolutely make sure you understand these five FUSE methods:
+   1. `getattr` get attributes of the file: its size, permissions, and
+   number of hardlinks to it.
+
+   2. `read`: read fro the file at a `offset` of `size` bytes.
+
+   3. `write`: write to the file at a `offset` of `size` bytes.
+
+   4. `readdir`: return the directory entries in the given directory.
+
+   5. `ftruncate`: truncate the file.
+
+Other than `getattr` (which we already defined), these are more-or-less
+identical to Unix calls, so you can just man page them to figure stuff
+out.  If you run FUSE with debugging output (which we do) you can see
+where it is failing and why (usually permission errors).
+
+***DO NOT WAIT TO DO THE ABOVE TIL LAB.  You will be very far behind.***
 
 ---------------------------------------------------------------------
 ### 1. General File system readings.

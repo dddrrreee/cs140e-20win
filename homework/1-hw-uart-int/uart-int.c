@@ -173,14 +173,12 @@ void notmain() {
 
 	dev_barrier();
 
-#if 0
-    // easiest test: just use the hw-uart.
-    my_puts("going to test using the hw-uart only:\n");
-    while(1) {
+	// easiest test: just use the hw-uart.
+	my_puts("going to test using the hw-uart only:\n");
+	while(1) {
         while(uart_has_data_int())
             uart_putc_int(uart_getc_int());
     }
-#endif
 
 #if 0
     // slightly more fancy: make sure printk works.
@@ -191,8 +189,9 @@ void notmain() {
         while(uart_has_data_int()) 
             printk("%c", uart_getc_int());
     }
-#endif
+#endif 
 
+#if 0
     /* 
      * this tests using the sw-uart: note we likely have to 
      * disable interrupts to make sure the sw-uart can do its
@@ -224,4 +223,5 @@ void notmain() {
 
     printk("SUCCESS!\n");
     clean_reboot();
+#endif 
 }

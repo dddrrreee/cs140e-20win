@@ -1,5 +1,7 @@
 ## Exporting your pi as a file system.
 
+***NOTE: Make sure you start with the [PRELAB](PRELAB.md)!***
+
 ***NOTE: This is from last year's lab.   It assumes we built a shell.  I think 
 not doing so is better, so we won't this year.***
 

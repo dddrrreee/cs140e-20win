@@ -6,6 +6,9 @@
 //          DO NOT MODIFY!!!
 //          DO NOT MODIFY!!!
 //
+// prototypes for different useful unix utilities.  we also mix in
+// some pi-specific unix-side routines since it's easier to keep them
+// in one place.
 #ifndef __LIB_UNIX_H__
 #define __LIB_UNIX_H__
 #include <stdint.h>
@@ -22,6 +25,23 @@ char *find_ttyusb(void);
 char *find_ttyusb_first(void);
 char *find_ttyusb_last(void);
 
+// read and echo the characters from the pi's usbtty to unix
+// and from unix to pi until the ttyusb disappears (the hardware got
+// pulled out) or we see a <DONE!!!> string, used to indicate 
+// a clean shutdown.
+void pi_echo(int unix_fd, int pi_fd, const char *portname);
+
+// hack-y state machine to indicate when we've seen the special string
+// 'DONE!!!' from the pi telling us to shutdown.  pass in the null
+// terminated string read from the pi.
+int pi_done(unsigned char *s);
+
+// overwrite any unprintable characters with a space.
+// otherwise terminals can go haywire/bizarro.
+// note, the string can contain 0's, so we send the
+// size.
+void remove_nonprint(uint8_t *buf, int n);
+#define HANDOFF_FD 21
 
 // read in file <name>
 // returns:
@@ -125,6 +145,12 @@ int open_fake_tty(char **fake_dev_name);
 // return a strdup's string.
 char *strcatf(const char *fmt, ...);
 
+// is <fd> open?
+int fd_is_open(int fd);
+
+
+// trivial helper to print out the contents of <argv> with a message.
+void argv_print(const char *msg, char *argv[]);
 
 // put your prototypes in here.
 #include "libunix-extra.h"

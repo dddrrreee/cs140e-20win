@@ -3,6 +3,6 @@
 #include <stdio.h>
 #include <unistd.h>
 
-int is_fd_open(int fd) {
+int fd_is_open(int fd) {
     return fcntl(fd, F_GETFL) >= 0;
 }

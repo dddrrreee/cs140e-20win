@@ -57,13 +57,11 @@ int uart_has_data_int(void){
 void mod_tx_interrupts (unsigned state) {
     dev_barrier();
     unsigned reg_val = get32(AUX_MU_IER_REG);
-    reg_val |= 1;
     if(state) {
-        put32(AUX_MU_IER_REG, reg_val);
+        put32(AUX_MU_IER_REG, reg_val | ENABLE_TX_INT);
     } else {
         // FIX 2: put32(AUX_MU_IO_REG, reg_val & ~1) doesn't clear bit as expected...
-        put32(AUX_MU_IER_REG, 0);
-        put32(AUX_MU_IER_REG, ENABLE_RX_INT);
+        put32(AUX_MU_IER_REG, reg_val & ~ENABLE_TX_INT);
     }
     dev_barrier();
 }
@@ -111,10 +109,12 @@ void uart_putc_int(unsigned char c) {
 
 int uart_getc_int(void) {
     //mod_tx_interrupts(0);
-    unsigned char in_c = 130;
+    system_disable_interrupts();
+	unsigned char in_c = 130;
     if(!cq_empty(&getQ)) {
         cq_pop_nonblock(&getQ, &in_c);
     }
+	system_enable_interrupts();
     //mod_tx_interrupts(1);
     return in_c; //change to unsigned code?
 }
@@ -173,12 +173,14 @@ void notmain() {
 
 	dev_barrier();
 
+#if 0
 	// easiest test: just use the hw-uart.
 	my_puts("going to test using the hw-uart only:\n");
 	while(1) {
         while(uart_has_data_int())
             uart_putc_int(uart_getc_int());
     }
+#endif 
 
 #if 0
     // slightly more fancy: make sure printk works.
@@ -189,9 +191,8 @@ void notmain() {
         while(uart_has_data_int()) 
             printk("%c", uart_getc_int());
     }
-#endif 
+#endif
 
-#if 0
     /* 
      * this tests using the sw-uart: note we likely have to 
      * disable interrupts to make sure the sw-uart can do its
@@ -223,5 +224,5 @@ void notmain() {
 
     printk("SUCCESS!\n");
     clean_reboot();
-#endif 
 }
+

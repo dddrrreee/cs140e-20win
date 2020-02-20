@@ -195,11 +195,10 @@ For today:
 
 To summarize the above:
 
- 1. We statically link each binary to a free address.  The legal free
-    range is defined in `shell-pi-side/pi-shell.h` --- it is all
-    addressees above the highest address we have ever used in the code
-    we've written so far and below what the end of the pi's physical
-    memory is.
+ 1. We statically link each binary to a free address.  
+    This means it must be above `HIGHEST_USED_ADDR` (in `rpi-asm.h`) which 
+    is the highest address we have ever used in the code
+    we've written so far.
 
  2. We only run one program at a time so don't have to keep track of
     what is free, nor which input/output is for/from which program.
@@ -227,38 +226,24 @@ While you won't be using the code as-is, the understanding you gained
 from writing it the first time should allow you to create a custom
 protocol pretty quickly.  Hopefully.
 
-
 This is a stripped down version (explained more below):
 
         =======================================================
          unix side                          pi side 
         -------------------------------------------------------
                                          
-                                            put_uint(ACK);
-
-        expect(fd, ACK);
-
-
+        put_byte(fd, PI_PUT_CODE)
         // version: stored by linker
         put_uint(fd, code[0]);
         // address: stored by linker.
         put_uint(fd, code[1]);
         put_uint(fd, nbytes);
         put_uint(fd, crc32(code, nbytes));
-   
-                                           <sanity checks>
-                                           put_uint(ACK);
-
-        expect(fd, ACK);
         <send code>
-        put_uint(fd, EOT);
-
-					   <get code>
-                                           expect(EOT);
+                        -------------->
+                                           <sanity checks>
+                                           <copy code to addr>
                                            <check code crc>
-                                           put_uint(ACK);
-
-        expect(fd, ACK);
 
                                            <done!>
         =======================================================
@@ -266,33 +251,16 @@ This is a stripped down version (explained more below):
 
 More descriptively:
 
- 1. The Unix-side shell code sends the pi-side an ASCII command (e.g.,
- "run <program name>").   You will do this even if you use your old code.
+ 1. The unix side sends: PI_PUT_CODE, the address the code is linked at,
+ its size, and a CRC of the code (`crc32(code, nbytes))`) and the code.  
+ The linker
+ script is written to that it stores a magic cookie `0x12345678` (so we
+  can sanity check) as the first word of
+ the binary, and its linked-to address as the second.  
 
- 2. The pi side prints this (so you can double-check) and then waits for
- an `ACK`, forcing the Unix-side to wait until its ready.
-
- 3. The unix side sends: the version, the address the code is linked at,
- its size, and a CRC of the code (`crc32(code, nbytes))`).  The linker
- script is written to that it stores the version as the first word of
- the binary, and its linked-to address as the second.  We use a version
- so that you know what version of the boot protocol you are using and
- can extend it later --- for us `version=2`.
-
- 4. The pi-side checks the address and the size, and if OK, sends  an
- `ACK`.  Otherwise it does a `put_uint` of the right error message
- (sending different conditions will help debug, since you can print them
- on the Unix-side).  **NOTE: the pi-side code cannot print at this point
- since the Unix-side is expecting raw bytes.  Doing so makes your code
- not work.**
-
- 5. The Unix-side sends the code and an `EOT` and then waits for an `ACK`.
-
- 6. The pi-side copies the code to `addr` (as before), checks the
- checksum, and if its OK, sends an `ACK` and then jumps to `addr`.
-
-The use of `ACKS` prevents the Unix-side from overrunning our finite-sized
-queue.  The range checks and the checksums guard against corruption.
+ 2. The pi-side checks the address, the size, and copies the code
+  (don't wait or you will blow out the uart buffer).  After copying
+  it checks the CRC and if that is ok, jumps to `addr`.
 
 We are sleazily running the code on our stack, so after you bootload,
 you can simply jump to it.
@@ -305,22 +273,13 @@ is a lot more code, but not alot more ideas.
 ----------------------------------------------------------------------
 ## Part 4:  Extensions.
 
-There's several things you can do.
+ 1. Run the program in its separate thread so main program stack is
+ not corrupted.  You can then extend your Unix side so you can run
+ multiple programs.  Because we are running cooperatively, we might
+ actually be able to make good progress without trashing shared state
+ (such as the UART).
 
- 0. Add more useful commands to your shell.   I assume you've been annoyed
- that there is no `cd`!  (Which is not a Unix command, but rather is
- built-in to the shell.)
-
- 1. Extend the shell to be able to run on scripts (e.g., files that
- have `#/usr/bin/pix` as their first line).   
-
- 2. Run the program in its separate thread so the pi-side shell stack is
- not corrupted.  You can then extend your Unix side with a `&` operator
- so you can run multiple programs.  Because we are running cooperatively,
- we might actually be able to make good progress without trashing shared
- state (such as the UART).
-
- 3. Add a `rpi_alarm(code, ms)` function (using timer-interrupts) to your
+ 2. Add a `rpi_alarm(code, ms)` function (using timer-interrupts) to your
  threading package so that it will `code` when an alarm expires.  You can
  use this to make a "watch-dog timer that kills a too-long running thread.
  You will have to also add `rpi_kill(tid)`.  Alternatively, you could
@@ -328,14 +287,8 @@ There's several things you can do.
  in a loop, yielding control until too-much time has passed, upon which
  it kills the running program.
 
- 4. Compile some other programs using fixed addresses (e.g., `sonar`)
+ 3. Compile some other programs using fixed addresses
  and change the delay code to `rpi_yield()` rather than busy wait..
-
-
 
 See the [README](0-my-install/README.md).  You'll need to pull over your
 simple-boot.c and make it compile.
-
-
-
-

@@ -15,7 +15,7 @@ void uart_clear_int(hw_uart_t *uart);
 unsigned *const uart_get_aux_irq(void) ;
 
 int uart_getc_int(void);
-//int uart_putc_int(int c);
+int uart_putc_int(int c);
 // int uart_putc_int(uint8_t c);
 int uart_interrupt_handler(void);
 

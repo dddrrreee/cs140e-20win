@@ -182,7 +182,7 @@ Disassembly of section .text:
   200248:	ebffff80 	bl	200050 <crc32>
   20024c:	e1500008 	cmp	r0, r8
   200250:	159f003c 	ldrne	r0, [pc, #60]	; 200294 <notmain+0xec>
-  200254:	1bffff86 	blne	200074 <put_uint>
+  200254:	1bffff94 	blne	2000ac <die>
   200258:	e59f0038 	ldr	r0, [pc, #56]	; 200298 <notmain+0xf0>
   20025c:	ebffff84 	bl	200074 <put_uint>
   200260:	e3a00f7d 	mov	r0, #500	; 0x1f4

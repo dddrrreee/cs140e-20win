@@ -117,12 +117,32 @@ void notmain(void) {
          * for this part: add these opcodes.
          */
         case PI_GPIO_SET_INPUT:
+			pin = get_byte();
+			gpio_set_input(pin);
+			break;
         case PI_GPIO_READ:
+			pin = get_byte();
+			val = gpio_read(pin);
+			put_byte(PI_GPIO_READ_REPLY);
+			put_uint32(val);
+			break;
         case PI_GPIO_SET_OUTPUT:
+			pin = get_byte();
+			gpio_set_output(pin);
+			break;
         case PI_GPIO_WRITE:
-            unimplemented();
+            pin = get_byte();
+			val = get_uint32();
+			gpio_write(pin, val);
             break;
-
+		case PI_GPIO_SET_ON:
+			pin = get_byte();
+			gpio_set_on(pin);
+			break;
+		case PI_GPIO_SET_OFF:
+			pin = get_byte();
+			gpio_set_off(pin);
+			break;
         default: 
             panic("unexpected op: %d\n", op);
         }

@@ -142,8 +142,8 @@ void notmain(void) {
 	}
 
     // 6. verify the cksum of the copied code.
-	if(cksum != crc32((void*) addr, nbytes)) {
-		put_uint(BAD_CODE_CKSUM);
+	if(cksum != crc32((unsigned*) addr, nbytes)) {
+		die(BAD_CODE_CKSUM);
 	}
 
     /****************************************************************

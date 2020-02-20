@@ -36,6 +36,9 @@ enum {
     PI_GPIO_SET_INPUT,      // expects a uint8 pin
     PI_GPIO_SET_OUTPUT,     // expects a uint8 pin
 
+	PI_GPIO_SET_ON,
+	PI_GPIO_SET_OFF,
+
     // using only these two you can cause the pi to do almost 
     // anyting by sending and receiving these.   
     //

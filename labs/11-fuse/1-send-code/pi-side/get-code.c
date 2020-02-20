@@ -12,6 +12,20 @@
 #define get_byte uart_getc
 #define put_byte uart_putc
 
+static unsigned get_uint(void) {
+	unsigned u = get_byte();
+        u |= get_byte() << 8;
+        u |= get_byte() << 16;
+        u |= get_byte() << 24;
+	return u;
+}
+static void put_uint(unsigned u) {
+    put_byte((u >> 0)  & 0xff);
+    put_byte((u >> 8)  & 0xff);
+    put_byte((u >> 16) & 0xff);
+    put_byte((u >> 24) & 0xff);
+}
+
 // if you want to grab large messages.
 static void read_exact(void *data, unsigned n) {
     uint8_t *p = data;
@@ -41,17 +55,33 @@ void notmain(void) {
      * get the opcode, nbytes, address and crc from unix.
      * sanity check that these make sense.
      * copy the code and jump to it.
-     */ 
-    unimplemented();
+     */
+	read_exact(&op, sizeof op);
+	read_exact(&n, sizeof n);
+	read_exact(&addr, sizeof addr);
+	read_exact(&crc, sizeof crc);
+	//op = get_byte();
+	//n = get_uint();
+	//addr = (void*) get_uint();
+	//crc = get_uint();
+
+	if(op != PI_PUT_CODE) {
+		panic("Bad opcode\n");
+	}
 
     if(addr < (void*)HIGHEST_USED_ADDR)
         panic("invalid addr %x, must be > %x\n", addr, HIGHEST_USED_ADDR);
 
-    unimplemented();
+ 	read_exact(addr + 8, n); 
+
+	uint32_t curr_crc = our_crc32(addr + 8, n);
+	//if(curr_crc != crc) {
+	//	panic("Bad CRC: got %u, expected %u\n", our_crc32(addr + 8, n), crc);
+	//}
 
     for(int i = 0; i < 10; i++) {
-        printk("%d: about to call shipped code, addr=%x, nbytes=%d!\n", i,addr,n);
-        BRANCHTO((uint32_t)addr);
+        printk("%d: about to call shipped code, addr=%x, nbytes=%d!\n", i,addr + 8,n);
+        BRANCHTO((uint32_t)(addr + 8));
         printk("code returned!\n");
     }
     clean_reboot();

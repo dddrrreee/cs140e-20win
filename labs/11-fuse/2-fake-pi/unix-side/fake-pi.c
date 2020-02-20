@@ -87,28 +87,81 @@ static void expect_op(uint8_t expect) {
  * trivial fake pi stuff: this mirrors what is in libpi-fake,
  * but stripped down so it's easier to get the entire idea.
  */
+// 1 is output, 0 is input
+int func[32];
 
-#if 0
 void gpio_set_output(unsigned pin) {
-    unimplemented();
+	if(pin < 0 || pin >= 32) {
+		panic("Set invalid output pin\n");
+	}
+
+	output("unix: set_output(%d)\n", pin);
+	put_uint8(PI_GPIO_SET_OUTPUT);
+	put_uint8(pin);
+	func[pin] = 1;
 }
 void gpio_set_input(unsigned pin) {
-    unimplemented();
+	if(pin < 0 || pin >= 32) {
+		panic("Set invalid input pin\n");
+	}
+
+	output("unix: set_input(%d)\n", pin);
+	put_uint8(PI_GPIO_SET_INPUT);
+	put_uint8(pin);
+	func[pin] = 0;
 }
 void gpio_write(unsigned pin, unsigned val) {
-    unimplemented();
+	if(pin < 0 || pin >= 32) {
+		panic("Set invalid pin writes \n");
+	}
+
+	if(val < 0) {
+		panic("Set invalid values \n");
+	}
+
+	output("unix: gpio_write(%d : %d)\n", pin, val);
+	put_uint8(PI_GPIO_WRITE);
+	put_uint8(pin);
+	put_uint32(val);
+	if(func[pin] != 1) {
+		panic("Not set as an output\n");
+	}
 }
 void gpio_set_on(unsigned pin) {
-    unimplemented();
+	if(pin < 0 || pin >= 32) {
+		panic("Set pin on invalid \n");
+	}
+
+	if(func[pin] != 1) {
+		panic("Not an output \n");
+	}
+	output("unix: gpio_set_on(%d)\n", pin);
+	put_uint8(PI_GPIO_SET_ON);
+	put_uint8(pin);
 }
+
 void gpio_set_off(unsigned pin) {
-    unimplemented();
+	if(pin < 0 || pin >= 32) {
+		panic("Set pin on invalid \n");
+	}
+	if(func[pin] != 1) {
+		panic("Not an output \n");
+	}
+
+	output("unix: gpio_set_off(%d)\n", pin);
+	put_uint8(PI_GPIO_SET_OFF);
+	put_uint8(pin);
 }
 
 int gpio_read(unsigned pin) {
+	if(func[pin] != 0) {
+		panic("Not set as an input\n");
+	}
     gpio_write(pin,0);
+	expect_op(PI_GPIO_READ_REPLY);
+	int in_pin = get_uint32();
+	return (unsigned)in_pin;
 }
-#endif
 
 void put32(volatile void *addr, unsigned val) {
     unsigned long x64 = (unsigned long) addr;

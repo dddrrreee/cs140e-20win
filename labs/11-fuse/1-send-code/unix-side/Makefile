@@ -29,7 +29,7 @@ hello-fixed:
 	$(CC) $(CFLAGS) $@.o -o $@ $(LIBUNIX) 
 
 run:
-	my-install ../pi-side/pi-side.bin -exec  ./$(NAME) < ../../hello-fixed/hello-fixed.bin
+	my-install ../pi-side/get-code.bin -exec  ./$(NAME) < ../../hello-fixed/hello-fixed.bin
 tags:
 	ctags *.[ch] $(LIBUNIX_PATH)/*.[ch]
 

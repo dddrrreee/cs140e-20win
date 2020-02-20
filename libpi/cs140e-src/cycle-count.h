@@ -1,6 +1,7 @@
 #ifndef __CYCLE_COUNT_H__
 // use r/pi cycle counters so that we can do tighter timings.
 
+#ifndef RPI_UNIX
 // must do init first.
 #define cycle_cnt_init() do {                                   \
     unsigned in = 1;                                            \
@@ -13,6 +14,13 @@
   	asm volatile ("MRC p15, 0, %0, c15, c12, 1" : "=r"(_out));	\
 	_out;								                        \
 })
+#else
+
+// if we are doing fake testing, have to provide fake versions of these.
+void cycle_cnt_init(void);
+unsigned cycle_cnt_read(void);
+
+#endif
 
 // some helper macros to make measuring the cycle count of
 // different operations easier.

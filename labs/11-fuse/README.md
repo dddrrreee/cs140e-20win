@@ -2,14 +2,11 @@
 
 ***NOTE: Make sure you start with the [PRELAB](PRELAB.md)!***
 
-***NOTE: This is from last year's lab.   It assumes we built a shell.  I think 
-not doing so is better, so we won't this year.***
-
-Today you're going to take your pi shell-system and use the FUSE file
-system to mount it as a normal file system on your laptop.    Each ability
-of the pi will be exposed to the user by mapping it to its own file and
-potentially overriding the sematics of `read()` and `write()` with custom
-actions.  
+Today you're going to use the FUSE file system to mount your pi as
+a normal file system on your laptop.   You can systematically expose
+different abilities of the pi to the user by mapping the feature to a
+special file and potentially overriding the sematics of `read()` and
+`write()` with custom actions.
 
 For example:
 
@@ -29,45 +26,23 @@ rather than writing a custom shell to export different actions.  E.g.,
 running `tail -f /pi/console` will cause all output from the pi to 
 be echoed to your terminal.
 
+You need two main abilities to do the lab, so we will split it into two parts.
+  1. You need to be able to send commands to the pi.    We do this first,
+     without using the FUSE file system.  This will make it much easier
+     to debug.  You'll do `1-send-code` to send code and then `2-fake-pi`
+     do see how to send a variety of commands.
+
+  2. You need to expose these commands via the file system.  After you do 
+     the above, it shoudn't be too hard to adapt the the code `2-fake-pi`
+     and hook up the FUSE file system.
+
 #### The big picture
 
-In the previous lab, you wrote a trivial shell that would look at what
-the user typed and decide if it was:
-
-  0. A built-in command: run on the pi.
-  2. A pi program: run on the pi.
-  1. Anything else?  Assume its a unix command: run on your laptop.
-
-Building it was a good proof-of-concept for seeing one way to meld
-your usual computing environment with your pi system.  On the other
-hand, it's clear it's a dead-end, at least without significant work.
-Among many reasons: (1) it is, and will remain, much less full-featured
-than your regular shell (no auto-completion, no history, no job control,
-no environment variables, etc) , (2) we are far from running any Unix
-code on the pi.
-
-In some sense, what we'd like is some way to extend your current shell
-(`bash`, `sh`, `tcsh`) so that it does all its normal laptop-stuff,
-but calls out to the pi for pi-stuff.  This would likely require having
-each different shell have some extensibility method and require us to
-write a bunch of uninteresting shell-specific code.
-
-We're going to side-step the problem to make it easier and our solution
-better.  One surprise in systems is that it can sometimes be easier
-to solve a more general problem than the one you are focused on.
-This situation is a good example of that.
-
-Rather than building pi-specific knowledge into the shell, we instead
-extend the pi as a file system, which your shell can then work with as
-it does any other sets of directories, files, links.
-
-Your shell is already good at dealing with file systems, and your laptop
-has lots of programs to do so.  Once we wrap the pi up as a set of files,
-directories, links, then you can do everything you wrote in your Unix-side
-shell and much much more, while cleanly causing any pi-action to occur.
-
-You now have autocompletion, history, job control, etc without having
-to write any code.
+Once we wrap the pi up as a set of files, directories, links, then you can
+use your shell to work with it as you do any other file system objects.
+If you expose enough, you can skip writing pi programs and just write
+simple shell scripts.  You now have autocompletion, history, job control,
+etc without having to write any code.
 
 Most OO programming --- at best --- allows you to wrap different nouns up
 with the same verbs, so that a single piece of code that works on those
@@ -83,7 +58,6 @@ Of course, are plenty of things that do not fit the Unix model of
 examples: `grep ioctl` in Linux device directories and look at all the ---
 oft-buggy --- code that was stuffed into these `ioctl`-routines because
 it did not fit nicely within the Unix file interface.
-
 
 ### Check-off
 
@@ -102,17 +76,14 @@ You need to show that:
            hello world.
            bye world.
 
-
-   2. Hook up your pi-FS to your pi-sh.  When the user writes values
+   2. When the user writes values
    to `/pi/echo`, `/pi/reboot`, `/pi/run` the relevant command is
-   sent to the pi (via the shell) and all shell-output is written to 
-   `/pi/console`.  
+   sent to the pi and all pi output is written to `/pi/console`.  
 
-
-      This will involve writing Unix code to fork/exec
-   fork/exec a program, overriding its file descriptors for `stdin`
-   (0), `stdout` (1), and `stderr` (2) so that it can interact with the
-   program identically as a user typing from the console.
+   This will involve writing Unix code to fork/exec fork/exec a program,
+   overriding its file descriptors for `stdin` (0), `stdout` (1), and
+   `stderr` (2) so that it can interact with the program identically as
+   a user typing from the console.
 
 Extensions:
 
@@ -123,40 +94,91 @@ Extensions:
    the pi in the background.
 
 ----------------------------------------------------------------------
-## Install FUSE
+## Part 1: send stuff to the pi.
 
-#### MacOS
+You already know how to do this for the bootloader, so this is a minor twist.
+We do the specific methods  in isolation so we can debug and then do FUSE.
 
-From the FAQ (https://github.com/osxfuse/osxfuse/wiki/FAQ):
+#### send code
 
-  - 2.1. What is the recommended way to install "FUSE for OS X"?
+If you look in `1-send-code` there is a `unix-side` that sends a program, and 
+a `pi-side` that receives it and jumps to it.  
 
-         The recommended way to install "FUSE for OS X" is to
-         download the latest "OSXFUSE-{version}.dmg" available from
-         http://osxfuse.github.com/ and double-clicking on "Install
-         OSXFUSE {version}".
+As discussed in the pre-lab, this will differ from the bootloader since
+we want to copy code into the address space of a running process (so
+can't overlap), jump to it and then return.
 
-From Ellie after she installed on the Mac:
+If you look in `11-fuse/hello-fixed` you can see the modifications we made:
+  1. changed the linker script to link at a non-overlapping address, and 
+     stick the address in the binary.
+  2. get rid of `rpi_reboot`.
 
-      For Fuse on Mac, I downloaded the Mac version of Fuse, OSXFuse,
-      from [here](https://osxfuse.github.io/).  It installs like any
-      other application on Mac.
+You should implement the code in `pi-side` and `unix-side` and make sure you
+can run the code multiple times from the `unix-side` directory:
 
-      Alternatively, someone could also use
-      Homebrew to install it [using these
-      instructions](https://github.com/alperakcan/fuse-ext2#alternate-install-method-of-fuse-for-macos).
+    make run
+    my-install ../pi-side/pi-side.bin -exec  ./send-pi-prog < ../../hello-fixed/hello-fixed.bin
 
+`send-pi-prog` will ship the code over and  exit when its done.  You will rip
+this code out later for the FUSE code.
 
-#### Linux
+#### remotely control the pi: `2-fake-pi`
 
-From the FUSE `github` repo (https://github.com/libfuse/libfuse):
+We want the FUSE system to send low-level commands to the pi.  We make sure
+we can do this by taking a bit of a weird side-step to make a tiny virtual
+machine (also with a `pi-side` and a `unix-side`) where the `unix-side` can
+send low level commands to the pi and it will execute.  The example code
+ships `PUT32` and `GET32` which allows it to run unmodified pi programs.
 
-    apt-get install gcc fuse libfuse-dev make cmake
+You should modify this so you can delete the `gpio.c` that it uses and 
+instead ships `PI_GPIO_SET_INPUT` etc (see `pi-side/pi-vmm.c` for the
+opcodes).  The code in 
+   - `2-fake-pi/unix-side/example-pi-programs` has programs that you should
+       be able to run.
+ 
+This part helps you learn two additional tricks (albeit in tiny form):
+   1. How to make a `libpi-fake` on your own.  It's been a useful trick, but
+      since we gave you so much fake code it's hard to see what's going on.
+      You'll build your own simple one.
+   2. How to find bugs automatically.  People have been burned by a common
+      set of errors: not doing a `gpio_set_input` or `gpio_set_output` before
+      using a pin, having `gpio_read` return something besides 1 or 0.  However,
+      these errors are trivial to catch in a fake enviroment (we can do in the 
+      real one too of course).  Just set some state variables (is the
+      uart initialzed?) and check them as needed.
+
+You should be able to find all three bugs pretty easily.
+
+##### Specifics: 
+
+Go into `unix-side/example-pi-programs` and make sure you can compile and run
+
+    my-install example-pi-programs/0-reboot
+    my-install example-pi-programs/2-blink
+
+Then make sure that making at this level and sending the fake `2-blink.fake`
+works (this uses our stuff).
+
+Then comment out `gpio.c` in the Makefile and start building your fake versions.
+    
+Then work through the rest of the programs, sort of ordered by difficulty:
+
+    example-pi-programs/1-put32.c   
+    example-pi-programs/2-blink.c    
+    example-pi-programs/3-bug.c  
+    example-pi-programs/4-bug.c
+    example-pi-programs/5-bug.c
+
 
 ----------------------------------------------------------------------
-## Part 0: use FUSE (15 minutes)
+## Part 2: FUSE
 
-Run the `hello` example in `lab11-fuse-fs/part0-hello`:
+
+
+##### Look over `0-hello`
+
+You should have already done this for the prelab!  But just to make sure you can 
+debug: Run the `hello` example in `lab11-fuse-fs/part0-hello`:
 
   0. `make`
   1. `make mount` will mount the `hello` file system; it will do so
@@ -171,10 +193,9 @@ that it prints out:
 
     hello cs140e: today let us do a short lab!
 
-----------------------------------------------------------------------
-## Part 1: Implement FUSE methods to make a simple FS (45 minutes)
+#### Part 1: Implement FUSE methods to make a simple FS (45 minutes)
 
-If you look in `part1-pi-fs/`:
+If you look in `3-pi-fs/`:
 
   - `pi-fs.c`: starter code to implement a simple FUSE file system.  
   The file system just has a single root directory and files, no 
@@ -206,60 +227,12 @@ out.  If you run FUSE with debugging output (which we do) you can see
 where it is failing and why (usually permission errors).
 
 ----------------------------------------------------------------------
-## Part 2: Handle redirection
-
-In order to allow your pi-fs to control your pi-shell, you'll have to 
-have a way to fork the pi-shell as a sub-process and control its 
-input (`stdin`) and see all its output (`stdout` and `stdin`).
-
-You've already done this kind of programming in your `replay` and
-`handoff` codes.  With a few small tweaks you can do the same here;
-we break this out to make it easier to debug any details in how you
-hook the two together.
-
-The main detail to get right is how the redirection process knows when
-your shell is done with the current command.  (You'll recall we used
-`CMD-DONE` in `lab10` as a hack to figure out when the shell was done.)
-Fortunately, this is actually easy (and I should have realized this before):
-the shell is done executing a command when it prints its shell prompt.
-E.g., `PIX:> `.  So we just need to listen for this.
-
-Rundown:
- - `part2-redirection` holds all the code.
- - `redirect.c:redir` is the routine you need to implement.
- - `driver.c` is the test driver.
-
-You should test from easy to hard:
- - `make run`: tests that you can (1) read `stdout` and `stderr` from
- a subprocess and (2) your code exits when it does rather than hanging.
-
- - `make run.fake-pi`: checks that you correctly listen for shell 
-  prompts.
-
- - `make run.pi`: checks that you can control your pi-shell.  You pi should
-  be plugged in.
-
-----------------------------------------------------------------------
-## Part 3: Hook up the your pi-fs to the your pi-shell.
+## Hook up the your pi-fs to the your pi commands
 
 Now you'll combine everything together.
 
-  1.  Copy all your code from part1 into this directory: (`cp ../part1-pi-fs/`\*.[ch] .`).
-
-  2. Implement the `do_echo`, `do_reboot`, `do_run`.
-
-  3. You'll have to use `Makefile.use`
-
-  4. Also, you'll need to replace your main with the code in `patch.c`.
-  The easiest way is to put this in your `pi-fs.c`:
-
-
-    #ifndef PART3
-       ...your original main() code....
-    #else
-    #    include "patch.c"
-    #endif
-
+  1. Implement the `do_echo`, `do_reboot`, `do_run` by using the code from
+     part 1.
 
 Break this down into steps.
 
@@ -270,18 +243,6 @@ Break this down into steps.
   4. Loading a program is a bit annoying.  We didn't think to put a
   size field in the binary, so we don't actually know how big it is.
   We assume all the bytes are there for a write.  This is ridiculous,
-  but works for our simple program.  In addition, the shell takes a file
-  name to run rather than the bytes of code.  Our hack: write the bytes
-  to a file (e.g., `/tmp/hello.bin`) and send this to the pi.
+  but works for our simple program. 
 
 You are done!
-
-----------------------------------------------------------------------
-## Further background reading:
-
-Some other places to read:
-
-  1. A reasonable [1-page rundown](https://engineering.facile.it/blog/eng/write-filesystem-fuse/).
-
-  2.  A longer, [old-school rundown](https://www.cs.nmsu.edu/~pfeiffer/fuse-tutorial/html/index.html), with code.
-

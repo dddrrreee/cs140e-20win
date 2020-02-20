@@ -76,6 +76,40 @@ To make the reading more goal-directed, start with `0-hello` and work
 through the example, you need to figure out why `open`, `readdir`
 `getattr` and `read` act as they do.
 
+
+----------------------------------------------------------------------
+## Install FUSE
+
+#### MacOS
+
+From the FAQ (https://github.com/osxfuse/osxfuse/wiki/FAQ):
+
+  - 2.1. What is the recommended way to install "FUSE for OS X"?
+
+         The recommended way to install "FUSE for OS X" is to
+         download the latest "OSXFUSE-{version}.dmg" available from
+         http://osxfuse.github.com/ and double-clicking on "Install
+         OSXFUSE {version}".
+
+From Ellie after she installed on the Mac:
+
+      For Fuse on Mac, I downloaded the Mac version of Fuse, OSXFuse,
+      from [here](https://osxfuse.github.io/).  It installs like any
+      other application on Mac.
+
+      Alternatively, someone could also use
+      Homebrew to install it [using these
+      instructions](https://github.com/alperakcan/fuse-ext2#alternate-install-method-of-fuse-for-macos).
+
+
+#### Linux
+
+From the FUSE `github` repo (https://github.com/libfuse/libfuse):
+
+    apt-get install gcc fuse libfuse-dev make cmake
+
+
+
 ---------------------------------------------------------------------
 ### 3. modifying and simplifying `my-install` for the lab.
 

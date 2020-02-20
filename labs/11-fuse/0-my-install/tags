@@ -1,0 +1,20 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+TRACE_FD	my-install.c	/^#define TRACE_FD /;"	d	file:
+TRACE_FD	send-recv.h	/^#define TRACE_FD /;"	d
+__SEND_RECV_H__	send-recv.h	/^#define __SEND_RECV_H__$/;"	d
+ck_eq32	simple-boot.c	/^static void ck_eq32(int fd, const char *msg, unsigned exp, unsigned got) {$/;"	f	file:
+get_byte	send-recv.c	/^uint8_t get_byte(int fd) {$/;"	f
+get_op	simple-boot.c	/^uint32_t get_op(int fd) {$/;"	f
+get_uint32	send-recv.c	/^uint32_t get_uint32(int fd) {$/;"	f
+handoff_to	my-install.c	/^void handoff_to(int fd, char *argv[]) {$/;"	f
+is_fd_open	my-install.c	/^int is_fd_open(int fd) {$/;"	f
+main	my-install.c	/^int main(int argc, char *argv[]) { $/;"	f
+main	pi-echo.c	/^int main(void) {$/;"	f
+put_byte	send-recv.c	/^void put_byte(int fd, uint8_t b) {$/;"	f
+put_uint32	send-recv.c	/^void put_uint32(int fd, uint32_t u) {$/;"	f
+simple_boot	simple-boot.c	/^void simple_boot(int fd, const uint8_t *buf, unsigned n) { $/;"	f

@@ -201,4 +201,8 @@ uint32_t load_code(struct vdev *v);
 #   include <assert.h>
 #endif
 
+// entry point definition
+void notmain(void);
+
+
 #endif

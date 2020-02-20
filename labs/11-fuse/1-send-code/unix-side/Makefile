@@ -13,14 +13,15 @@ HDRS := $(wildcard ./*.h)
 ALL_OBJS := $(patsubst %.c, %.o, $(SOURCES)) $(FAKE_OBJS)
 DEPS := ./Makefile $(LIBUNIX) $(LIBUNIX_PATH)/libunix.h $(HDRS)
 
-all : libunix hello-fixed $(NAME)
+all : libs hello-fixed $(NAME)
 
 $(ALL_OBJS): $(DEPS) 
 
 # make libunix quietly.  remove the '@' and the '-s' if you want to see what is 
 # going on.
-libunix:
+libs:
 	@make -s -C $(LIBUNIX_PATH)
+	make -C ../pi-side
 
 hello-fixed:
 	make -C ../../hello-fixed/
@@ -36,4 +37,4 @@ tags:
 clean :
 	rm -f *.o *.a *~ Makefile.bak $(NAME)
 
-.PHONY: clean tags   libunix run hello-fixed
+.PHONY: clean tags libs run hello-fixed

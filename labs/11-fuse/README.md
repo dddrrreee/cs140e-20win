@@ -173,8 +173,6 @@ Then work through the rest of the programs, sort of ordered by difficulty:
 ----------------------------------------------------------------------
 ## Part 2: FUSE
 
-
-
 ##### Look over `0-hello`
 
 You should have already done this for the prelab!  But just to make sure you can 
@@ -193,14 +191,20 @@ that it prints out:
 
     hello cs140e: today let us do a short lab!
 
-#### Part 1: Implement FUSE methods to make a simple FS (45 minutes)
+#### Implement FUSE methods to make a simple FS 
 
 If you look in `3-pi-fs/`:
 
   - `pi-fs.c`: starter code to implement a simple FUSE file system.  
-  The file system just has a single root directory and files, no 
-  subdirectories.
-  - `pi-fs-support.c`: support code that we provide.
+     You are more than welcome to start with your hello file system if
+     you prefer.  We've defined a bunch of the methods you will need.
+     They are likely a bit opeque, so look in the `fuse.h` in your 
+     install or in many 
+
+  - your file system just needs a single root directory and files, no 
+    subdirectories, so you can do a pretty simple data structure to 
+    track this.  Again: you're welcome to kill all of our code.
+ 
   - `make mount`: will mount your file system.
   - `make unmount`: will forcibly unmount if it gets stuck.
    - `make test`: will execute simple Unix commands to check if your 
@@ -211,9 +215,9 @@ You'll have to implement six methods:
    - `getattr` get attributes of the file: its size, permissions, and
    number of hardlinks to it.
 
-   - `open`: I'd use `file_lookup` in `pi-fs-support.c`
+   - `open`: 
 
-   - `read`: read fro the file at a `offset` of `size` bytes.
+   - `read`: read from the file at a `offset` of `size` bytes.
 
    - `write`: write to the file at a `offset` of `size` bytes.
 
@@ -226,7 +230,6 @@ identical to Unix calls, so you can just man page them to figure stuff
 out.  If you run FUSE with debugging output (which we do) you can see
 where it is failing and why (usually permission errors).
 
-----------------------------------------------------------------------
 ## Hook up the your pi-fs to the your pi commands
 
 Now you'll combine everything together.

@@ -15,6 +15,8 @@
 //  - stdin (file descriptor 0) has input
 //  - the pi fd has ouput.
 void echo(int fd, const char *portname) {
+	size_t to_write = 0;
+	int stdin_closed = 0;
     while(1) {
         // must reset rfds and tv each time.
         fd_set rfds;
@@ -27,7 +29,7 @@ void echo(int fd, const char *portname) {
         tv.tv_sec = 0;
         tv.tv_usec = 1000;  // set this to whatever timeout you want.
 
-        int retval, n;
+        int retval, n = 0;
         char buf[4096];
 
         if((retval = select(fd+1, &rfds, NULL, NULL, &tv)) < 0) 
@@ -43,20 +45,26 @@ void echo(int fd, const char *portname) {
         assert(FD_ISSET(0, &rfds) || FD_ISSET(fd, &rfds));
 
         if(FD_ISSET(0, &rfds)) {
+			if(!stdin_closed) {
             // output("input data is available now.\n");
             if((n = read(0, buf, sizeof buf)) < 0)
                 sys_die(read, failed);
             if(!n) {
                 output("stdin is closed: assuming we are done!\n");
-                exit(0);
+				stdin_closed = 1;
+				continue;
             }
+			to_write += n;
             // put the EOS for printing.
             buf[n] = 0;
             // fprintf(stderr, "got: <%s>\n", buf);
             // don't write the EOS
-            if(write(fd, buf, n) < 0)
+            int m;
+			if(m = write(fd, buf, n) < 0)
                 sys_die(write, failed?);
-            // output("UNIX wrote: <%s> nbytes=%d to pi\n", buf, n);
+			to_write += m;
+			
+			}  // output("UNIX wrote: <%s> nbytes=%d to pi\n", buf, n);
         }
         if((FD_ISSET(fd, &rfds))) {
             if((n = read(fd, buf, sizeof buf)) <= 0)

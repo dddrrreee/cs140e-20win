@@ -14,21 +14,32 @@
 #include "uart-int.h"
 
 // Auxiliary Module Registers
+// Thse registers are defined on 9 of the Broadcom datqsheet.
+// The AUX IRQ register indicates whether there is an interrupt pending
+// for the AUX module. In this case, we check for an interrupt on the mini-UART.
 static volatile unsigned* AUX_IRQ = (void*) 0x20215000;
+
+// The AUX ENB register allows peripherals of the AUX module to be enabled
+// by the code; we must enable the mini-UART.
 static volatile unsigned* AUX_ENABLES = (void*) 0x20215004;
 
 // Mini UART Register Map
+// Page 11 of the Broadcom datasheet defines the AUX MU IO reg, which
+// is primarily used to read and write data to the mini-UART.
 static volatile unsigned* AUX_MU_IO_REG = (void*) 0x20215040;
 
 // IRQ register 
+// Page 116 of the Broadcom datasheet defines the IRQ enable register, which
+// we can use to initialize the AUX interrupt.
 static volatile unsigned* IRQ_ENABLE_1 = (void*) 0x2000B210;
 
-// Function prototypes
+// Function prototypes for helper functions
 void mod_tx_interrupts (unsigned state);
 
 // Module-level variables
 
 // Interrupt-driven HW UART
+// Struct defined in uart.h
 static hw_uart_t* hw_uart;
 
 // Circular queues for transmission and reception
@@ -68,6 +79,12 @@ int uart_has_data_int(void){
  * Function: uart_get_aux_irq
  * Parameters: none
  * Returns: update state of the AUX interrupt register
+ *
+ * Notes: where possible in this assignment, I attempted to adhere
+ * to the function prototypes given in the header. Thus, some functions
+ * will be invoked even if there is a performance penalty due to
+ * my desire to adhere to starter code.
+ *
  */
 unsigned* const uart_get_aux_irq(void) {
 	// According to page 9 of the Broadcom datasheet,
@@ -112,6 +129,11 @@ uart_int_t uart_has_int(hw_uart_t* hw_uart) {
  * Returns: none
  */
 void mod_tx_interrupts (unsigned state) {
+
+	// Page 7 of the Broadcom manual requires pair of read and write
+	// barriers between accesses to different peripherals. Because we
+	// modify the mini-UART and are unclear if we have accessed another
+	// peripheral previously, I place a set of barriers.
     dev_barrier();
     
 	// According to page 12 of the Broadcom datasheet and errata,
@@ -124,6 +146,8 @@ void mod_tx_interrupts (unsigned state) {
     } else {
         put32(&(hw_uart->ier), reg_val & ~ENABLE_TX_INT);
     }
+
+	// Reference above
     dev_barrier();
 }
 
@@ -134,9 +158,22 @@ static unsigned char in_data = 0;
  * Function: uart_interrupt_handler
  * Parameters: None
  * Returns: 1 on success
+ *
+ * Notes: This is not the most efficient implementation of the 
+ * interrupt handler. To adhere to header prototypes, I check
+ * the type of UART interrupt using uart_has_int, which restricts
+ * it to TX, RX, or no interrupt. To make this more efficient, I 
+ * could check both types of interrupts when the handler is invoked.
+ *
  */
 int uart_interrupt_handler(void) {
- 	
+	
+	// Page 7 of the Broadcom manual requires pair of read and write
+	// barriers between accesses to different peripherals. Because we
+	// modify the mini-UART and are unclear if we have accessed another
+	// peripheral previously, I place a set of barriers.
+	dev_barrier();
+
 	// Check that mini-UART is interrupt source
 	uart_int_t status = uart_has_int(hw_uart);
 
@@ -155,10 +192,9 @@ int uart_interrupt_handler(void) {
 		// check we have popped a valid character from the TX queue and that
 		// the HW UART can transmit a character.
 		// If so, transfer character from transmit queue to HW
-        while((uart_can_putc()) && cq_pop_nonblock(&putQ, &in_data)) {
-            uart_putc(in_data);
-        }
-
+       
+		uart_int_flush_all();
+		
 		// Check that the transmit queue is not empty. Otherwise,
 		// we will not get another set of interrupts
         if(cq_empty(&putQ)) {
@@ -167,6 +203,8 @@ int uart_interrupt_handler(void) {
 	} else {
 		;
 	}
+
+	dev_barrier();
 	return 1;
 }
 
@@ -181,7 +219,7 @@ void interrupt_vector(unsigned pc) {
  * Returns: Nones
  */
 void uart_int_flush_all(void){
-    unsigned char d;
+	unsigned char d;
 	// While UART HW can tranmit characters and we pop 
 	// valid characters from the transmit queue, place
 	// the character onto the hardware UART buffer
@@ -198,13 +236,12 @@ void uart_int_flush_all(void){
  */
 int uart_putc_int(int c) {
 
-	// We must disable interrupts because according to Dawson,
-	// interrupt and non-interrupt code sharing a resource must 
-	// be appropriately protected from each other
-    system_disable_interrupts();
-
 	// Push onto transmit queue
     cq_push(&putQ, c);
+	
+	// We must disable interrupts because we do not want
+	// an interrupt to fire while we are modifying interrupt state.
+    system_disable_interrupts();
 
 	// If transmit interrupts had been disabled in handler 
 	// due to lack of characters to transmit, that condition
@@ -216,8 +253,9 @@ int uart_putc_int(int c) {
 	// exhaust our transmit queue.
     uart_int_flush_all();
 
-	// Done with transmit queue, so re-enable interrupts
+	// Done with interrupt modifications, so re-enable interrupts
     system_enable_interrupts();
+
 	return c;
 }
 
@@ -228,10 +266,6 @@ int uart_putc_int(int c) {
  */
 int uart_getc_int(void) {
 
-	// Shared resource is the receive queue; need to protect
-	// so disable interrupts
-    system_disable_interrupts();
-	
 	// Initialize input character to invalid ASCII code so that 
 	// even if pop fails, no extra character is output
 	unsigned char in_c = 130;
@@ -242,7 +276,6 @@ int uart_getc_int(void) {
     }
 
 	// Finished with shared resource, so re-enable interrupts
-	system_enable_interrupts();
     return in_c; 
 }
 
@@ -262,6 +295,8 @@ void my_puts(const char *str) {
  * Returns: none
  */
 void uart_init_with_interrupts(void) {
+	// According to the Broadcom manual, we need a dsm and dmb barriers
+	// between operations on different peripherals.
     dev_barrier();
 
    	// According to page 102 of the Broadcom manual, 
@@ -275,11 +310,11 @@ void uart_init_with_interrupts(void) {
 	// and mini UART.
     dev_barrier();
 
-	// According to the Broadcom manual, we need a dsm and dmb barriers
-	// between operations on different peripherals, in this case GPIO
-	// and mini UART.
     put32(AUX_ENABLES, get32(AUX_ENABLES) | (ENABLE_UART));
     
+	// According to the Broadcom manual, we need a dsm and dmb barriers
+	// between operations on different peripherals, in this case AUX
+	// and mini UART.
     dev_barrier();
     
 	// The Broadcom manual defines mini-UART registers on pages 11-17, 
@@ -287,29 +322,33 @@ void uart_init_with_interrupts(void) {
 	// via checksums
 	hw_uart = (hw_uart_t*) AUX_MU_IO_REG; 
 	put32(&(hw_uart->cntl), 0x0);
+
+	// Page 12 of the Broadcom datasheet and errata show that bits 0 and 1
+	// control whether the interrupts are enabled
 	put32(&(hw_uart->ier), ENABLE_TX_INT | ENABLE_RX_INT);
 	put32(&(hw_uart->iir), CLEAR_RX_FIFO | CLEAR_TX_FIFO);
 	put32(&(hw_uart->lcr), ENABLE_8BIT_MODE);
+
+	// Page 11 dictates the formula to calculate the baud rate of the mini-UART.
+	// With 250MHz system clock and 115200 desired baud rate, the baud rate register
+	// must be loaded with value 270.
 	put32(&(hw_uart->baud), BAUD_115200);
 	put32(&(hw_uart->cntl), TX_ENABLE | RX_ENABLE);
 
-    // Using mini-UART, so we need to use the AUX interrupt.
+	// According to the Broadcom manual, we need a dsm and dmb barriers
+	// between operations on different peripherals, in this case IRQ
+	// and mini UART.
+    dev_barrier();
+    
+	// Using mini-UART, so we need to use the AUX interrupt.
 	// This slot is defined in page 113 of the Broadcom manual
     put32(IRQ_ENABLE_1, 1 << 29);
 
-    dev_barrier();
-   
 	// Initialize the transmit and receive queues
 	cq_init(&getQ, 1);
     cq_init(&putQ, 1);
-     
-    
-   // The  UART needs to have something
-   // in its queue before interrupts are enabled
-   put32(&(hw_uart->io), '\r');
-      
-   dev_barrier();
-    
+
+	dev_barrier();
 }
 
 void notmain() {
@@ -317,7 +356,7 @@ void notmain() {
     uart_init_with_interrupts();
     system_enable_interrupts();
 
-#if 0
+#if 1
 	// easiest test: just use the hw-uart.
 	my_puts("going to test using the hw-uart only:\n");
 	while(1) {
@@ -337,6 +376,7 @@ void notmain() {
     }
 #endif 
 
+#if 0
     /* 
      * this tests using the sw-uart: note we likely have to 
      * disable interrupts to make sure the sw-uart can do its
@@ -368,6 +408,7 @@ void notmain() {
 
     printk("SUCCESS!\n");
     clean_reboot();
+#endif
 }
 
 

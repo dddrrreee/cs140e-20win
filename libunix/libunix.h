@@ -40,7 +40,7 @@ int pi_done(unsigned char *s);
 // otherwise terminals can go haywire/bizarro.
 // note, the string can contain 0's, so we send the
 // size.
-void remove_nonprint(uint8_t *buf, int n);
+//static void remove_nonprint(uint8_t *buf, int n);
 #define HANDOFF_FD 21
 
 // read in file <name>

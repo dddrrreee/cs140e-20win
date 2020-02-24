@@ -1,3 +1,6 @@
+#ifndef __PI_MESSAGE_H__
+#define __PI_MESSAGE_H__
+
 // opcodes we use to communicate with pi.  
 //  - these should fit in a single byte.  
 //  - if you bitwise-OR in PI_NEED_ACK the pi will reply 
@@ -57,17 +60,18 @@ enum {
 
     PI_END,         // do not put opcodes after this.
 
-    PI_NEED_ACK     // bit-wise or this with any previous opcode to 
+    PI_NEED_ACK = 1<<7    // bit-wise or this with any previous opcode to 
                     // force a reply
-};
-
-// echo message [<PI_ECHO>, <nbytes> <string>]
-struct pi_echo {
-    unsigned nbytes;
-    char string[0]; // struct hack
 };
 
 static void check(void) {
     // make sure we can use the upper bit
     AssertNow(PI_END < 127);
 }
+
+struct pi_bin_header {
+    uint32_t cookie, hdrsize, addr, nbytes;
+};
+
+#endif 
+

@@ -106,6 +106,9 @@ char **log_list_all(const char *dirname, const char *prefix);
 void run_system(const char *cmd, ...);
 
 uint32_t our_crc32(const void *buf, unsigned size);
+// our_crc32_inc(buf,size,0) is the same as our_crc32 
+uint32_t our_crc32_inc(const void *buf, unsigned size, uint32_t crc);
+
 
 // create file <name>: truncates if already exists.
 int create_file(const char *name);

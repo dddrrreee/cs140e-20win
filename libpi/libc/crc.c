@@ -51,7 +51,7 @@ static uint32_t crc32_tab[] = {
 	0xb40bbe37, 0xc30c8ea1, 0x5a05df1b, 0x2d02ef8d
 };
 
-static uint32_t crc32_inc(const void *buf, unsigned size, uint32_t crc) {
+uint32_t our_crc32_inc(const void *buf, unsigned size, uint32_t crc) {
     const uint8_t *p = buf;
 
     crc = crc ^ ~0U;
@@ -61,5 +61,5 @@ static uint32_t crc32_inc(const void *buf, unsigned size, uint32_t crc) {
 }
 
 uint32_t our_crc32(const void *buf, unsigned size) {
-    return crc32_inc(buf,size,0);
+    return our_crc32_inc(buf,size,0);
 }

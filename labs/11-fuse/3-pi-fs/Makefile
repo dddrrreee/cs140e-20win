@@ -47,6 +47,24 @@ $(NAME):  $(OBJS)
 	$(CC) $(CFLAGS) $^ `pkg-config fuse --cflags --libs`  -o $@ -lm  $(LIBUNIX)
 
 
+test:
+	@ echo "----------start------------------------------"
+	echo 1 > $(WHERE)/echo.cmd
+	@ echo "----------2---------------------------------"
+	echo 2 >> $(WHERE)/echo.cmd
+	@ echo "----------3---------------------------------"
+	echo "hello this is our test" >> $(WHERE)/echo.cmd
+	@ echo "----------4---------------------------------"
+	cat $(WHERE)/console
+	@ echo "----------5---------------------------------"
+	cat $(WHERE)/echo.cmd
+	ls -R $(WHERE)
+	cat $(WHERE)/console
+	cat ./hello-fixed.bin > $(WHERE)/run.cmd
+	cat ./hello-fixed.bin > $(WHERE)/run.cmd
+	cat ./hello-fixed.bin > $(WHERE)/run.cmd
+	echo 1 > $(WHERE)/reboot.cmd
+
 # pull in dependency info for *existing* .o files
 -include $(OBJS:.o=.d)
 
@@ -71,4 +89,4 @@ ctags:
 	ctags *.[ch]
 # remove compilation products
 clean:
-	rm -f $(NAME) *.o *.d Makefile.bak *~ *.bin tags 
+	rm -f $(NAME) *.o *.d Makefile.bak *~  tags 

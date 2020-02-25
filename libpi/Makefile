@@ -34,14 +34,16 @@ TARGET = libpi.a
 OBJS := $(OUR_OBJS)  $(YOUR_OBJS)
 
 OBJS := $(foreach o, $(OBJS), $(BUILD_DIR)/$(notdir $o)) $(EXTRA_OBJS)
-# Get all depend files by replacing extensions
-DEPS := $(OBJS:.o=.d)  $(BUILD_DIR)/$(START).d
+# Get all depend files by replacing extensions.  we over dep on all headers.
+DEPS := $(OBJS:.o=.d)  $(BUILD_DIR)/$(START).d 
+
+HDRS := $(wildcard ./*.h ./*/*.h)
 
 all: $(TARGET) $(START).o 
 
 # we bundle start.s with the library: just make different ones for each
 # different start so that the library is internally consistent.
-$(TARGET): $(OBJS) $(SUPPORT_OBJS)  ./put-your-src-here.mk 
+$(TARGET): $(OBJS) $(SUPPORT_OBJS)  ./put-your-src-here.mk  $(HDRS)
 	arm-none-eabi-ar crf $(TARGET) $(OBJS) $(SUPPORT_OBJS)
 	$(OD) -D $@ > $@.list
 

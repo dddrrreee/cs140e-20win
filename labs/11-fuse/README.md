@@ -2,7 +2,7 @@
 
 ***NOTE: Make sure you start with the [PRELAB](PRELAB.md)!***
 
-Today you're going to use the FUSE file system to mount your pi as
+Next lab you're going to use the FUSE file system to mount your pi as
 a normal file system on your laptop.   You can systematically expose
 different abilities of the pi to the user by mapping the feature to a
 special file and potentially overriding the sematics of `read()` and
@@ -36,6 +36,9 @@ You need two main abilities to do the lab, so we will split it into two parts.
      the above, it shoudn't be too hard to adapt the the code `2-fake-pi`
      and hook up the FUSE file system.
 
+
+We will do the first one today.
+
 #### The big picture
 
 Once we wrap the pi up as a set of files, directories, links, then you can
@@ -62,36 +65,18 @@ it did not fit nicely within the Unix file interface.
 ### Check-off
 
 You need to show that:
+  0. You can run `1-send-code/unix-side/send-pi-prog` and get one of our log files:
 
-  1. Your pi-FS works as a standard file system.  `make part0` wil
-  run some simple tests.  You should be able to run the usual
-  Unix file programs, have them work as expected, and have all
-  output appear in `/pi/console`.  For example:
+        pi-trace my-install ../pi-side/get-code.bin -exec ./send-pi-prog < ../../hello-fixed/hello-fixed.bin
+        ls log-files/
+        log-file.7115e076.txt
 
-           % echo "hello world." > /pi/echo
-           % cat /pi/echo
-           hello world.
-           % echo "bye world." > /pi/echo
-           % cat /pi/console
-           hello world.
-           bye world.
+  1. You can run `2-fake-pi/unix-side/2-blink.fake` and get one of our log files.
 
-   2. When the user writes values
-   to `/pi/echo`, `/pi/reboot`, `/pi/run` the relevant command is
-   sent to the pi and all pi output is written to `/pi/console`.  
+        pi-replay log.interpose.txt my-install ../pi-side/pi-vmm.bin -exec ./example-pi-programs/2-blink.fake
+        ls log-files/
+        log-file.2476ee66.txt  log-file.3e1374a4.txt  log-file.87125e4f.txt
 
-   This will involve writing Unix code to fork/exec fork/exec a program,
-   overriding its file descriptors for `stdin` (0), `stdout` (1), and
-   `stderr` (2) so that it can interact with the program identically as
-   a user typing from the console.
-
-Extensions:
-
-   1. Add directories.
-   2. Add `/pi/dev/led` so that writes turn the led on/off and that 
-   reads give the current state.
-   3. Add a `pthread` thread to your FS that will pull output from
-   the pi in the background.
 
 ----------------------------------------------------------------------
 ## Part 1: send stuff to the pi.
@@ -169,83 +154,3 @@ Then work through the rest of the programs, sort of ordered by difficulty:
     example-pi-programs/4-bug.c
     example-pi-programs/5-bug.c
 
-
-----------------------------------------------------------------------
-## Part 2: FUSE
-
-##### Look over `0-hello`
-
-You should have already done this for the prelab!  But just to make sure you can 
-debug: Run the `hello` example in `lab11-fuse-fs/part0-hello`:
-
-  0. `make`
-  1. `make mount` will mount the `hello` file system; it will do so
-  single-threaded (the `-s` option) and in the fore-ground (the `-f`
-  option).  
-  2. `make run` (in another terminal).  Will do a trivial test to show
-  it is up and running.
-
-This code comes from (https://github.com/libfuse/libfuse/tree/master/example).
-There are a bunch of other examples there.  Change the code so
-that it prints out:
-
-    hello cs140e: today let us do a short lab!
-
-#### Implement FUSE methods to make a simple FS 
-
-If you look in `3-pi-fs/`:
-
-  - `pi-fs.c`: starter code to implement a simple FUSE file system.  
-     You are more than welcome to start with your hello file system if
-     you prefer.  We've defined a bunch of the methods you will need.
-     They are likely a bit opeque, so look in the `fuse.h` in your 
-     install or in many 
-
-  - your file system just needs a single root directory and files, no 
-    subdirectories, so you can do a pretty simple data structure to 
-    track this.  Again: you're welcome to kill all of our code.
- 
-  - `make mount`: will mount your file system.
-  - `make unmount`: will forcibly unmount if it gets stuck.
-   - `make test`: will execute simple Unix commands to check if your 
-   system is broken.
-
-You'll have to implement six methods:
-
-   - `getattr` get attributes of the file: its size, permissions, and
-   number of hardlinks to it.
-
-   - `open`: 
-
-   - `read`: read from the file at a `offset` of `size` bytes.
-
-   - `write`: write to the file at a `offset` of `size` bytes.
-
-   - `readdir`: return the directory entries in the given directory.
-
-   - `ftruncate`: truncate the file.
-
-Other than `getattr` (which we already defined), these are more-or-less
-identical to Unix calls, so you can just man page them to figure stuff
-out.  If you run FUSE with debugging output (which we do) you can see
-where it is failing and why (usually permission errors).
-
-## Hook up the your pi-fs to the your pi commands
-
-Now you'll combine everything together.
-
-  1. Implement the `do_echo`, `do_reboot`, `do_run` by using the code from
-     part 1.
-
-Break this down into steps.
-
-  1. reboot:  `echo 1 > ./pi/reboot` should cause a reboot.  Make sure
-  you can do multiple times.
-  2. echo: `echo hello > ./pi/echo` should echo the output.  
-  3. Get the console working.
-  4. Loading a program is a bit annoying.  We didn't think to put a
-  size field in the binary, so we don't actually know how big it is.
-  We assume all the bytes are there for a write.  This is ridiculous,
-  but works for our simple program. 
-
-You are done!

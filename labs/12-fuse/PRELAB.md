@@ -10,7 +10,9 @@ You'll need to do some simple changes to part 1 and part 2 from last
 time to make the system easier to build with FUSE.  After doing each,
 make sure your code works!
 
-##  code changes to hello-fixed and 1-send-code
+
+=========================================================================
+## 1. code changes to hello-fixed and 1-send-code
 
 It turns out it's much easier to send programs from FUSE if the binary contains
 the program size in it.  It's also easier to add stuff to the header later if
@@ -84,7 +86,8 @@ both your pi and unix side.   My unix side looks like:
     
         uint32_t crc = our_crc32_inc(buf, n, our_crc32(&h, sizeof h));
 
-##  code change to pi-vmm
+=========================================================================
+## 2. code change to pi-vmm
 
 The main change from last time: it turns out to be much easier to do certain
 operations if we can tell the pi vmm to send a message back when it completes
@@ -156,3 +159,100 @@ you'll get mysterious messages and not have any context.
             output("%c", get_op());
     }
 
+
+=========================================================================
+### 3. Changing trace in 5-replay
+
+As we send more and more stuff between the  pi and unix it's more and more 
+useful to check that everyone sends the same thing.
+
+Unfortunately, when I did lab 5 I got too cute with command line argument parsing
+so we have to change the code so we can do more complicated versions.
+
+As always, when we make changes that should not modify old results, we want to 
+get the old checksums.  So, before you do the modifications below to handle
+argument passing make sure you get the checksums:
+
+  1. `cd 5-replay/code`
+  2. `make trace`
+  3. `./trace my-install ./hello.bin
+  4. record the checksum (I got: `log-file.9d10342e.txt`).
+
+
+If you change `5-replay/code/trace.c`:
+
+    // trace.c
+    int main(int argc, char *argv[]) {
+    #if 1
+        char *bootloader = argv[1];
+        char **argv_rest = 0;
+        char *dev_name = 0;
+    
+        if(argc < 3)
+            die("ERROR: wrong number (n=%d) of arguments to %s\n", argc, argv[0]);
+        else if(strncmp(argv[2], "/dev", 4) != 0) {
+            argv_rest = &argv[2];
+            dev_name = find_ttyusb();
+        } else {
+            if(argc < 4)
+                panic("too few arguments\n");
+            dev_name = argv[2];
+            argv_rest = &argv[3];
+        }
+    #else
+        char *bootloader = argv[1];
+        char *pi_prog = argv[argc-1];
+        char *dev_name = 0;
+    
+        // interpose my-install foo.bin
+        if(argc == 3)
+            dev_name = find_ttyusb();
+        // interpose pi-install /dev/ttyUSB foo.bin
+        else if(argc == 4) {
+            dev_name = argv[argc-2];
+            const char *prefix = "/dev/";
+            if(strncmp(dev_name, prefix, strlen(prefix)) != 0)
+                die("ERROR: unexpected device=<%s>, expected a <%s> prefix\n", dev_name, prefix);
+        } else
+            die("ERROR: wrong number (n=%d) of arguments to %s\n", argc, argv[0]);
+    #endif
+    
+And `interpose.c`:
+
+    endpt_t start_unix_side(char *prog_name, char **argv_rest) {
+    #if 1
+    #   define MAX_ARGS 12
+        char * argv[MAX_ARGS];
+        memset(argv, 0, sizeof argv);
+    
+        argv[0] = prog_name;
+        argv[1] = "/tmp/fake-dev";
+        for(int i = 0; argv_rest[i]; i++) {
+            assert((i+2)<MAX_ARGS);
+            argv[i+2] = argv_rest[i];
+        }
+    #else
+
+        char * argv[4];
+        argv[0] = prog_name;
+        // so it does not go search for one.
+        argv[1] = "/tmp/fake-dev";
+        argv[2] = pi_prog_name;
+        argv[3] = 0;
+    #endif
+
+And finally `interpose.h`:
+
+    endpt_t start_unix_side(char *prog_name, char **argv_rest);
+
+#### replay
+
+Replay is a two line change.
+
+Comment out:
+    //char *pi_prog = argv[3];
+
+
+Change the `start_unix_side`:
+
+        endpt_t u = start_unix_side(unix_side, &argv[3]);

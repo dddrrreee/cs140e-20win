@@ -155,6 +155,12 @@ int fd_is_open(int fd);
 // trivial helper to print out the contents of <argv> with a message.
 void argv_print(const char *msg, char *argv[]);
 
+struct pi_bin_header;
+// check that the contents in <h> are ok.
+int pi_header_check(struct pi_bin_header *h);
+// send the code to the pi listening on <fd>
+int pi_send_code(int fd, struct pi_bin_header *h, const char *code, uint32_t n);
+
 // put your prototypes in here.
 #include "libunix-extra.h"
 

@@ -1,0 +1,47 @@
+/* 
+ * We hardwire it to link at <LINK_ADDR>; it's easy to change
+ * so the linking is parameterized.   
+ * 
+ * XXX: Make sure you jump to <LINK_ADDR+SIZEOF(.crt0_header)> when going 
+ * to run the code!
+ */
+LINK_ADDR = 0x100000f0;
+SECTIONS
+{
+    /* our simple a.out header.  will add as needed. */
+    .crt0_header LINK_ADDR : {
+        /* magic cookie for sanity checking */
+        LONG(0x12345678);
+
+        /* 
+         * the second word is the size of the header.  this lets us avoid changing
+         * a bunch of code as we add fields.  You should copy the entire header
+         * and just jump over it.
+         */
+        LONG(SIZEOF(.crt0_header));
+
+        /* Where we are linked at */
+        LONG(LINK_ADDR);
+        /* 
+         * total size of the binary file in bytes not including the header.
+         * NOTE: bss data is *not* in the .bin: it contains only zeros so we
+         * do not need to record them, just its size.
+         */
+        LONG(SIZEOF(.text) + SIZEOF(.data) + SIZEOF(.rodata) );
+
+        /* can add stuff below and loader should still work */
+    }
+	.text :  { KEEP(*(.text.boot))  *(.text*) }
+    .data :   { . = ALIGN(4); *(.data*)   . = ALIGN(4); } 
+    .rodata : { . = ALIGN(4); *(.rodata*) . = ALIGN(4); }
+	.bss : {
+        __bss_start__ = .;
+        *(.bss*)
+        . = ALIGN(4);
+        *(COMMON)
+        . = ALIGN(8);
+        __bss_end__ = .;
+        . = ALIGN(8);
+        __heap_start__ = .;
+    }
+}

@@ -89,4 +89,4 @@ ctags:
 	ctags *.[ch]
 # remove compilation products
 clean:
-	rm -f $(NAME) *.o *.d Makefile.bak *~ *.bin tags 
+	rm -f $(NAME) *.o *.d Makefile.bak *~  tags 

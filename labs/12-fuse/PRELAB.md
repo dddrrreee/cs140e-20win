@@ -10,6 +10,7 @@ You'll need to do some simple changes to part 1 and part 2 from last
 time to make the system easier to build with FUSE.  After doing each,
 make sure your code works!
 
+
 =========================================================================
 ## 1. code changes to hello-fixed and 1-send-code
 

@@ -1,53 +1,69 @@
-NAME := driver
+# makefile based on scott mcpeak's grad school page :)
+# 	http://scottmcpeak.com/autodepend/autodepend.html
 
-# check that your path is defined.
-ifndef CS140E_PATH
-$(error CS140E_PATH is not set: this should contain the absolute path to where this directory is.  Define it in your shell's initialiation.  For example, .tcshrc for tcsh or .bashrc for bash)
-endif
-
-include $(CS140E_PATH)/libpi/includes.mk
-
-CFLAGS += -Wno-unused-function -Wno-unused-variable  -Iexternal-code
-
-# if you want to compile everything in a directory, do something like this.
-#   SOURCES := $(wildcard ./*.c)
-#   OBJS := $(patsubst %.c, %.o, $(SOURCES))
+NAME= driver
 OBJS := $(NAME).o external-code/bzt-sd.o fat32-helpers.o
 
-# add all the .h's as dependencies, libpi and the makefile.
-DEPS := $(MEMMAP) $(LPI)
+# check that your path is defined.
+LIBPI_PATH = $(CS140E_PATH)/libpi
 
-# uncomment the different tests.
-all: libpi $(OBJS) $(NAME).bin # run
+# useful set of defines.
+include $(LIBPI_PATH)/includes.mk
 
-libpi: 
-	@ # @make -s -C $(LPP)
-	make -C $(LPP)
 
-$(OBJS): $(DEPS)
-%.o: %.c $(DEPS)
-	$(CC) $(CFLAGS) -c $< -o $@
-%.o: %.S
-	$(CC) -c $(CPP_ASFLAGS) $< -o $@
+# if you want to use cronin.
+# OBJS += external-code/emmc.o external-code/platform.o 
+# LPI += ./libgcc.a
+# CFLAGS += -DCRONIN
 
-# rules to generate .elf->.list->.bin
-%.elf: $(MEMMAP) $(OBJS) $(DEPS) 
-	$(LD) $(START) $(OBJS) -T $(LPP)/memmap -o $*.elf  $(LPI)
-%.list: %.elf
-	$(OD) -D   $*.elf > $*.list
-%.bin: %.list
-	$(OCP) $*.elf -O binary $*.bin
+CPP_ASFLAGS =  -nostdlib -nostartfiles -ffreestanding   -Wa,--warn -Wa,--fatal-warnings -Wa,-mcpu=arm1176jzf-s -Wa,-march=armv6zk
+
+CFLAGS += -Wstack-usage=512 -Iexternal-code
+
+# -marm_prefer_ldrd_strd
+
+CFLAGS += -Wno-unused-function -Werror
+
+all: libpi $(NAME).bin run
 
 run:
-	my-install ./$(NAME).bin
+	my-install $(NAME).bin
 
-tags: 
-	ctags *.[chSs] $(LPP)/*.[ch] $(LPP)/*.[chSs]
+# is there a better way to do this?
+libpi:
+	@make -C $(LIBPI_PATH)
 
+$(NAME).bin: $(LIBPI_PATH)/memmap $(OBJS) $(LIBPI_PATH)/cs140e-start.o 
+	$(LD) $(LIBPI_PATH)/cs140e-start.o $(OBJS) -T $(LIBPI_PATH)/memmap -o $(NAME).elf  $(LPI)
+	$(OD) -D $(NAME).elf > $(NAME).list
+	$(OCP) $(NAME).elf -O binary $(NAME).bin
+
+# pull in dependency info for *existing* .o files
+-include $(OBJS:.o=.d)
+
+# compile and generate dependency info;
+# more complicated dependency computation, so all prereqs listed
+# will also become command-less, prereq-less targets
+#   sed:    strip the target (everything before colon)
+#   sed:    remove any continuation backslashes
+#   fmt -1: list words one per line
+#   sed:    strip leading spaces
+#   sed:    add trailing colons
+%.o: %.c
+	$(CC) -c $(CFLAGS) $*.c -o $*.o
+	$(CC) -MM $(CFLAGS) $*.c > $*.d
+	@mv -f $*.d $*.d.tmp
+	@sed -e 's|.*:|$*.o:|' < $*.d.tmp > $*.d
+	@sed -e 's/.*://' -e 's/\\$$//' < $*.d.tmp | fmt -1 | \
+	  sed -e 's/^ *//' -e 's/$$/:/' >> $*.d
+	@rm -f $*.d.tmp
+
+.s.o: 
+	$(AS) $(ASFLAGS) $< -o $@
+
+.S.o: 
+	$(CC) -c $(CPP_ASFLAGS) $< -o $@
+
+# remove compilation products
 clean:
-	rm -rf $(BUILD_DIR) $(NAME) *~ tags */*.o *.o *.bin *.elf *.list *.img Makefile.bak  *.d
-
-.PHONY: libpi all tags clean run
-
-# stop make from deleting these suffix'd files.
-.PRECIOUS: %.list %.elf
+	rm -f replay *.o *.d *.bin *.elf *.list *.img Makefile.bak *~ external-code/*.o external-code/*.d

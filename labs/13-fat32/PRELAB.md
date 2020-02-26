@@ -1,10 +1,11 @@
 We won't be using FUSE tomorrow.  You should pause that lab and do the reading below
 or the wednesday lab is going to be rough:
 
+  - [paul's summary](https://www.pjrc.com/tech/8051/ide/fat32.html).  This has
+    some useful pictures.   An [annotated version](docs/pauls-fat32.annoted.pdf)
+    is in the `docs/` directory: this is a good place to start.
   - [aeb's summary](https://www.win.tue.nl/~aeb/linux/fs/fat/fat-1.html).
   - [data structure layout](http://www.c-jump.com/CIS24/Slides/FileSysDataStructs/FileSysDataStructs.html) this has useful tables.
-  - [paul's summary](https://www.pjrc.com/tech/8051/ide/fat32.html).  This has
-    some useful pictures.
   - [cpl.li's writeup](https://cpl.li/2019/mbrfat/) -- more pictures.  Some
     extra sentences.
   - [OSdev's partition writeup](https://wiki.osdev.org/Partition_Table).

@@ -8,5 +8,6 @@ or the wednesday lab is going to be rough:
   A full description.  Perhaps more detail than you need, but useful
   for all the weird flags that can pop up.
   5. [linux source](https://elixir.bootlin.com/linux/latest/source/fs/fat/dir.c).
+  6. The file system implementation chapter from the "three easy pieces" book.
 
 I'm going to redo some hints for FUSE after tomorrow.

@@ -74,6 +74,10 @@ Bytes   Content
 492-495 Next free cluster or 0xffffffff (hint only)
 496-507 Reserved
 508-511 0xaa550000 - sector signature
+
+ Is located at:
+    uint16_t  info_sec_num;         // 48-49   Filesystem information sector number in 
+ from start of the fat32 partition (see below)
 */
 struct fsinfo {
     uint32_t sig1;                  // 0-3

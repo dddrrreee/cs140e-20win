@@ -20,6 +20,9 @@ or the wednesday lab is going to be rough:
 
 I'm going to redo some hints for FUSE after tomorrow.
 
+If you're confused by "little-endian" versus not:
+  - [little endian](https://en.wikipedia.org/wiki/Endianness#Little-endian).
+
 --------------------------------------------------------------------------
 ### Check your kmalloc works.
 

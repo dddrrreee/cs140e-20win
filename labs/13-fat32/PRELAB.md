@@ -5,6 +5,9 @@ or the wednesday lab is going to be rough:
   - [data structure layout](http://www.c-jump.com/CIS24/Slides/FileSysDataStructs/FileSysDataStructs.html) this has useful tables.
   - [paul's summary](https://www.pjrc.com/tech/8051/ide/fat32.html).  This has
     some useful pictures.
+  - [cpl.li's writeup](https://cpl.li/2019/mbrfat/) -- more pictures.  Some
+    extra sentences.
+  - [OSdev's partition writeup](https://wiki.osdev.org/Partition_Table).
   -  [wikipedia](https://en.wikipedia.org/wiki/Design_of_the_FAT_file_system).
      full description.  Perhaps more detail than you need, but useful
      for all the weird flags that can pop up.

@@ -76,13 +76,13 @@ Bytes   Content
 508-511 0xaa550000 - sector signature
 */
 struct fsinfo {
-    uint32_t sig1;
-    uint8_t _reserved0[480];
-    uint32_t sig2;
-    uint32_t free_cluster_count;
-    uint32_t next_free_cluster;
-    uint8_t _reserved1[12];
-    uint32_t sig3;
+    uint32_t sig1;                  // 0-3
+    uint8_t _reserved0[480];        // 4-483
+    uint32_t sig2;                  // 484-487
+    uint32_t free_cluster_count;    // 488-491
+    uint32_t next_free_cluster;     // 492-485
+    uint8_t _reserved1[12];         // 496-507
+    uint32_t sig3;                  // 508-511
 };
 _Static_assert(sizeof(struct fsinfo) == 512, "fsinfo size wrong");
 
@@ -136,7 +136,6 @@ typedef struct {
 } __attribute__ ((packed)) fat32_boot_sec_t;
 
 _Static_assert(sizeof(fat32_boot_sec_t) == 512, "volume_id size is wrong");
-
 
 // directory attribute types.
 enum {
@@ -230,4 +229,6 @@ void mbr_partition_print(const char *msg, struct partition_entry *p);
 // is partition empty?
 int mbr_partition_empty(uint8_t *part);
 
+// sanity checking.
+#include "fat32-check-offsets.h"
 #endif

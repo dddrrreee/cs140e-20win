@@ -2,7 +2,8 @@
 #ifndef __RPI_MACROS_H__
 #define __RPI_MACROS_H__
 
-#define is_aligned(x, a)    (((x) & ((typeof(x))(a) - 1)) == 0)
+// i think this only works for power of 2?
+#define is_aligned(x, a)        (((x) & ((typeof(x))(a) - 1)) == 0)
 #define pi_roundup(x,n) (((x)+((n)-1))&(~((n)-1)))
 
 // check bitfield positions.

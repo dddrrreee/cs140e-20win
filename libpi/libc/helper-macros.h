@@ -2,8 +2,9 @@
 #ifndef __RPI_MACROS_H__
 #define __RPI_MACROS_H__
 
-#define is_aligned(x, a)    (((x) & ((typeof(x))(a) - 1)) == 0)
-// #define roundup(x,n) (((x)+((n)-1))&(~((n)-1)))
+// i think this only works for power of 2?
+#define is_aligned(x, a)        (((x) & ((typeof(x))(a) - 1)) == 0)
+#define pi_roundup(x,n) (((x)+((n)-1))&(~((n)-1)))
 
 // check bitfield positions.
 #define check_bitfield(T, field, off, nbits) do {                       \
@@ -33,11 +34,19 @@
         printk("\t0x%x\n", (x)->field);             \
 } while(0)
 
+
+#if 0
 // check bitfield positions.
 #define check_off_static(T, field, off, nbytes) do {        \
     AssertNow(offsetof(T, field) == off);                   \
     AssertNow(sizeof ((T *)0)->field == nbytes);            \
 } while(0)
+#endif
+
+#define check_off_static(T, field, off, nbytes)                           \
+    _Static_assert(offsetof(T, field) == off, "field offset is wrong");   \
+    _Static_assert(sizeof ((T *)0)->field == nbytes, "nbytes is wrong")
+
 
 #define check_off(T, field, off, nbytes) do {                           \
     unsigned got = offsetof(T, field);                              \

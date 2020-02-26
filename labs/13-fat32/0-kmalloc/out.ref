@@ -1,0 +1,37 @@
+TRACE:TRACE: setting malloc start to 1mb
+TRACE:going to check alignment
+TRACE:kmalloc(1)= 0x100008
+TRACE:kmalloc(2)= 0x100010
+TRACE:kmalloc(3)= 0x100018
+TRACE:kmalloc(4)= 0x100020
+TRACE:kmalloc(5)= 0x100028
+TRACE:kmalloc(6)= 0x100030
+TRACE:kmalloc(7)= 0x100038
+TRACE:kmalloc(8)= 0x100040
+TRACE:kmalloc(9)= 0x100048
+TRACE:kmalloc(10)= 0x100058
+TRACE:kmalloc(11)= 0x100068
+TRACE:kmalloc(12)= 0x100078
+TRACE:kmalloc(13)= 0x100088
+TRACE:kmalloc(14)= 0x100098
+TRACE:kmalloc(15)= 0x1000a8
+TRACE:kmalloc(16)= 0x1000b8
+TRACE:kmalloc(17)= 0x1000c8
+TRACE:kmalloc(18)= 0x1000e0
+TRACE:kmalloc(19)= 0x1000f8
+TRACE:larger allocations
+TRACE:kmalloc_aligned(1,32) =0x100120
+TRACE:kmalloc_aligned(1,64) =0x102840
+TRACE:kmalloc_aligned(1,128) =0x105c00
+TRACE:kmalloc_aligned(1,256) =0x107600
+TRACE:kmalloc_aligned(1,512) =0x10a400
+TRACE:kmalloc_aligned(1,1024) =0x10bc00
+TRACE:kmalloc_aligned(1,2048) =0x10e800
+TRACE:kmalloc_aligned(1,4096) =0x110000
+TRACE:kmalloc_aligned(1,8192) =0x114000
+TRACE:kmalloc_aligned(1,16384) =0x118000
+TRACE:kmalloc_aligned(1,32768) =0x120000
+TRACE:kmalloc_aligned(1,65536) =0x130000
+TRACE:kmalloc_aligned(1,131072) =0x140000
+TRACE:kmalloc_aligned(1,262144) =0x180000
+TRACE:kmalloc_aligned(1,524288) =0x200000

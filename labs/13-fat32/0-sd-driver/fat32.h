@@ -13,6 +13,11 @@
  *      ****** DO NOT MODIFY THIS FILE ********
  */
 
+
+/**********************************************************************
+ * mbr + helpers.
+ */
+
 /*
   Copied from from: 
    https://www.win.tue.nl/~aeb/linux/fs/fat/fat-1.html
@@ -35,15 +40,7 @@
     and each directory entry takes 32 bytes; space is rounded up to
     entire sectors).
 */
-struct partition_entry {
-    uint32_t bootable_p:8,
-             chs_start:24,
-             part_type:8,
-             chs_end:24;
-    uint32_t lba_start;
-    uint32_t nsec;
-} __attribute__ ((packed));
-_Static_assert (sizeof(struct partition_entry) == 16, "partition_entry: size wrong");
+
 
 
 /*
@@ -64,6 +61,38 @@ struct mbr {
     uint16_t sigval;
 };
 _Static_assert(sizeof(struct mbr) == 512, "mbr size wrong");
+
+// partition entry.
+typedef struct partition_entry {
+    uint32_t bootable_p:8,
+             chs_start:24,
+             part_type:8,
+             chs_end:24;
+    uint32_t lba_start;
+    uint32_t nsec;
+} __attribute__ ((packed)) mbr_partition_ent_t;
+_Static_assert (sizeof(struct partition_entry) == 16, "partition_entry: size wrong");
+
+static inline int mbr_part_is_fat32(int t) { return t == 0xb || t == 0xc; }
+
+// return pointer to partition in <mbr> (0..3), error if partno>=4.
+mbr_partition_ent_t mbr_get_partition(struct mbr *mbr, unsigned partno);
+
+// check that the master boot record looks as we expect.
+void mbr_check(struct mbr *mbr);
+
+// print out the partition <p>
+void mbr_partition_print(const char *msg, struct partition_entry *p);
+
+// is partition empty?
+int mbr_partition_empty(uint8_t *part);
+
+
+/*************************************************************************
+ * fsinfo struct + helpers.
+ */
+
+
 
 /*
 Bytes   Content
@@ -90,7 +119,26 @@ struct fsinfo {
 };
 _Static_assert(sizeof(struct fsinfo) == 512, "fsinfo size wrong");
 
-// https://www.win.tue.nl/~aeb/linux/fs/fat/fat-1.html
+void fat32_fsinfo_print(const char *msg, struct fsinfo *f);
+void fat32_fsinfo_check(struct fsinfo *info);
+
+/**********************************************************************
+ * fat32 volume id + helpers: first sector of the fat32 fs.  confusingly also
+ * called the boot sector (as we do).
+ */
+
+/*
+ * Also called the "volume id".  Important fields;
+ * 1. `bytes_per_sector`: should always be 512 byes.
+ * 2. `sectors_per_cluster`: can only be 1,2,4,8,16,32,64,128.
+ * 3. `reserved_area_nsec` (or number of reserved sectors): usually `0x20`.
+ * 4. `nfats` (number of fats): always 2.
+ * 5. `nsec_per_fat` (sectors per fat): depends on disk size.
+ * 6. `first_cluster` (root directory is the first cluster):  usually `0x2`.
+ * 7. `sig` (signature): always `0xaa55`.
+ *
+ *  https://www.win.tue.nl/~aeb/linux/fs/fat/fat-1.html
+ */
 typedef struct {
     uint8_t asm_code[3];            // 0-2  Assembly code instructions to jump to boot 
                                     //      code (mandatory in bootable partition)
@@ -141,6 +189,11 @@ typedef struct {
 
 _Static_assert(sizeof(fat32_boot_sec_t) == 512, "volume_id size is wrong");
 
+void fat32_volume_id_check(fat32_boot_sec_t *b);
+void fat32_volume_id_print(const char *msg, fat32_boot_sec_t *b);
+
+
+
 // directory attribute types.
 enum {
     FAT32_RO = 0x01,
@@ -181,8 +234,15 @@ typedef struct {
     uint32_t file_nbytes;   // 28-31   Filesize in bytes
 } __attribute__ ((packed)) fat32_dir_t;
 
-
 _Static_assert(sizeof(fat32_dir_t) == 32, "fat32_dir size is wrong");
+
+static inline uint32_t fat32_cluster_id(fat32_dir_t *d) {
+    return d->hi_start << 16 | d->lo_start;
+}
+static inline int fat32_is_dir(fat32_dir_t *d) { 
+    return d->attr == FAT32_DIR; 
+}
+
 
 #define NDIR_PER_SEC (512/32) 
 _Static_assert(sizeof(fat32_dir_t) * NDIR_PER_SEC == 512, "NDIR_PER_SEC wrong");
@@ -222,16 +282,55 @@ enum {
     USED_CLUSTER,
 };
 
-// is this a master boot record?
-void mbr_check(struct mbr *mbr);
 
-static inline int mbr_part_is_fat32(int t) { return t == 0xb || t == 0xc; }
 
-// print out the partition <p>
-void mbr_partition_print(const char *msg, struct partition_entry *p);
+/**********************************************************************
+ * fat32 helpers.
+ */
 
-// is partition empty?
-int mbr_partition_empty(uint8_t *part);
+// convert name from 8.3
+void fat32_dirent_name(fat32_dir_t *d, char *name, unsigned n);
+// return index in lookup of <name> in <d>
+int fat32_dir_lookup(const char *raw_name, fat32_dir_t *d, unsigned n);
+
+
+static inline int fat32_is_attr(uint32_t x, uint32_t flag) {
+    // is this the right thing?
+    if(x == FAT32_LONG_FILE_NAME)
+        return x == flag;
+    return (x & flag) == flag;
+}
+
+// print the attribute <attr> as a string.
+const char * fat32_dir_attr_str(int attr);
+
+// call to print dir entry <d>: does not expand LFN.
+void fat32_dirent_print(const char *msg, fat32_dir_t *d);
+// internal: don't call.
+void fat32_dirent_print_helper(fat32_dir_t *d);
+
+// if you want to print lfns have to call this instead: <left> is
+// number of directory entries left in the dir.   returns the 
+// total number of entries consumed by the long file name.
+int fat32_lfn_print(const char *msg, fat32_dir_t *d, int left);
+
+// is dirent <d> free?
+int fat32_dirent_free(fat32_dir_t *d);
+// is lfn dirent free?
+int fat32_dirent_is_deleted_lfn(fat32_dir_t *d);
+
+// call on entries in the actual FAT itself.
+int fat32_fat_entry_type(uint32_t x);
+const char * fat32_fat_entry_type_str(uint32_t x);
+
+static inline int fat32_dirent_is_lfn(fat32_dir_t *d) {
+    return (d->attr == FAT32_LONG_FILE_NAME);
+}
+
+// trivial output helpers.
+void print_as_string(const char *msg, uint8_t *p, int n) ;
+void print_bytes(const char *msg, uint8_t *p, int n) ;
+void print_words(const char *msg, uint32_t *p, int n) ;
 
 // sanity checking.
 #include "fat32-check-offsets.h"

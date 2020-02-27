@@ -32,6 +32,8 @@ The tl;dr strategy:
      the wikipedia page for further explanation.
   2. Look through `fat32.h`.
   3. Start coding in `driver.c`.
+  4. To get checksums, set `trace_p = 1` in `pi-sd.c` and it will emit `TRACE
+     messages --- you can grep these out and compare them.
 
 #### Checkoff
 
@@ -45,6 +47,7 @@ You should:
      `grep` them out!).
   4. Read in and jump to `hello-fixed.bin` from the `11-fuse` lab (you'll
      have to copy it to your SD card).
+
 
 
 You should have something that looks like this at the end:

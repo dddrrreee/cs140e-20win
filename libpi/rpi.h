@@ -121,6 +121,9 @@ void *kmalloc_heap_ptr(void);
 void kfree(void *p);
 void kfree_all(void);
 
+// does [p, p+n) only contain 0s?
+int memiszero(const void *_p, unsigned n);
+
 /*****************************************************************************
  * memory related helpers
  */
@@ -204,5 +207,19 @@ uint32_t load_code(struct vdev *v);
 // entry point definition
 void notmain(void);
 
+
+/******************************************************************
+ * SD card routines.
+ */
+
+// read sector [lba,lba+nsec) into <buf>.   must be large enough. 
+// returns 0 on error, <nsec> read in on not.
+int pi_sd_read(void *data, uint32_t lba, uint32_t nsec);
+
+// called to init first.
+int pi_sd_init(void);
+
+// read and allocate a buffer entry <nsec*secsize> big
+void *pi_sec_read(uint32_t lba, uint32_t nsec);
 
 #endif

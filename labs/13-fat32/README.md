@@ -63,7 +63,8 @@ You should have something that looks like this at the end:
         kernel_address=0x8000
         
         ---------------------------------------------------------
-        crc of bootcode (nbytes=50248) = d555bec1
+        crc of bootcode (nbytes=50248) = 324c3013
+
         DONE!!!
         
         Saw done

@@ -108,11 +108,10 @@ functionality: threads, interrupts, virtual memory and file systems.
    control other pi's.  The code depends on having an interrupt-based 
    UART channel.
 
-***[HAVE NOT UPDATED THE LABS BELOW]***
 
 ### Part 3: file systems.
 
-  - [11-fuse-fs](11-fuse-fs/): In this lab you will use the FUSE file
+  - [11-fuse.A](11-fuse/): In this lab you will use the FUSE file
     system to wrap up your pi as a special file system and mount it on your
     laptop, where you can use standard utilities (and your normal shell)
     to interact with it.  You can then control the pi by reading / writing
@@ -124,18 +123,25 @@ functionality: threads, interrupts, virtual memory and file systems.
     files, directories, links and interact with them using a uniform set
     of verbs (e.g., `open()-read()-write()-close()`).
 
-  - [12-simple-fs](12-simple-fs): here you will write code to partition
-  your pi's SD card driver and write a custom file system to manage it so that
-  you can read/write files across runs.
+  - [12-fuse.B](12-fuse/): We continue fuse since it was a big lab :). 
+
+  - [13-fat32](13-fat32/): The SD and virtual memory are the biggest
+    unknowns in our universe, so we'll bang out quick versions of each,
+    and then circle back around and make your system more real.
+
+    You will write a simple read-only FAT32 file system that can read from
+    your SD card. You will use this to do a very OS-style "hello world":
+    use your FAT32 to read `hello-fixed.bin` from last lab from your SD
+    card, jump to it and run it.
+
+***[HAVE NOT UPDATED THE LABS BELOW]***
 
 ### Part 4: Virtual Memory
 
-  - [14-vm.0](14-vm.0/): Virtual memory and the SD card file
-  system are the biggest unknowns in our universe, so we'll bang out
-  quick versions of each, and then circle back around and make your
-  system more real.  This lab is a semi-lecture on the big picture of
-  virtual memory, then you take a working VM system and replace its page
-  table manipulation with your own.
+  - [14-vm](14-vm/): This lab is a semi-lecture on the big picture of
+    virtual memory, then you take a working VM system and replace its page
+    table manipulation with your own.
+
 
   - [15-vm.1](15-vm.1/): The previous lab defined the main noun
   in the virtual memory universe (the page table); this lab does the main

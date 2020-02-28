@@ -39,6 +39,55 @@ You need two main abilities to do the lab, so we will split it into two parts.
 
 We will do the first one today.
 
+#### Post-script: Hints.
+
+This lab has given the most people the most problems of any so far.  I just
+rewrote my implementation from scratch to try to get some sticking points.
+
+Biggest hint: If you are having trouble getting the FUSE system to work
+(e.g., various permissions etc), stop messing with it, create a copy of
+`0-hello` and try to modify it so you can write a single file.   This was
+a fast way to sort out many problems (for me at least) --- you have to deal
+with much less, and the compile-debug-edit cycle is way faster.
+
+Other Various hints:
+  1. You *must* change the `st_size` field to the correct value, otherwise the output
+     will be stale or truncated.
+
+  2. Instead of laboriously typing tests out, stick them in your makefile and just
+     run them.  This way you can add more and more and automatically check if any
+     modification messages things up.
+
+            test1:
+                cat fuse-hello/hello
+                # easy to check result
+                cp Makefile fuse-hello/hello
+                diff Makefile fuse-hello/hello
+                # do a small file then a large
+                cat small-file.txt > fuse-hello/hello
+                diff small-file.txt fuse-hello/hello
+                # try different ways of writing
+                cat Makefile > fuse-hello/hello
+                diff Makefile fuse-hello/hello
+                # ...
+
+     then do:
+            make test1
+
+   3. Run fuse without `-d` so you can see more stuff --- otherwise there is a huge
+      amount of output that will hide your prints.  Also, add way more information
+      into the debugging prints that are in there now!
+
+   4.  Note that the permissions passed to `open` have a different bit-pattern
+      than your permission flags.  You can't just compare them or do bitwise 
+      "and" or "or" operations.     Open takes things like `O_RDNLY`, `O_RDWR`
+      but the permissions we assign to the `st_mode` field have a completely
+      different representation.  Messing this up will lead to permission failures,
+      which menas no output.
+   5. Even to just write a single file I needed to do all the different operations.
+      Otherwise it would fail (e.g., on `truncate`) and not be able to do much.
+
+
 #### The big picture
 
 Once we wrap the pi up as a set of files, directories, links, then you can

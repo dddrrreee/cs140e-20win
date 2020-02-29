@@ -62,11 +62,11 @@ Your partner's does.  You plug your setup into their laptop.
 
    2. Use `git` to clone (check out) the class repository:
 
-          % git clone git@github.com:dddrrreee/cs140e-win20.git  
+          % git clone git@github.com:dddrrreee/cs140e-win21-dev.git  
 
       If you don't want to install a key on github, use:
 
-          % git clone https://github.com/dddrrreee/cs140e-win20.git
+          % git clone https://github.com/dddrrreee/cs140e-win21-dev.git
 
       Pro tip: run your `git clone` command in some sensible directory
       (e.g., `~/class/`) and remember where you checked your repository
@@ -160,8 +160,8 @@ executable programs in a `bin` directory located in your home directory.
 #### Install the rest of the code
 
 Gates wireless can really suck, so it's best if you download the rest
-of the code that you need: look in Part 3 (serial drivers) and Part 4
-(gcc toolchain) of the lab, and install the software it says.
+of the code that you need: look in `README.md/Part 3` (serial drivers) and 
+`README.md/Part 4` (gcc toolchain) of the lab, and install the software it says.
 
 #### Nice-haves: Extra, very useful things.
 

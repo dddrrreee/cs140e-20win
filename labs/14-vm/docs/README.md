@@ -1,5 +1,10 @@
 
-`arm1176-vm.annot.pdf`: this is the chip specific chapter on vm.   Some notable
+-----------------------------------------------------------------------
+### How memory works on our r/pi a+.
+
+The r/pi A+ uses the `arm1176jzf-s` chip.  
+
+`arm1176-vm.annot.pdf`: chip specific chapter on vm.   Some notable
 parts:
 
   - 6-9: disable, enable mmu
@@ -29,9 +34,11 @@ parts:
   - 6-46: translation figure for 1mb section.
   - 6-53: list of all mmu registers from cp15
 
+----------------------------------------------------------------------
+### Synchronizing TLB/BTB/prefetch buffer/page table mem/etc
 
-
-`armv6.b2-memory.annot.pdf`: this gives memory ordering restrictions.
+`armv6.b2-memory.annot.pdf`: the general armv6 memory ordering restrictions.
+Notable points:
   - b2-13: memory model: what store must a load return?
   - b2-14: instruction fetches must only access normal memory.  does this mean
     we cannot mark ram as non-normal?
@@ -68,4 +75,3 @@ parts:
    * b2-25: sync changes asid/ttbr.  cookbook example.  subtle.
      shows why *MUST* write the code in assembly, with no branches,
      no indirect jumps, no function calls.
-        

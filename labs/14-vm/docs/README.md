@@ -29,3 +29,43 @@ parts:
   - 6-46: translation figure for 1mb section.
   - 6-53: list of all mmu registers from cp15
 
+
+
+`armv6.b2-memory.annot.pdf`: this gives memory ordering restrictions.
+  - b2-13: memory model: what store must a load return?
+  - b2-14: instruction fetches must only access normal memory.  does this mean
+    we cannot mark ram as non-normal?
+    further: prefetch can go down both
+    branches: better make sure doesn't access device
+    mem it should not!  
+  - b2-16: table with rules for memory ordering
+  - b2-17: rules for determining if access A1 occurs
+    before A2. 
+  - b2-18: memory barriers, dsb > dmb: dsb completes after all
+    all memory, cache, tlb and branch prediction operations have completed
+    no instruction after the dsb can execute until the dsb completes.
+  - b2-19: prefetchflush: flushes the pipeline so all instructions after
+    are fetched from cache/mem after prefetch completes.  ensure
+    that changing asid, tlb etc are visible for sure after prefetch.
+    all branches after the prefetch will have state after it.  other
+    subtle points.
+  - b2-20: possible operations needed to handle cache coherence issues
+  - b2-21: cache management operations.
+  * b2-22: tlb operations: this is crucial for us.     must 
+    do a dsb + prefetchflush after you modify the TLB.
+  * b2-23: if you modify the *page table* need to a dsb.  must 
+    clean out of the cache if it's cacheable memory.  cookbook code
+    to clean PTE modification.
+  * b2-24: any invalidation of btb only visible after prefetch flush.
+    list of operations where you need to do a flush:
+        enable / disable mmu
+        writing new code.
+        writing pte entry
+        changes to ttbr0, ttbr1, ttbcr
+        changes to process id/context id.
+
+    any change to cp14/cp15 need a prefetchflush.
+   * b2-25: sync changes asid/ttbr.  cookbook example.  subtle.
+     shows why *MUST* write the code in assembly, with no branches,
+     no indirect jumps, no function calls.
+        

@@ -7,10 +7,10 @@ EX_DIR = ./example-pi-programs
 #
 # NAME  := $(EX_DIR)/0-reboot.c
 # NAME  := $(EX_DIR)/1-put32.c
- NAME  := $(EX_DIR)/2-blink.c
+# NAME  := $(EX_DIR)/2-blink.c
 # NAME  := $(EX_DIR)/3-bug.c
 # NAME  := $(EX_DIR)/4-bug.c
-# NAME  := $(EX_DIR)/5-bug.c
+ NAME  := $(EX_DIR)/5-bug.c
 
 ## comment out gpio.c here to use your higher level code.
 OUR_SRC := fake-pi.c #$(LPP)/cs140e-private/gpio.c

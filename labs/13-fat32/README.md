@@ -63,7 +63,8 @@ You should have something that looks like this at the end:
         kernel_address=0x8000
         
         ---------------------------------------------------------
-        crc of bootcode (nbytes=50248) = d555bec1
+        crc of bootcode (nbytes=50248) = 324c3013
+
         DONE!!!
         
         Saw done
@@ -151,7 +152,7 @@ Our SD cards are broken down as follows:
      can read in both and check they are identical.
 
    - The root directory: located by reading `sec_per_cluster` worth of
-     data from cluster 2.
+     data from cluster 2.  
 
 Further reading --- the first three are good summaries, the latter have more detail:
 
@@ -209,6 +210,15 @@ You'll get the root directory, read it in, and print it.
    3. The print loop should print something sensible.
    4. You can also print it with the LFNs (commented out)
 
+
+*Note: the checked-in code has a completely broken comment that the root
+can only be one cluster.*  While I would expect the root directory in
+your current SD card to fit in one cluster (since we didn't do much on
+the sd card), in general it can be unbounded in size and you will have
+to iterate through it, loading its cluster as you do files (below).
+The annoying difference from files is that you do not know the size of
+the directory up-front.
+
 -------------------------------------------------------------------------
 ### Part 5: read in and print `config.txt`
 
@@ -220,6 +230,32 @@ If everything has gone according to plan:
       an allocated buffer.   
    3. When the entry in the fat is `LAST_CLUSTER` you know you've reached the end.
 
+
+*NOTE: do not  check the type of the fat entry by hand, in particular do not do 
+a raw comparison to `LAST_CLUSTER`, since there are many allowed values for this
+sentinel.   Instead, call `fat32_fat_entry_type` which strips out the bits
+for you (you can certainly write a more clever version of this routine, 
+which you are encouraged to do!):
+
+        // in fat32-helpers.c
+        int fat32_fat_entry_type(uint32_t x) {
+            // eliminate upper 4 bits: error to not do this.
+            x = (x << 4) >> 4;
+            switch(x) {
+            case FREE_CLUSTER:
+            case RESERVED_CLUSTER:
+            case BAD_CLUSTER:
+                return x;
+            }
+            if(x >= 0x2 && x <= 0xFFFFFEF)
+                return USED_CLUSTER;
+            if(x >= 0xFFFFFF0 && x <= 0xFFFFFF6)
+                panic("reserved value: %x\n", x);
+            if(x >=  0xFFFFFF8  && x <= 0xFFFFFFF)
+                return LAST_CLUSTER;
+            panic("impossible type value: %x\n", x);
+        }
+
 -------------------------------------------------------------------------
 ### Part 6: read in and run `hello.bin`
 
@@ -227,3 +263,41 @@ If everything has gone according to plan:
       (use the code from `11-fuse/hello-fixed/`).
    2. Read it into a buffer at the required range.
    3. Jump to it.
+
+-------------------------------------------------------------------------
+### Extensions
+
+
+#### make a simple network file system.
+
+There's an unholy number of extensions you can do for this lab. Maybe the most
+significant one is to attach your SD card "file system" to fuse as a 
+sort-of network file systems (similar to NFS):
+  1. Have a "mount point" on your fake pi file system (e.g., `/pi`).
+  2. When FUSE operations are done to files and directories below this mount
+     point subdirectory, translate these to messages you can send to the pi 
+     and get a response on.
+  3.  The pi loop would act on them, and send the results back to your unix
+     side, which would forward to the FUSE system.  
+
+For example:
+  1. If the user does `cat /pi/config.txt`, forward the
+     FUSE `open`, `getattr`, `read` calls to pi by making opcodes (e.g.,
+     `PI_FS_OPEN`, `PI_FS_GETATTR`, `PI_FS_READ`), and bundling the the
+     arguments passed to FUSE in the messages sent to the pi, (similar
+     in spirit, albeit different in details, to how you did commands in
+     your `pi-vmm.c` lab).
+  2.  The pi side would read the contents of `config.txt` and send it back 
+     to the UNIX side.
+  3. The unix side would copy these into the buffer based to `pi_fuse_read`.
+
+#### Make your fat32 less primitive.
+
+  1. Instead of dealing with raw names, deal with the human readable ones.
+  2. use LFN names.
+  3. Handle subdirectories.
+  4. Add writes.
+  5. Combine the above and then `cp -r` large file system trees from your
+     laptop to the pi, and recursively run `cksum` on the contents, making
+     sure you get the same values as you get on your laptop.  This is a very
+     very hard, very very easy test that will seek and destroy many bugs.

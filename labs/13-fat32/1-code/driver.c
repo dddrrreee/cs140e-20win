@@ -4,6 +4,9 @@
 #include "rpi.h"
 #include "fat32.h"
 #include "crc.h"
+#include "pi-message.h"
+
+#define roundup(x, n) (((x)+((n)-1))&(~((n)-1)))
 
 /*
  * aggregate the FAT32 information.  refer to paul's writeup for
@@ -48,7 +51,11 @@ fat32_fs_t fat32_mk(uint32_t lba_start, fat32_boot_sec_t *b) {
     fs.lba_start = lba_start;
     fs.fat_begin_lba = lba_start + b->reserved_area_nsec;
     printk("begin lba = %d\n", fs.fat_begin_lba);
-    unimplemented();
+
+	fs.cluster_begin_lba = fs.fat_begin_lba + 2 * b->nsec_per_fat;
+	fs.sectors_per_cluster = b->sec_per_cluster;
+	fs.root_dir_first_cluster = b->first_cluster;
+	fs.n_fat = (b->nsec_per_fat * b->bytes_per_sec / 4); 
 
     /* 
      * read in the entire fat (one copy: worth reading in the second and
@@ -60,7 +67,8 @@ fat32_fs_t fat32_mk(uint32_t lba_start, fat32_boot_sec_t *b) {
      * The File Allocation Table has one entry per cluster. This entry
      * uses 12, 16 or 28 bits for FAT12, FAT16 and FAT32.
     */
-    unimplemented();
+    
+	fs.fat = pi_sec_read(fs.fat_begin_lba, b->nsec_per_fat * b->nfats);	
 
     return fs;
 }
@@ -68,7 +76,7 @@ fat32_fs_t fat32_mk(uint32_t lba_start, fat32_boot_sec_t *b) {
 // given cluster_number get lba
 uint32_t cluster_to_lba(struct fat32 *f, uint32_t cluster_num) {
     assert(cluster_num >= 2);
-    unimplemented();
+	return f->cluster_begin_lba + (cluster_num - 2) * f->sectors_per_cluster;
 }
 
 /*
@@ -85,11 +93,8 @@ fat32_dir_t *fat32_readin_root_dir(uint32_t *dir_n, fat32_fs_t *fs) {
     printk("cluster 2 to lba = %d\n", cluster_to_lba(fs, 2));
 
     // root directory is fixed size = 1 cluster.
-    unimplemented();
-    unsigned dir_lba = 0;       // fill this in
-    uint32_t dir_nsecs = 0;     // fill this in
-
-
+    unsigned dir_lba = cluster_to_lba(fs, 2);       // fill this in
+    uint32_t dir_nsecs = fs->sectors_per_cluster;     // fill this in
 
     printk("rood dir first cluster = %d\n", dir_lba);
     *dir_n = NDIR_PER_SEC * dir_nsecs;
@@ -142,6 +147,8 @@ void dirent_print(dirent_t *e) {
         e->name, e->cluster_id, e->is_dir_p?"dir":"file", e->nbytes);
 }
 
+#define END_CODE 0xFFFFFFF
+
 // you may have to read in many clusters: this should be a loop.
 // as a first cut (for config) try just reading one cluster.
 pi_file_t fat32_read_file(fat32_fs_t *fs, dirent_t *d) {
@@ -149,14 +156,37 @@ pi_file_t fat32_read_file(fat32_fs_t *fs, dirent_t *d) {
 
     pi_file_t f;
 
-    unimplemented();
+	f.n_data = d->nbytes;
+	f.n_alloc = roundup(f.n_data, 512 * fs->sectors_per_cluster);
+	f.data = kmalloc(f.n_alloc);
+	
+	memset(f.data, 0, f.n_alloc);
+	char* file_ptr = f.data;
+
+	uint32_t next_id = id;
+	uint32_t* fat_walker = fs->fat + next_id;
+
+	while(fat32_fat_entry_type(next_id) != LAST_CLUSTER) {
+		printk("TRYING TO READ CLUSTER_ID: %d\n", next_id);
+		pi_sd_read(file_ptr, cluster_to_lba(fs, next_id),
+				   fs->sectors_per_cluster);
+		next_id = (*fat_walker) & 0xFFFFFFF;
+		fat_walker = fs->fat + next_id;
+		file_ptr += 512 * fs->sectors_per_cluster; 
+	}
+	
+	if(fat32_fat_entry_type(next_id) == LAST_CLUSTER) {
+		printk("TRYING TO READ CLUSTER_ID: %d\n", next_id);
+		pi_sd_read(file_ptr, cluster_to_lba(fs, next_id), fs->sectors_per_cluster);
+	}
 
     // done.
     return f;
 }
 
 void notmain(void) {
-    uart_init();
+    kmalloc_init();
+	uart_init();
 
     //*********************************************************************
     // PART1
@@ -184,8 +214,8 @@ void notmain(void) {
         NOTE: this is our <fat32_boot_sec_t>.   
     */
     printk("reading from %d\n", p.lba_start);
-    fat32_boot_sec_t *b = 0;
-    unimplemented();
+    fat32_boot_sec_t *b = pi_sec_read(p.lba_start, 1);
+	
     // does a reasonably thorough set of checks.  please post if you figure out
     // more.
     fat32_volume_id_check(b);
@@ -193,8 +223,8 @@ void notmain(void) {
 
     // this is what we add to <lba_start>
     assert(b->info_sec_num == 1);
-    struct fsinfo *info = 0;
-    unimplemented();
+    struct fsinfo *info = pi_sec_read(p.lba_start + b->info_sec_num, b->info_sec_num);
+
     fat32_fsinfo_check(info);
     fat32_fsinfo_print("info struct", info);
 
@@ -274,6 +304,14 @@ void notmain(void) {
     // PART6
     // read in and jump to hello-fixed.bin --- you probably should rename it 
     // something that is easy to get.
-
+	char bin_file[] = "HELLO   BIN";
+	e =  dirent_fat32_lookup(bin_file, dirs, n_dir);
+    if(!e)
+        panic("could not find <%s>??\n", bin_file);
+    dirent_print(e);
+    f = fat32_read_file(&fs, e);
+	struct pi_bin_header h = *(struct pi_bin_header*) f.data;
+	memcpy(h.addr, f.data, h.nbytes);
+	BRANCHTO(h.addr + sizeof h); 
     clean_reboot();
 }

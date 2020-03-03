@@ -49,6 +49,7 @@ void notmain(void) {
     uint8_t op;
     uint32_t n, crc;
     void *addr = 0;
+	struct pi_bin_header h; 
     AssertNow(sizeof addr == 4);
 
     /*
@@ -57,13 +58,12 @@ void notmain(void) {
      * copy the code and jump to it.
      */
 	read_exact(&op, sizeof op);
-	read_exact(&n, sizeof n);
-	read_exact(&addr, sizeof addr);
+	read_exact(&h, sizeof h); 
+	//read_exact(&n, sizeof n);
+	//read_exact(&addr, sizeof addr);
 	read_exact(&crc, sizeof crc);
-	//op = get_byte();
-	//n = get_uint();
-	//addr = (void*) get_uint();
-	//crc = get_uint();
+	
+	addr = (void*)h.addr;
 
 	if(op != PI_PUT_CODE) {
 		panic("Bad opcode\n");
@@ -72,16 +72,18 @@ void notmain(void) {
     if(addr < (void*)HIGHEST_USED_ADDR)
         panic("invalid addr %x, must be > %x\n", addr, HIGHEST_USED_ADDR);
 
- 	read_exact(addr + 8, n); 
+	n = h.nbytes;
+ 	
+	read_exact(addr + sizeof h, n); 
 
-	uint32_t curr_crc = our_crc32(addr + 8, n);
-	//if(curr_crc != crc) {
-	//	panic("Bad CRC: got %u, expected %u\n", our_crc32(addr + 8, n), crc);
-	//}
+	uint32_t curr_crc = our_crc32_inc(addr + sizeof h, n, our_crc32(&h, sizeof h));
+	if(curr_crc != crc) {
+		panic("Bad CRC: got %u, expected %u\n", our_crc32(addr + sizeof h, n), crc);
+	}
 
     for(int i = 0; i < 10; i++) {
-        printk("%d: about to call shipped code, addr=%x, nbytes=%d!\n", i,addr + 8,n);
-        BRANCHTO((uint32_t)(addr + 8));
+        printk("%d: about to call shipped code, addr=%x, nbytes=%d!\n", i,addr + sizeof h,n);
+        BRANCHTO((uint32_t)(addr + sizeof h));
         printk("code returned!\n");
     }
     clean_reboot();

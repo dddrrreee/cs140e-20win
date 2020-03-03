@@ -1,0 +1,82 @@
+#include "timer-interrupt.h"
+#include "cycle-count.h"
+
+// engler,cs140e: trivial non-pre-emptive threads package.
+#ifndef __RPI_PREEMPTIVE_THREAD_H__
+
+/*
+ * trivial thread descriptor:
+ *   - <next>: pointer to the next thread in the queue that
+ *     holds the thread.
+ *  - <tid> unique thread id.
+ *  - <stack>: fixed size stack.
+ *
+ * the big simplication: rather than save registers on the
+ * stack we stick them in a single fixed-size location at
+ * offset in the thread structure.
+ *  - offset 0 means it's hard to mess up offset calcs.
+ *  - doing in one place rather than making space on the
+ *    stack makes it much easier to think about.
+ *  - the downside is that you can't do nested, pre-emptive
+ *    context switches.  since this is not pre-emptive, we
+ *    defer until later.
+ *
+ * changes:
+ *  - dynamically sized stack.
+ *  - save registers on stack.
+ *  - add condition variables or watch.
+ *  - some notion of real-time.
+ *  - a private thread heap.
+ *  - add error checking: thread runs too long, blows out its
+ *    stack.
+ */
+
+// you should define these; also rename to something better.
+#define REG_SP_OFF 13
+#define REG_LR_OFF 14
+#define REG_PC_OFF 15
+#define REG_SPSR_OFF 16
+
+// in bytes.
+#define THREAD_MAXSTACK (1024 * 8/4)
+typedef struct rpi_preemptive_thread {
+    struct rpi_preemptive_thread *next;
+    uint32_t tid;
+    uint32_t done; //0 = still running, 1 = done running, and don't need anymore.
+    uint32_t align; //needed so 8 byte aligned
+    uint32_t stack[THREAD_MAXSTACK];
+} rpi_preemptive_thread_t;
+
+// create a new thread that takes a single argument.
+rpi_preemptive_thread_t *rpi_fork_preemptive(void (*code)(void *arg), void *arg);
+
+// exit current thread.
+void rpi_exit_preemptive(int exitcode);
+
+// starts the thread system: nothing runs before.
+//     - <preemptive_p> = 1 implies pre-emptive multi-tasking.
+void rpi_thread_start_preemptive(void);
+
+// pointer to the current thread.
+rpi_preemptive_thread_t *rpi_cur_thread_preemptive(void);
+
+// context-switch:
+//  - save the current register values into <old_save_area>
+//  - load the values in <new_save_area> into the registers
+//  reutrn to the caller (which will now be different!)
+void rpi_cswitch_preemptive_banked(uint32_t *old_save_area, uint32_t *new_save_area);
+
+// returns the stack pointer --- don't write to
+// what it points to unless you are looking for excitement.
+const uint8_t *rpi_get_sp_preemptive(void);
+
+// check that the current thread is within its stack.
+void rpi_stack_check_preemptive(void);
+
+// sleep for <usec>.  can be used to implement simple
+// real-time scheduling.
+void rpi_exact_sleep_preemptive(uint32_t usec);
+
+void rpi_join_preemptive(rpi_preemptive_thread_t *th);
+
+#endif

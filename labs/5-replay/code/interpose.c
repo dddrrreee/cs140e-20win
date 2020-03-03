@@ -75,16 +75,30 @@ static void unix_end_failed(endpt_t *e, const char *cmd) {
 //   2. fork/exec the client code.
 //   3. create a watchdog to kill the child if the parent dies.
 //   4. return descriptor.
-endpt_t start_unix_side(char *prog_name, char *pi_prog_name) {
+endpt_t start_unix_side(char *prog_name, char **argv_rest) {
+#if 1
+#   define MAX_ARGS 12
+    char * argv[MAX_ARGS];
+    memset(argv, 0, sizeof argv);
+
+    argv[0] = prog_name;
+    argv[1] = "/tmp/fake-dev";
+    for(int i = 0; argv_rest[i]; i++) {
+        assert((i+2)<MAX_ARGS);
+        argv[i+2] = argv_rest[i];
+    }
+#else
+
     char * argv[4];
     argv[0] = prog_name;
     // so it does not go search for one.
     argv[1] = "/tmp/fake-dev";
     argv[2] = pi_prog_name;
     argv[3] = 0;
+#endif
 
     int pid;
-#   define TRACE_FD 21
+    #   define TRACE_FD 21
     // you implement exec_server_socket.
     int fd = exec_server_socket(&pid, argv, TRACE_FD);
     output("pi-install pid = %d\n", pid);
@@ -93,6 +107,8 @@ endpt_t start_unix_side(char *prog_name, char *pi_prog_name) {
     e.pid = pid;
     return e;
 }
+    
+
 
 // not much to do: we just open it.
 endpt_t start_pi_side(const char *dev_name) {

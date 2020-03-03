@@ -83,18 +83,20 @@ int main(int argc, char *argv[]) {
     //
     // after sending: run pi_echo.
     char buf[1024 * 64];
-    uint32_t cookie, addr;
 
-    read_exact(0, &cookie, sizeof cookie);
-    uint32_t expect = 0x12345678;
-    if(cookie != expect)
-        panic("invalid cookie: %x, expected %x\n", cookie, expect);
+	struct pi_bin_header h;
+
+    read_exact(0, &h, sizeof h);
+	assert(sizeof h == h.hdrsize);
     
-    read_exact(0, &addr, sizeof(addr));
+	uint32_t expect = 0x12345678;
+    if(h.cookie != expect)
+        panic("invalid cookie: %x, expected %x\n", h.cookie, expect);
     
-    if(addr <= HIGHEST_USED_ADDR)
+
+    if(h.addr <= HIGHEST_USED_ADDR)
         panic("specified addr %x will hit pi code %x\n", 
-                addr, HIGHEST_USED_ADDR);
+                h.addr, HIGHEST_USED_ADDR);
 
     // read in code, check for errors.
     int n = read(0, buf, sizeof buf);
@@ -107,17 +109,20 @@ int main(int argc, char *argv[]) {
 
     // send to the pi!
     put_byte(fd, PI_PUT_CODE);
-    put_uint32(fd, n);
-    put_uint32(fd, addr);
-    put_uint32(fd, our_crc32(buf, n));
+    //put_uint32(fd, n);
+    //put_uint32(fd, h.addr);
+    // put_uint32(fd, our_crc32_inc(buf, n, our_crc32(&h, sizeof h)));
 
+	write_exact(fd, &h, sizeof h);
+    put_uint32(fd, our_crc32_inc(buf, n, our_crc32(&h, sizeof h)));
+	
 	int i;
 	for(i = 0; i < n; ++i) {
 		put_byte(fd, buf[i]);
 	}
 	//write_exact(fd, buf, n);
 
-    output("loaded code at %x with nbytes=%d: going to echo output\n", addr,n);
+    output("loaded code at %x with nbytes=%d: going to echo output\n", h.addr,n);
     pi_echo(0, fd, 0);
     return 0;
 }

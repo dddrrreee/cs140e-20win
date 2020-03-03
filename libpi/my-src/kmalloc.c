@@ -26,9 +26,10 @@ void *kmalloc(unsigned nbytes) {
     demand(init_p, calling before initialized);
     
     void* to_allocate = heap_ptr;
-    unsigned rounded_nbytes = roundup(nbytes, 4);
-    heap_ptr += rounded_nbytes;
+    unsigned rounded_nbytes = roundup(nbytes, 8);
     memset(heap_ptr, 0, rounded_nbytes);
+    heap_ptr += rounded_nbytes;
+    //memset(heap_ptr, 0, rounded_nbytes);
     return to_allocate;
 
 }
@@ -38,9 +39,9 @@ void *kmalloc(unsigned nbytes) {
 void *kmalloc_aligned(unsigned nbytes, unsigned alignment) {
     demand(init_p, calling before initialized);
 
-    if(alignment <= 4)
+    if(alignment <= 8)
         return kmalloc(nbytes);
-    demand(alignment % 4 == 0, "weird alignment: not a multiple of 4!");
+    demand(alignment % 8 == 0, "weird alignment: not a multiple of 4!");
     unsigned aligned_heap_ptr = (unsigned) heap_ptr;
 	aligned_heap_ptr = roundup(aligned_heap_ptr, alignment);
 	heap_ptr = (void*) aligned_heap_ptr;
@@ -77,4 +78,10 @@ void kfree_all(void) {
 // 
 void *kmalloc_heap_ptr(void) {
     return (void*) heap_ptr;
+}
+
+void kmalloc_init_set_start(unsigned start_address) {
+    demand(!init_p, cannot initialize twice!\n);
+    init_p = 1;
+    heap_ptr = (void*) start_address;
 }

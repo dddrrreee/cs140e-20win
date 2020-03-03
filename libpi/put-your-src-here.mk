@@ -6,4 +6,4 @@ YOUR_OBJS = uart.o gpio.o kmalloc.o sw-uart.o
 
 # these are initial .o's we give you: to use your own, remove them
 # and add yours
-EXTRA_OBJS= 
+EXTRA_OBJS= cs140e-objs/uart-int.o 

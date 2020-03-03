@@ -29,7 +29,8 @@ void *sec_read(uint32_t lba, uint32_t nsec) {
 }
 
 void notmain(void) {
-    uart_init();
+    kmalloc_init();
+	uart_init();
 
     printk("about to init\n");
     pi_sd_init();

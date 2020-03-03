@@ -4,15 +4,16 @@
 NAME= pi-fs
 WHERE=./fake-pi
 
-FUSE_CMD = ./$(NAME) -f -d -s $(WHERE)
+FUSE_CMD = ./$(NAME) -f -s $(WHERE)
 
 LIBUNIX_PATH := $(CS140E_PATH)/libunix
+LIBPI_PATH := $(CS140E_PATH)/libpi
 LIBUNIX := $(LIBUNIX_PATH)/lib-support.unix.a
-CFLAGS := -Wall -g -Wno-unused-function -Wno-unused-variable -I. -I$(LIBUNIX_PATH) -Og -DRPI_UNIX -I$(LIBUNIX_PATH)/..
+CFLAGS := -Wall -g -Wno-unused-function -Wno-unused-variable -I. -I$(LIBUNIX_PATH) -Og -DRPI_UNIX -I$(LIBUNIX_PATH)/.. -I$(LIBPI_PATH)
 
 OBJS = $(NAME).o 
 
-FUSE_CMD = ./$(NAME) -f -d -s $(WHERE)
+FUSE_CMD = ./$(NAME) -f -s $(WHERE)
 
 CC = gcc
 CFLAGS += -D_FILE_OFFSET_BITS=64  `pkg-config fuse --cflags --libs`

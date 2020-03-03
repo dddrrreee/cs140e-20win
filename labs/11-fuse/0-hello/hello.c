@@ -23,8 +23,8 @@ static int hello_open(const char *path, struct fuse_file_info *fi) {
 
     // we only allow read-only access to the file.
     // Q: what happens if we remove this check?
-    if((fi->flags & 3) != O_RDONLY)
-        return -EACCES;
+    //if((fi->flags & 3) != O_RDONLY)
+    //    return -EACCES;
 
     // 0 = success 
     return 0;
@@ -81,6 +81,7 @@ static int hello_getattr(const char *path, struct stat *stbuf) {
 static int hello_read(const char *path, char *buf, size_t size, 
                     off_t offset, struct fuse_file_info *fi) {
 
+	debug("&&&&&&&&&&&&&&&&&&&&&&& READING &&&&&&&&&&&&&&&&&&&&&&&&&&&&\n");
     size_t len = strlen(hello_str);
     // same pattern: fail if they are looking for a different file
     // than /hello

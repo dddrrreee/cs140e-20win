@@ -266,6 +266,12 @@ int uart_putc_int(int c) {
  */
 int uart_getc_int(void) {
 
+	// Since we ask for a input char, we better get
+	// one out. Spin until we get an input char
+	while(cq_empty(&getQ)) {
+		;
+	}
+
 	// Initialize input character to invalid ASCII code so that 
 	// even if pop fails, no extra character is output
 	unsigned char in_c = 130;
@@ -275,7 +281,7 @@ int uart_getc_int(void) {
         cq_pop_nonblock(&getQ, &in_c);
     }
 
-	// Finished with shared resource, so re-enable interrupts
+	// Return the character we received
     return in_c; 
 }
 
@@ -310,6 +316,8 @@ void uart_init_with_interrupts(void) {
 	// and mini UART.
     dev_barrier();
 
+	// According to page 9 of the Broadcom datasheet, we can 
+	// enable the UART by setting the LSB.
     put32(AUX_ENABLES, get32(AUX_ENABLES) | (ENABLE_UART));
     
 	// According to the Broadcom manual, we need a dsm and dmb barriers
@@ -326,13 +334,22 @@ void uart_init_with_interrupts(void) {
 	// Page 12 of the Broadcom datasheet and errata show that bits 0 and 1
 	// control whether the interrupts are enabled
 	put32(&(hw_uart->ier), ENABLE_TX_INT | ENABLE_RX_INT);
+
+	// Page 13 of the Broadcom datasheet and errata show that bits 0 and 1
+	// control whether to clear the hardware FIFOs.
 	put32(&(hw_uart->iir), CLEAR_RX_FIFO | CLEAR_TX_FIFO);
+	
+	// Page 14 of the Broadcom datasheet and errata show that if bit 0
+	// is set, 8-bit mode is used.
 	put32(&(hw_uart->lcr), ENABLE_8BIT_MODE);
 
 	// Page 11 dictates the formula to calculate the baud rate of the mini-UART.
 	// With 250MHz system clock and 115200 desired baud rate, the baud rate register
 	// must be loaded with value 270.
 	put32(&(hw_uart->baud), BAUD_115200);
+
+	// According to pages 16-17 of the Broadcom datasheet,
+	// bits 1 and 0 can be set to enable transmit and receive.
 	put32(&(hw_uart->cntl), TX_ENABLE | RX_ENABLE);
 
 	// According to the Broadcom manual, we need a dsm and dmb barriers
@@ -348,6 +365,8 @@ void uart_init_with_interrupts(void) {
 	cq_init(&getQ, 1);
     cq_init(&putQ, 1);
 
+	// According to the Broadcom manual, we need a dsm and dmb barriers
+	// between operations on different peripherals.
 	dev_barrier();
 }
 

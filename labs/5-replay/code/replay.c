@@ -46,7 +46,7 @@ int main(int argc, char *argv[]) {
     }
     char *logfile = argv[1];
     char *unix_side = argv[2];
-    char *pi_prog = argv[3];
+    // char *pi_prog = argv[3];
 
     unsigned n;
     log_ent_t *log = log_parse_tuples(logfile,&n);
@@ -67,7 +67,7 @@ int main(int argc, char *argv[]) {
     int ntrials = 1;
     // run successful trials.
     for(int i = 0; i < ntrials; i++)  {
-        endpt_t u = start_unix_side(unix_side, pi_prog);
+        endpt_t u = start_unix_side(unix_side, &argv[3]);
         replay_unix(&u, log, n, -1);
     }
 
@@ -77,7 +77,7 @@ int main(int argc, char *argv[]) {
             continue;
         output("-------------------TRIAL %d about to run-----------------------------\n",i);
         output("going to try to corrupt %d\n", i);
-        endpt_t u = start_unix_side(unix_side, pi_prog);
+        endpt_t u = start_unix_side(unix_side, &argv[3]);
         if(!replay_unix(&u, log, n, i))
             panic("impossible: did not corrupt i=%d\n", i);
         close_open_fds();

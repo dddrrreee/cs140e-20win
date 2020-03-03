@@ -1,0 +1,195 @@
+make[1]: Nothing to be done for `all'.
+arm-none-eabi-gcc -Og -Wall -nostdlib -nostartfiles -ffreestanding -mcpu=arm1176jzf-s -mtune=arm1176jzf-s  -std=gnu99 -I/Users/brianjun/Desktop/school/Winter1920/CS140E/cs140e-20win/libpi -I.  -I/Users/brianjun/Desktop/school/Winter1920/CS140E/cs140e-20win/libpi/cs140e-src -I/Users/brianjun/Desktop/school/Winter1920/CS140E/cs140e-20win/libpi/cs140e-interrupt -ggdb -Wno-pointer-sign -Wno-unused-function -Wno-unused-variable    -c -o rpi-thread.o rpi-thread.c
+arm-none-eabi-gcc -c -nostdlib -nostartfiles -ffreestanding   -Wa,--warn -Wa,--fatal-warnings -Wa,-mcpu=arm1176jzf-s -Wa,-march=armv6zk   -I/Users/brianjun/Desktop/school/Winter1920/CS140E/cs140e-20win/libpi -I.  -I/Users/brianjun/Desktop/school/Winter1920/CS140E/cs140e-20win/libpi/cs140e-src -I/Users/brianjun/Desktop/school/Winter1920/CS140E/cs140e-20win/libpi/cs140e-interrupt thread-asm.S -o thread-asm.o
+arm-none-eabi-gcc -Og -Wall -nostdlib -nostartfiles -ffreestanding -mcpu=arm1176jzf-s -mtune=arm1176jzf-s  -std=gnu99 -I/Users/brianjun/Desktop/school/Winter1920/CS140E/cs140e-20win/libpi -I.  -I/Users/brianjun/Desktop/school/Winter1920/CS140E/cs140e-20win/libpi/cs140e-src -I/Users/brianjun/Desktop/school/Winter1920/CS140E/cs140e-20win/libpi/cs140e-interrupt -ggdb -Wno-pointer-sign -Wno-unused-function -Wno-unused-variable    -c -o circular.o circular.c
+arm-none-eabi-gcc -c -nostdlib -nostartfiles -ffreestanding   -Wa,--warn -Wa,--fatal-warnings -Wa,-mcpu=arm1176jzf-s -Wa,-march=armv6zk   -I/Users/brianjun/Desktop/school/Winter1920/CS140E/cs140e-20win/libpi -I.  -I/Users/brianjun/Desktop/school/Winter1920/CS140E/cs140e-20win/libpi/cs140e-src -I/Users/brianjun/Desktop/school/Winter1920/CS140E/cs140e-20win/libpi/cs140e-interrupt test-asm.S -o test-asm.o
+arm-none-eabi-gcc -Og -Wall -nostdlib -nostartfiles -ffreestanding -mcpu=arm1176jzf-s -mtune=arm1176jzf-s  -std=gnu99 -I/Users/brianjun/Desktop/school/Winter1920/CS140E/cs140e-20win/libpi -I.  -I/Users/brianjun/Desktop/school/Winter1920/CS140E/cs140e-20win/libpi/cs140e-src -I/Users/brianjun/Desktop/school/Winter1920/CS140E/cs140e-20win/libpi/cs140e-interrupt -ggdb -Wno-pointer-sign -Wno-unused-function -Wno-unused-variable    -c -o 6-preempt-test.o 6-preempt-test.c
+arm-none-eabi-ld /Users/brianjun/Desktop/school/Winter1920/CS140E/cs140e-20win/libpi/cs140e-start.o 6-preempt-test.o rpi-thread.o thread-asm.o circular.o  test-asm.o -T /Users/brianjun/Desktop/school/Winter1920/CS140E/cs140e-20win/libpi/memmap -o 6-preempt-test.bin.elf  /Users/brianjun/Desktop/school/Winter1920/CS140E/cs140e-20win/libpi/libpi.a
+arm-none-eabi-objdump -D  -S 6-preempt-test.bin.elf > 6-preempt-test.bin.list
+arm-none-eabi-objcopy 6-preempt-test.bin.elf -O binary 6-preempt-test.bin.bin
+my-install ./6-preempt-test.bin.bin
+find-ttyusb.c:find_ttyusb_first:106:FOUND: </dev/cu.SLAB_USBtoUART>
+opened tty port </dev/cu.SLAB_USBtoUART>.
+my-install: tty-usb=</dev/cu.SLAB_USBtoUART> program=<./6-preempt-test.bin.bin> about to boot
+******************sending 12752 bytes
+bootloader: Done.
+listening on ttyusb=</dev/cu.SLAB_USBtoUART>
+Starting now!
+offsets checked out!
+Thread 1 says 1
+Thread 2 says 2
+Thread 3 says 3
+Thread 4 says 4
+Thread 5 says 5
+Interrupt
+Interrupt
+rpInterrupt
+ieInterrupt
+Interrupt
+rrInterrupt
+upInterrupt
+Interrupt
+t
+Interrupt
+SnInterrupt
+Interrupt
+teInterrupt
+rruInterrupt
+ptInterrupt
+
+DInterrupt
+Interrupt
+ONInterrupt
+E!Interrupt
+Interrupt
+!!Interrupt
+
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Interrupt
+Int""  make: *** [6-preempt-test.bin] Interrupt: 2
+make: *** Deleting intermediate file `6-preempt-test.o'

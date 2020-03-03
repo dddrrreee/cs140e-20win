@@ -27,6 +27,12 @@ void interrupt_vector(unsigned pc) {
 #define get_byte uart_getc_int
 #define put_byte uart_putc_int
 
+// send a PI_READY if opcode has PI_NEED_ACK in it.
+static void send_ack(unsigned op) {
+	if(op & PI_NEED_ACK) {
+		put_byte(PI_READY);
+	}
+}
 static void read_exact(void *data, unsigned n) {
     uint8_t *p = data;
     for(int i = 0; i < n; i++)
@@ -87,11 +93,13 @@ void notmain(void) {
 
         // all op's are uint8s to save space
         op = get_byte();
-        switch(op) {
+        switch(op & ~PI_NEED_ACK) {
         case PI_REBOOT: 
             printk("PI: reboot\n");
-            delay_ms(10);  // XXX: change uart-int to have a flush routine.
-            clean_reboot();
+            uart_int_flush_all();
+			send_ack(op);
+			delay_ms(100);  // XXX: change uart-int to have a flush routine.
+            rpi_reboot();
         /*
          * Ignoring race conditions with other connections, 
          * we only really need put32 and get32 and can then
@@ -106,11 +114,12 @@ void notmain(void) {
             val = GET32(addr);
             put_byte(PI_GET32_REPLY);
             put_uint32(val);
-            break;
+			break;
         case PI_PUT32:
             addr = get_uint32();
             val = get_uint32();
             PUT32(addr,val);
+			send_ack(op);
             break;
 
         /************************************************
@@ -119,6 +128,7 @@ void notmain(void) {
         case PI_GPIO_SET_INPUT:
 			pin = get_byte();
 			gpio_set_input(pin);
+			send_ack(op);
 			break;
         case PI_GPIO_READ:
 			pin = get_byte();
@@ -129,19 +139,23 @@ void notmain(void) {
         case PI_GPIO_SET_OUTPUT:
 			pin = get_byte();
 			gpio_set_output(pin);
+			send_ack(op);
 			break;
         case PI_GPIO_WRITE:
             pin = get_byte();
 			val = get_uint32();
 			gpio_write(pin, val);
+			send_ack(op);
             break;
 		case PI_GPIO_SET_ON:
 			pin = get_byte();
 			gpio_set_on(pin);
+			send_ack(op);
 			break;
 		case PI_GPIO_SET_OFF:
 			pin = get_byte();
 			gpio_set_off(pin);
+			send_ack(op);
 			break;
         default: 
             panic("unexpected op: %d\n", op);

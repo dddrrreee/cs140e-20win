@@ -72,11 +72,13 @@ interrupt_asm:
   @ vpush {s0-s15}	        @ uncomment if want to save caller-saved fp regs
 
   mov   r0, lr              @ Pass old pc
+  
   bl    interrupt_vector    @ C function
 
   @ vpop {s0-s15}           @ pop caller saved fp regs
   pop   {r0-r12,lr} 	    @ pop integer registers
-
+  
+  
   @ return from interrupt handler: will re-enable general ints.
   movs    pc, lr        @ moves the link register into the pc and implicitly
                         @ loads the PC with the result, then copies the 

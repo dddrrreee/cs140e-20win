@@ -20,7 +20,7 @@ typedef struct endpoint {
 } endpt_t;
 
 endpt_t start_pi_side(const char *dev_name);
-endpt_t start_unix_side(char *prog_name, char *pi_prog_name);
+endpt_t start_unix_side(char *prog_name, char **argv_rest);
 
 
 typedef struct {

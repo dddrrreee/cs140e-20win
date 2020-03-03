@@ -80,7 +80,10 @@ static void expect_op(uint8_t expect) {
     uint8_t got = get_op();
     if(got == expect)
         return;
-    panic("expected %d, received %d\n", expect, got);
+    output("expected %d, received %d ('%c')\n", expect, got, got);
+    // dump out the rest of the string so we can see what is going on.
+    while(1)
+        output("%c", get_op());
 }
 
 /*************************************************************
@@ -96,7 +99,7 @@ void gpio_set_output(unsigned pin) {
 	}
 
 	output("unix: set_output(%d)\n", pin);
-	put_uint8(PI_GPIO_SET_OUTPUT);
+	put_uint8(PI_GPIO_SET_OUTPUT | PI_NEED_ACK);
 	put_uint8(pin);
 	func[pin] = 1;
 }
@@ -106,7 +109,7 @@ void gpio_set_input(unsigned pin) {
 	}
 
 	output("unix: set_input(%d)\n", pin);
-	put_uint8(PI_GPIO_SET_INPUT);
+	put_uint8(PI_GPIO_SET_INPUT | PI_NEED_ACK);
 	put_uint8(pin);
 	func[pin] = 0;
 }
@@ -120,7 +123,7 @@ void gpio_write(unsigned pin, unsigned val) {
 	}
 
 	output("unix: gpio_write(%d : %d)\n", pin, val);
-	put_uint8(PI_GPIO_WRITE);
+	put_uint8(PI_GPIO_WRITE | PI_NEED_ACK);
 	put_uint8(pin);
 	put_uint32(val);
 	if(func[pin] != 1) {
@@ -136,7 +139,7 @@ void gpio_set_on(unsigned pin) {
 		panic("Not an output \n");
 	}
 	output("unix: gpio_set_on(%d)\n", pin);
-	put_uint8(PI_GPIO_SET_ON);
+	put_uint8(PI_GPIO_SET_ON | PI_NEED_ACK);
 	put_uint8(pin);
 }
 
@@ -149,7 +152,7 @@ void gpio_set_off(unsigned pin) {
 	}
 
 	output("unix: gpio_set_off(%d)\n", pin);
-	put_uint8(PI_GPIO_SET_OFF);
+	put_uint8(PI_GPIO_SET_OFF | PI_NEED_ACK);
 	put_uint8(pin);
 }
 
@@ -168,7 +171,7 @@ void put32(volatile void *addr, unsigned val) {
     uint32_t x32 = x64;
     assert(x32 == x64);
     output("unix: put32(%x : %p) = %x\n", x32, addr, val);
-    put_uint8(PI_PUT32);
+    put_uint8(PI_PUT32 | PI_NEED_ACK);
     put_uint32((unsigned long)addr);
     put_uint32(val);
 }
@@ -214,8 +217,8 @@ int va_printk(char *buf, unsigned n, const char *fmt, va_list args) {
 void clean_reboot(void) {
     output("about to exit\n");
     // we don't have to wait?
-    put_uint8(PI_REBOOT);
-
+    put_uint8(PI_REBOOT | PI_NEED_ACK);
+	expect_op(PI_READY);
     delay_ms(1000);
     while(can_read_timeout(pi_fd,10000))
         get_op();

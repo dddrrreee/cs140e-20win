@@ -10,7 +10,7 @@
 // on the other hand, idk if it's a bright idea to put into libpi.  it's going to
 // pull in all sorts of stuff if we're not careful.
 
-#include "rpi-asm.h"
+#include "rpi-constants.h"
 #include "sw-uart.h"
 
 typedef enum { PUTC_HW_UART = 1, PUTC_SW_UART, PUTC_ESP_UART } uart_dev_t;

@@ -50,4 +50,47 @@ void system_enable_interrupts(void);
 void system_disable_interrupts(void);
 void int_init(void);
 
+#if 0
+/*
+  p A2-16
+  offsets for the different exceptions
+
+  ldr pc, _reset_asm
+  ldr pc, _undefined_instruction_asm
+  ldr pc, _software_interrupt_asm
+  ldr pc, _prefetch_abort_asm
+  ldr pc, _data_abort_asm
+  ldr pc, _reset_asm
+  ldr pc, _interrupt_asm
+*/
+enum {
+    INT_RESET_ID            = 0,
+    INT_UNDEFINED_ID        = 1,
+    INT_SWI_ID              = 2,
+    INT_PREFETCH_ABORT_ID   = 3,
+    INT_DATA_ABORT_ID       = 4,
+    // there is no 5: mark as illegal
+    INT_ILLEGAL_ID          = 5,
+    INT_INTERRUPT_ID        = 6,
+    INT_MAX_ID
+};
+// this is the intial trampoline: it has to setup a stack and save regs.
+typedef void (*int_handler_t)(void);
+
+// used to override the default int/exception handler.  must be
+// called before int_init
+void int_set_handler(unsigned handler_id, int_handler_t handler);
+#endif
+
+// need to disable mmu if it's enabled.
+#define INT_UNHANDLED(msg,r) \
+    panic("ERROR: unhandled exception <%s> at PC=%x\n", msg,r)
+
+// can override these.
+void data_abort_vector(unsigned pc);
+void prefetch_abort_vector(unsigned pc);
+void reset_vector(unsigned pc);
+void interrupt_vector(unsigned pc);
+void software_interrupt_vector(unsigned pc);
+
 #endif 

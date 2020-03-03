@@ -1,25 +1,25 @@
-#ifndef __RPI_CONSTANTS__
-#define __RPI_CONSTANTS__
-/*
- * we put all the various magic constants here.   otherwise they are buried in different
- * places and it's easy to get conflicts.
- */
+#ifndef __RPI_ASM_H__
+#define __RPI_ASM_H__
+// only include this in .S files.
 
-// this is 128MB --- should change to closer to what the r/pi A+ actually has.
-#define STACK_ADDR          0x8000000
-
-// put right above it.
-#define INT_STACK_ADDR      0x9000000  
-
-// this is the highest address we use --- above it is free.  should just rewrite 
-// the code so that we can malloc.
-#define HIGHEST_USED_ADDR INT_STACK_ADDR
+#include "rpi-constants.h"
 
 #define MK_FN(fn_name)     \
 .globl fn_name;             \
 fn_name:
 
-#define CYC_PER_USEC 700
-#define PI_MHz  (700*1000*1000UL)
+
+// used to make a cp15 function: clear the input "read-only" register
+#define MK_CP15_FUNC(name, macro_name)           \
+.globl name;                                \
+name:                                       \
+    CLR(r0);                                 \
+    macro_name(r0);                          \
+    bx lr
+
+
+// used to clear register before CP15 operation.
+#define CLR(reg) mov reg, #0 
+
 
 #endif

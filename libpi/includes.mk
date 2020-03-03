@@ -24,6 +24,6 @@ INC = -I$(CS140E_LIBPI_PATH) -I.  -I$(CS140E_LIBPI_PATH)/cs140e-src -I$(CS140E_L
 
 CFLAGS = -Og -Wall -nostdlib -nostartfiles -ffreestanding -mcpu=arm1176jzf-s -mtune=arm1176jzf-s  -std=gnu99 $(INC) -ggdb -Wno-pointer-sign
 
-ASFLAGS = --warn --fatal-warnings  -mcpu=arm1176jzf-s -march=armv6zk
+ASFLAGS = --warn --fatal-warnings  -mcpu=arm1176jzf-s -march=armv6zk $(INC)
 
 CPP_ASFLAGS =  -nostdlib -nostartfiles -ffreestanding   -Wa,--warn -Wa,--fatal-warnings -Wa,-mcpu=arm1176jzf-s -Wa,-march=armv6zk   $(INC)

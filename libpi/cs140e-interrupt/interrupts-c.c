@@ -1,6 +1,28 @@
 #include "rpi.h"
 #include "rpi-interrupts.h"
 
+/*
+ * Copy in interrupt vector table and FIQ handler _table and _table_end
+ * are symbols defined in the interrupt assembly file, at the beginning
+ * and end of the table and its embedded constants.
+ */
+
+#if 0
+static int int_init_p = 0;
+
+void int_set_handler(unsigned handler_id, int_handler_t handler) {
+    extern unsigned _interrupt_table_data;
+    extern unsigned _interrupt_table_end:
+
+    demand(!int_init_p, must call before int_init);
+    assert(handler_id < INT_MAX_ID);
+    assert(handler_id != INT_ILLEGAL_ID);
+
+    int_handler_t *v = (void*)&_interrupt_table_end;
+    v[INT_handler_id] = handler;
+}
+#endif
+
 // initialize global interrupt state.
 void int_init(void) {
     // put interrupt flags in known state. 
@@ -9,14 +31,9 @@ void int_init(void) {
     PUT32(Disable_IRQs_2, 0xffffffff);
     dev_barrier();
 
-    /*
-     * Copy in interrupt vector table and FIQ handler _table and _table_end
-     * are symbols defined in the interrupt assembly file, at the beginning
-     * and end of the table and its embedded constants.
-     */
+
     extern unsigned _interrupt_table;
     extern unsigned _interrupt_table_end;
-
     // where the interrupt handlers go.
 #   define RPI_VECTOR_START  0
     unsigned *dst = (void*)RPI_VECTOR_START,
@@ -26,11 +43,14 @@ void int_init(void) {
         dst[i] = src[i];
 }
 
+void fast_interrupt_vector(unsigned pc) {
+    INT_UNHANDLED("fast", pc);
+}
+
+
+#if 0
 #define UNHANDLED(msg,r) \
 	panic("ERROR: unhandled exception <%s> at PC=%x\n", msg,r)
-void fast_interrupt_vector(unsigned pc) {
-	UNHANDLED("fast", pc);
-}
 
 // this is used for syscalls.
 void software_interrupt_vector(unsigned pc) {
@@ -48,3 +68,4 @@ void prefetch_abort_vector(unsigned pc) {
 void data_abort_vector(unsigned pc) {
 	UNHANDLED("data abort", pc);
 }
+#endif

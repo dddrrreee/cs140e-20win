@@ -24,13 +24,14 @@ actual reality works and looks like; most implementors have no idea.
 
 ### 2. refactor 6-threads to put your code in `libpi/my-src`
 
-As a preperatory step towards making user-level processes, you should
+As a preparatory step towards making user-level processes, you should
 also refactor your threads lab so that the thread code is in your
 `libpi/my-src`.
 
 In order to minimize boring bugs, I'd suggest doing it as follows:
 
    0. Make sure it still compiles before doing anything:
+
         % cd 6-threads/threads.new
         % make clean
         % make

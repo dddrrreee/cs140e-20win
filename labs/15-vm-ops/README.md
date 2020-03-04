@@ -313,3 +313,18 @@ are correct.
 
 You should go through and delete all of our files, changing the `Makefile`
 to remove references to them.  At this point, all code is written by you!
+
+## Extensions
+ 
+We did the bare minimum; lots of useful things to add:
+  1. What we have is very slow in that it flushes everything rather than flushing
+     just the needed virtual address.  Change the PTE modification code to be more
+     precise.
+
+  2. Write tests that verify the coherence actions we perform are needed.  Doing this
+     both gives a good set of tests, and is a great way to empirically build your
+     understanding of how the machine works.
+
+  3. You can make a virtual memory system that does not use page tables by carefully
+     adding entries to the "locked" region in the TLB on miss (or before).  It's an
+     interesting exercise to redo the VM in this way.

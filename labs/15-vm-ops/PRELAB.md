@@ -79,7 +79,7 @@ In order to minimize boring bugs, I'd suggest doing it as follows:
             % make -s | & grep -v arm-none > out2
             % diff out2 out
 
-    7. Great!
+  7. Great!
 
 This is a general pattern: whenever you are going to do a change that should not
 change external behavior, always:

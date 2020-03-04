@@ -134,20 +134,21 @@ functionality: threads, interrupts, virtual memory and file systems.
     use your FAT32 to read `hello-fixed.bin` from last lab from your SD
     card, jump to it and run it.
 
-***[HAVE NOT UPDATED THE LABS BELOW]***
-
 ### Part 4: Virtual Memory
 
-  - [14-vm](14-vm/): This lab is a semi-lecture on the big picture of
-    virtual memory, then you take a working VM system and replace its page
-    table manipulation with your own.
+  - [14-vm](14-vm/): You take a working VM system and, using the
+    ARM documents, replace its page table manipulation with your own.
+    You also add exception handling to catch protection and missing translation
+    faults.   The former gives you the tools to start doing user-level protection,
+    the latter for demand paging and extending a stack as code accesses it.
 
+  - [15-vm-ops](15-vm-ops/): The previous lab defined the main noun in the
+    virtual memory universe (the page table); this lab does the main verbs
+    used to set up the VM hardware, including how to synchronize hardware,
+    translation, and page table state (more subtle than it sounds).
+    At the end you should be able to delete all our starter code.
 
-  - [15-vm.1](15-vm.1/): The previous lab defined the main noun
-  in the virtual memory universe (the page table); this lab does the main
-  verbs used to set up the VM hardware, including how to synchronize
-  hardware, translation, and page table state (more subtle than it
-  sounds).  At the end you should be able to delete all our starter code.
+***[HAVE NOT UPDATED THE LABS BELOW]***
 
 #### Part 5: processes
 

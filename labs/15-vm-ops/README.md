@@ -131,7 +131,7 @@ fine-grained way through the use of domains.
 
 Mechanically it works as follows.
   - each page-table entry (PTE) has a 4-bit field stating which single 
-  domain the entry belongs to.
+  domain (out of 16 possible) the entry belongs to.
 
   - the system control register (CP15) has a 32-bit domain register (`c3`,
   page B4-42) that contains 2-bits for each of the 16 domains stating
@@ -139,17 +139,16 @@ Mechanically it works as follows.
     - no-access (`0b00`): no load or store can be done to any virtual
     address belonging to the domain;
 
-    - a "client" (`0b01`): all accesses must be consistent with the
+  - a "client" (`0b01`): all accesses must be consistent with the
     permissions in their associated PTE;
 
-    - a "manager" (`0b11`): no permission checks are done, can read or
+  - a "manager" (`0b11`): no permission checks are done, can read or
     write any virtual address in the PTE region.
 
   - B4-15: On each memory reference, the hardware looks up the page
-  table entry (in reality: the cached TLB entry) for the virtual address,
-  gets the domain number, looks up the 2-bit state of the domain in the
-  domain register checks if it is allowed.
-
+    table entry (in reality: the cached TLB entry) for the virtual address,
+    gets the domain number, looks up the 2-bit state of the domain in the
+    domain register checks if it is allowed.
 
 As a result, you can quickly do a combination of both removing all access
 to a set of regions, and granting all access to others by simply writing
@@ -283,9 +282,9 @@ The high-level sequence is given on page 6-9 of the `arm1176.pdf` document
 We provided macros for most of these; but you should check that they 
 are correct.  
 
-   * Note that the flush instruction cache operation has bugs in many
-   in some ARM v6 chips, so we provided the recommended sequences (taken
-   from Linux).
+   * Note that the flush instruction cache operation has bugs in 
+     some ARM v6 chips, so we provided the recommended sequences (taken
+     from Linux).
 
 ----------------------------------------------------------------------
 ##### 6-9: Protocol for turning on MMU.
@@ -314,5 +313,3 @@ are correct.
 
 You should go through and delete all of our files, changing the `Makefile`
 to remove references to them.  At this point, all code is written by you!
-
-

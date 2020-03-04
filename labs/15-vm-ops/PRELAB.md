@@ -92,3 +92,7 @@ This will catch many errors.  Best is to add this to your `Makefile`
 targets so it is done always and any deviation automatically flagged.
 If you have output that changes but is not essential, prefix it with a
 string of some kind (e.g., `DEBUG:`) so you can `grep` it out.
+
+Obviously, after each lab we should have been putting the code in `libpi`
+as a commit point, and also adding automatic tests to the build to make
+sure the code didn't get broken.  Next year...

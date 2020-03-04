@@ -22,11 +22,11 @@ chips), so being able to reason about them means that everything else
 is comparatively easy.  It also means you have a real grasp of how
 actual reality works and looks like; most implementors have no idea.
 
-### 2. refactor 6-threads to put your code in `libpi/my-src`
+### 2. refactor 6-threads to put your code in `libpi/my-src` (quick)
 
 As a preparatory step towards making user-level processes, you should
 also refactor your threads lab so that the thread code is in your
-`libpi/my-src`.
+`libpi/my-src`.  This should take 5-10 minutes, hopefully.   
 
 In order to minimize boring bugs, I'd suggest doing it as follows:
 

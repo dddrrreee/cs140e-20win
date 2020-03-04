@@ -32,9 +32,9 @@ In order to minimize boring bugs, I'd suggest doing it as follows:
 
    0. Make sure it still compiles before doing anything:
 
-        % cd 6-threads/threads.new
-        % make clean
-        % make
+            % cd 6-threads/threads.new
+            % make clean
+            % make
 
    1.  Make a clean copy so we don't break working code:
 

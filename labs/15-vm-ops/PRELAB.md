@@ -38,13 +38,13 @@ In order to minimize boring bugs, I'd suggest doing it as follows:
 
    1.  Make a clean copy so we don't break working code:
 
-        % cd ..
-        % cp -r threads.new threads.refactor
+            % cd ..
+            % cp -r threads.new threads.refactor
 
    2. Add all the tests to the `Makefile` by changing the `all` target.
       For me:
 
-          all: libpi $(OBJS) 4-test-exit.bin 1-test-thread.bin \
+            all: libpi $(OBJS) 4-test-exit.bin 1-test-thread.bin \
                             2-test.bin 3-test-cswitch.bin
 
    3. Get the output before we touch anything.  I run `tcsh` so that looks something
@@ -59,23 +59,25 @@ In order to minimize boring bugs, I'd suggest doing it as follows:
     4. Refactor: move the thread code to your `libpi/my-src` directory so it 
        automatically gets compiled and added to `libpi`:  
 
-        # from 6-threads.refactor
-        % mv rpi-thread.c Q.h thread-asm.S ../../../libpi/my-src
+            # from 6-threads.refactor
+            % mv rpi-thread.c Q.h thread-asm.S ../../../libpi/my-src
 
     5. Refactor: Change the `Makefile` to not have the thread `.o's`:
 
        Previous:
+
             OBJS := test-asm.o rpi-thread.o thread-asm.o circular.o  
 
        Becomes:
+
             OBJS := test-asm.o
 
     6. Test:
 
-        % make clean
-        % make 
-        % make -s | & grep -v arm-none > out2
-        % diff out2 out
+            % make clean
+            % make 
+            % make -s | & grep -v arm-none > out2
+            % diff out2 out
 
     7. Great!
 

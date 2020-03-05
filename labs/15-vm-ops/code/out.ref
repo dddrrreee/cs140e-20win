@@ -1,0 +1,154 @@
+make[1]: Entering directory '/home/engler/class/cs140e-20win/libpi'
+make[1]: Nothing to be done for 'all'.
+make[1]: Leaving directory '/home/engler/class/cs140e-20win/libpi'
+my-install driver.bin
+find-ttyusb.c:find_ttyusb_first:106:FOUND: </dev/ttyUSB0>
+opened tty port </dev/ttyUSB0>.
+my-install: tty-usb=</dev/ttyUSB0> program=<driver.bin> about to boot
+******************sending 16204 bytes
+waiting for a start
+got a start
+putting code
+put code and got back
+bootloader: Done.
+listening on ttyusb=</dev/ttyUSB0>
+implement one at a time.
+------------------------------
+0x100000:
+	0b0	= sec_base_addr
+	  --> va=0x       0
+	           76543210
+	0b0	= nG
+	0b0	= S
+	0b0	= APX
+	0b0	= TEX
+	0b11	= AP
+	0b0	= IMP
+	0b1	= domain
+	0b0	= XN
+	0b0	= C
+	0b0	= B
+	0b10	= tag
+my.pte@ 0x100000 = 110000100010
+HASH:PTE crc:: hash=2f782a81,nbytes=4
+------------------------------
+0x100004:
+	0b1	= sec_base_addr
+	  --> va=0x  100000
+	           76543210
+	0b0	= nG
+	0b0	= S
+	0b0	= APX
+	0b0	= TEX
+	0b11	= AP
+	0b0	= IMP
+	0b1	= domain
+	0b0	= XN
+	0b0	= C
+	0b0	= B
+	0b10	= tag
+my.pte@ 0x100000 = 100000000110000100010
+HASH:PTE crc:: hash=5f6614fe,nbytes=4
+------------------------------
+0x1001fc:
+	0b1111111	= sec_base_addr
+	0x7f
+	  --> va=0x 7f00000
+	           76543210
+	0b0	= nG
+	0b0	= S
+	0b0	= APX
+	0b0	= TEX
+	0b11	= AP
+	0b0	= IMP
+	0b1	= domain
+	0b0	= XN
+	0b0	= C
+	0b0	= B
+	0b10	= tag
+my.pte@ 0x100000 = 111111100000000110000100010
+HASH:PTE crc:: hash=e22b84dd,nbytes=4
+------------------------------
+0x100800:
+	0b1000000000	= sec_base_addr
+	0x200
+	  --> va=0x20000000
+	           76543210
+	0b0	= nG
+	0b0	= S
+	0b0	= APX
+	0b0	= TEX
+	0b11	= AP
+	0b0	= IMP
+	0b1	= domain
+	0b0	= XN
+	0b0	= C
+	0b0	= B
+	0b10	= tag
+my.pte@ 0x100000 = 100000000000000000110000100010
+HASH:PTE crc:: hash=314dc8fc,nbytes=4
+------------------------------
+0x100804:
+	0b1000000001	= sec_base_addr
+	0x201
+	  --> va=0x20100000
+	           76543210
+	0b0	= nG
+	0b0	= S
+	0b0	= APX
+	0b0	= TEX
+	0b11	= AP
+	0b0	= IMP
+	0b1	= domain
+	0b0	= XN
+	0b0	= C
+	0b0	= B
+	0b10	= tag
+my.pte@ 0x100000 = 100000000100000000110000100010
+HASH:PTE crc:: hash=93a2dadc,nbytes=4
+------------------------------
+0x100808:
+	0b1000000010	= sec_base_addr
+	0x202
+	  --> va=0x20200000
+	           76543210
+	0b0	= nG
+	0b0	= S
+	0b0	= APX
+	0b0	= TEX
+	0b11	= AP
+	0b0	= IMP
+	0b1	= domain
+	0b0	= XN
+	0b0	= C
+	0b0	= B
+	0b10	= tag
+my.pte@ 0x100000 = 100000001000000000110000100010
+HASH:PTE crc:: hash=b76d0d60,nbytes=4
+------------------------------
+0x10023c:
+	0b10001111	= sec_base_addr
+	0x8f
+	  --> va=0x 8f00000
+	           76543210
+	0b0	= nG
+	0b0	= S
+	0b0	= APX
+	0b0	= TEX
+	0b11	= AP
+	0b0	= IMP
+	0b1	= domain
+	0b0	= XN
+	0b0	= C
+	0b0	= B
+	0b10	= tag
+my.pte@ 0x100000 = 1000111100000000110000100010
+HASH:PTE crc:: hash=87a285bd,nbytes=4
+doing print with vm ON
+OFF
+******** success ************
+DONE!!!
+
+Saw done
+
+bootloader: pi exited.  cleaning up

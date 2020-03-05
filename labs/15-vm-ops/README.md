@@ -14,6 +14,55 @@ and replace every function prefixed with `our_` to be your own code.
 The code is setup so that you can knock these off one at a time, making
 sure that things work after each modification.
 
+If you look in `mmu.h` you'll see the five routines you have to 
+implement, which will be in `your-vm-asm.S`:
+
+    void cp15_domain_ctrl_wr(uint32_t dom_reg);
+    void mmu_reset(void);
+    void cp15_set_procid_ttbr0(uint32_t proc_and_asid, fld_t *pt);
+    void mmu_disable_set_asm(cp15_ctrl_reg1_t c);
+    void mmu_enable_set_asm(cp15_ctrl_reg1_t c);
+
+You'll use the B2 chapter to figure these out.  Their callers are in
+`mmu.c`.
+
+The different arm-specific data structures have migrated to:
+  - `armv6-coprocessor-asm.h` --- many useful assembly instructions and page numbers.
+  - `armv6-cp15.h` --- the arm coprocessor 15 definition and related things.
+  - `armv6-vm.h` --- the arm vm definitions.
+
+#### Check-off
+
+You're going to write a tiny amount of code (< 10 lines for each part),
+but it has to be the right code.  You will:
+
+  1. Set up domains.  You must put in barriers correctly (give the page
+  number and what the ARM requires).  Show the code faults when you
+  (1) run code for memory that has the "execute never" bit set, (2)
+  write to memory that is read-only.
+
+  2. Set the ASID and page-table pointer.  You must handle coherence
+  correctly, using the ARM provided instruction sequence to switch
+  `ASID`s (your comments should state page number citations and succinct
+  intuition).
+
+  3. Turn on/turn off the MMU.  As in (2) you must handle coherence /
+  flushing correctly (with page number citations).
+
+  4. Delete our files and starter code (remove references from the
+  `Makefile`).  At this point, all code is written by you!
+
+  5. Make a flush routine that only flushes the specific VA information.
+  Measure the cost difference (huge).
+
+Extensions:
+  1. Set up code so that it cleans the cache rather than just invalidates.
+  2. Write code to make it easy to look up a PTE (`mmu_lookup_pte(void *addr)`)
+  and change permissions, write-buffer, etc.
+  3. Set-up two-level paging.
+  4. Set-up 16MB paging.
+
+------------------------------------------------------------------------
 #### Flushing stale state.
 
 The trickiest part of this lab is not figuring out the instructions 
@@ -68,33 +117,17 @@ ARMv6 manual (`docs/armv6.b2-memory.annot.pdf`).  Useful pages:
   - B2-23: how to flush after changing a PTE.
   - B2-24: must flush after a CP15.
 
-#### Check-off
+----------------------------------------------------------------------
+## Part 0: migrate your lab14 code.
 
-You're going to write a tiny amount of code (< 10 lines for each part),
-but it has to be the right code.  You will:
+I had to refactor some pieces, you'll have to migrate your MMU routines over
+into `code/mmu.c` and change `mmu_map_section` to handle domains:
 
-  1. Set up domains.  You must put in barriers correctly (give the page
-  number and what the ARM requires).  Show the code faults when you
-  (1) run code for memory that has the "execute never" bit set, (2)
-  write to memory that is read-only.
+    mmu_mark_sec_ap_perm(fld_t *pt, unsigned va, unsigned nsec, unsigned perm);
+    mmu_map_section(fld_t *pt, uint32_t va, uint32_t pa, uint32_t dom);
 
-  2. Set the ASID and page-table pointer.  You must handle coherence
-  correctly, using the ARM provided instruction sequence to switch
-  `ASID`s (your comments should state page number citations and succinct
-  intuition).
-
-  3. Turn on/turn off the MMU.  As in (2) you must handle coherence /
-  flushing correctly (with page number citations).
-
-  4. Delete our files and starter code (remove references from the
-  `Makefile`).  At this point, all code is written by you!
-
-Extensions:
-  1. Set up code so that it cleans the cache rather than just invalidates.
-  2. Write code to make it easy to look up a PTE (`mmu_lookup_pte(void *addr)`)
-  and change permissions, write-buffer, etc.
-  3. Set-up two-level paging.
-  4. Set-up 16MB paging.
+Just making should produce something sensible after; you can diff against
+`out.ref`.
 
 ----------------------------------------------------------------------
 ## Part 1: setting up domains.

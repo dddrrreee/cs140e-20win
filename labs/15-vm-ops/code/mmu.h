@@ -82,24 +82,24 @@ void write_domain_access_ctrl(unsigned d);
  */
 
 // write the values for the domain control reg and do any needed coherence.
-//void cp15_domain_ctrl_wr(uint32_t dom_reg);
+void cp15_domain_ctrl_wr(uint32_t dom_reg);
 void our_cp15_domain_ctrl_wr(uint32_t dom_reg);
 
 // one time initialization of the machine state.  cache/tlb should not be active yet
 // so just invalidate.  
-//void mmu_reset(void);
+void mmu_reset(void);
 void our_mmu_reset(void);
 
 // sets both the procid and the ttbr0 register: does any needed coherence.
 // i *think* we absolutely must do both of these at once.
-//void cp15_set_procid_ttbr0(uint32_t proc_and_asid, fld_t *pt);
+void cp15_set_procid_ttbr0(uint32_t proc_and_asid, fld_t *pt);
 void our_cp15_set_procid_ttbr0(uint32_t proc_and_asid, fld_t *pt);
 
 // sets the control register to <c> and does any needed coherence operations.
-//void mmu_disable_set_asm(cp15_ctrl_reg1_t c);
-//void mmu_enable_set_asm(cp15_ctrl_reg1_t c);
-
+void mmu_disable_set_asm(cp15_ctrl_reg1_t c);
 void our_mmu_disable_set_asm(cp15_ctrl_reg1_t c);
+
+void mmu_enable_set_asm(cp15_ctrl_reg1_t c);
 void our_mmu_enable_set_asm(cp15_ctrl_reg1_t c);
 
 /******************************************************************

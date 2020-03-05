@@ -10,10 +10,6 @@ int mmu_is_enabled(void) {
     return cp15_ctrl_reg1_rd().MMU_enabled != 0;
 }
 
-fld_t * mmu_lookup_section(fld_t *pt, unsigned va) {
-    unimplemented();
-}
-
 static void 
 mmu_mark_sec_ap_perm(fld_t *pt, unsigned va, unsigned nsec, unsigned perm) {
     unimplemented();

@@ -42,8 +42,6 @@ void mmu_map_sections(fld_t *pt, unsigned va, unsigned pa, unsigned nsec, uint32
 // lookup section <va> in page table <pt>
 fld_t *mmu_lookup(fld_t *pt, uint32_t va);
 
-// called to sync after a set of pte modifications: flushes everything.
-void mmu_sync_pte_mods(void);
 // *<pte> = e.   more precisely flushes state.
 void mmu_sync_pte_mod(fld_t *pte, fld_t e);
 
@@ -89,6 +87,11 @@ void our_cp15_domain_ctrl_wr(uint32_t dom_reg);
 // so just invalidate.  
 void mmu_reset(void);
 void our_mmu_reset(void);
+
+// called to sync after a set of pte modifications: flushes everything.
+void mmu_sync_pte_mods(void);
+#define mmu_sync_pte_mods our_mmu_sync_pte_mods
+void our_mmu_sync_pte_mods(void);
 
 // sets both the procid and the ttbr0 register: does any needed coherence.
 // i *think* we absolutely must do both of these at once.

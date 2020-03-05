@@ -73,7 +73,7 @@ interrupt_asm:
 
   mov   r0, lr              @ Pass old pc
   
-  bl    interrupt_vector    @ C function
+  bl   interrupt_vector   @ C function
 
   @ vpop {s0-s15}           @ pop caller saved fp regs
   pop   {r0-r12,lr} 	    @ pop integer registers
@@ -131,5 +131,22 @@ prefetch_abort_asm:
   sub   lr, lr, #4
   bl    prefetch_abort_vector
 data_abort_asm:
-  sub   lr, lr, #4
-  bl    data_abort_vector
+  @sub   lr, lr, #4
+  mov sp, #INT_STACK_ADDR   @ i believe we have 512mb - 16mb, so this should be safe
+  sub lr, lr, #8
+  @sub   lr, lr, #4
+
+  push  {r0-r12,lr}         @ XXX: pushing too many registers: only need caller
+  @ vpush {s0-s15}	        @ uncomment if want to save caller-saved fp regs
+
+  mov   r0, lr              @ Pass old pc
+  
+  bl   data_abort_vector   @ C function
+
+  @ vpop {s0-s15}           @ pop caller saved fp regs
+  pop   {r0-r12,lr} 	    @ pop integer registers
+  
+  
+  @ return from interrupt handler: will re-enable general ints.
+  movs    pc, lr        @ moves the link register into the pc and implicitly
+                        @ loads the PC with the result, then copies the 

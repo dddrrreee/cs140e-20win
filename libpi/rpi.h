@@ -210,6 +210,65 @@ void notmain(void);
 
 
 /******************************************************************
+ * thread  routines.
+ */
+
+#define REG_SP_OFF 10
+#define REG_LR_OFF 9
+
+// in bytes.
+#define THREAD_MAXSTACK (1024 * 8/4)
+typedef struct rpi_thread {
+    // as our initial
+    uint32_t reg_save_area[16];
+
+	struct rpi_thread *next;
+	uint32_t tid;
+    // not needed, but useful for testing without cswitch
+    void (*fn)(void *arg);
+    void *arg;
+
+	uint32_t stack[THREAD_MAXSTACK];
+} rpi_thread_t;
+
+// create a new thread that takes a single argument.
+rpi_thread_t *rpi_fork(void (*code)(void *arg), void *arg);
+
+// exit current thread.
+void rpi_exit(int exitcode);
+
+// yield the current thread.
+void rpi_yield(void);
+
+// starts the thread system: nothing runs before.
+// 	- <preemptive_p> = 1 implies pre-emptive multi-tasking.
+void rpi_thread_start(void);
+
+// pointer to the current thread.
+rpi_thread_t *rpi_cur_thread(void);
+
+// context-switch:
+//  - save the current register values into <old_save_area>
+//  - load the values in <new_save_area> into the registers
+//  reutrn to the caller (which will now be different!)
+void rpi_cswitch(uint32_t *old_save_area, uint32_t *new_save_area);
+
+// returns the stack pointer --- don't write to
+// what it points to unless you are looking for excitement.
+const uint8_t *rpi_get_sp(void);
+
+// check that the current thread is within its stack.
+void rpi_stack_check(void);
+
+// sleep for <usec>.  can be used to implement simple
+// real-time scheduling.
+void rpi_exact_sleep(uint32_t usec);
+
+// do some internal consistency checks --- used for testing.
+void rpi_internal_check(void);
+
+
+/******************************************************************
  * SD card routines.
  */
 

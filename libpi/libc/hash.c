@@ -12,7 +12,8 @@
                        +(uint32_t)(((const uint8_t *)(d))[0]) )
 #endif
 
-uint32_t fast_hash(const char * data, int len) {
+uint32_t fast_hash(volatile const char * _data, int len) {
+    const char * data = (const void*)_data;
 uint32_t hash = len, tmp;
 int rem;
 

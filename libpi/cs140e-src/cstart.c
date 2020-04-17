@@ -2,11 +2,13 @@
 #include "sw-uart.h"
 #include "control-block.h"
 
+#if 0
 static sw_uart_t console_uart;
 static int internal_sw_putchar(int c) {
     sw_uart_putc(&console_uart, c);
     return c;
 }
+#endif
 
 void _cstart() {
     extern int __bss_start__, __bss_end__;
@@ -18,7 +20,7 @@ void _cstart() {
     while( bss < bss_end )
         *bss++ = 0;
 
-#if 1
+#if 0
     // this links in so much stuff.  need to fix.
     control_blk_t *cb = cb_get_block();
     if(cb) {

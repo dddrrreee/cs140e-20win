@@ -165,7 +165,14 @@ void put8(volatile void *addr, unsigned char v);
 
 // *(unsigned *)addr
 unsigned GET32(unsigned addr);
-unsigned get32(const volatile void *addr);
+unsigned (get32)(const volatile void *addr);
+#if 0
+#define get32(addr) ({      \
+    _Static_assert( sizeof(typeof(* (addr))) == 4, "underlying type not 32bits");\
+    (get32)(addr);          \
+})
+#endif
+
 
 // *(unsigned short *)addr
 unsigned short GET16(unsigned addr);

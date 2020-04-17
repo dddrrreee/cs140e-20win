@@ -6,4 +6,12 @@ YOUR_OBJS =
 
 # these are initial .o's we give you: to use your own, remove them
 # and add yours
-EXTRA_OBJS= cs140e-objs/uart.o cs140e-objs/gpio.o  cs140e-objs/kmalloc.o
+EXTRA_OBJS= cs140e-objs/uart.o \
+            cs140e-objs/gpio.o  \
+            cs140e-objs/gpio-int.o  \
+            cs140e-objs/kmalloc.o \
+            cs140e-objs/sw-uart.o \
+            cs140e-objs/uart-int.o \
+            cs140e-objs/interrupts-asm.o \
+            cs140e-objs/thread-asm.o      \
+            cs140e-objs/rpi-thread.o   

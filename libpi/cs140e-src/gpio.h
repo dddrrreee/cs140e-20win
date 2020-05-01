@@ -41,6 +41,18 @@ void gpio_set_on(unsigned pin);
 // turn <pin> off.
 void gpio_set_off(unsigned pin);
 
+// broadcom doc claims we can get the current state of the device
+// but that seems incorrect.
+
+// set <pin> as a pullup
+void gpio_set_pullup(unsigned pin);
+// set <pin> as a pulldown.
+void gpio_set_pulldown(unsigned pin);
+// set <pin> back to the default state: no pull up, no pulldown.
+void gpio_pud_off(unsigned pin);
+
+int gpio_get_pud(unsigned pin);
+
 /*****************************************************************
  * use the following to configure interrupts on pins.
  */
@@ -76,5 +88,7 @@ int gpio_event_detected(unsigned pin);
 
 // p96: have to write a 1 to the pin to clear the event.
 void gpio_event_clear(unsigned pin);
+
+
 
 #endif

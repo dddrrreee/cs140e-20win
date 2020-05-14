@@ -2,5 +2,5 @@
 #define __LIBC_EXTRA_H__
 
 // put your extra libc prototypes here.
-uint32_t fast_hash(volatile const char * data, int len);
+uint32_t fast_hash(const void *data, int len);
 #endif

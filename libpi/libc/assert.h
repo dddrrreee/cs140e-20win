@@ -20,7 +20,8 @@
 
 #define pi_trace(args...) do { printk("TRACE:"); printk(args); } while(0)
 
-#define assert(bool) do { if((bool) == 0) panic(#bool); } while(0)
+#define assert(bool) do { if((bool) == 0) panic("%s", #bool); } while(0)
+
 
 #define _XSTRING(x) #x
 
@@ -39,8 +40,8 @@
     if(!(_expr)) {                                                  \
         rpi_reset_putc();\
         printk("ERROR:%s:%s:%d: "                      \
-                        "FALSE(<" _XSTRING(_expr) ">): " _XSTRING(_msg) "\n",\
-                        __FILE__, __FUNCTION__, __LINE__, ##args);              \
+                        "FALSE(<%s>): " _XSTRING(_msg) "\n",\
+                        __FILE__, __FUNCTION__, __LINE__, _XSTRING(_expr), ##args);              \
         clean_reboot();\
     }                                                               \
 } while(0)

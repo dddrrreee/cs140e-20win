@@ -167,6 +167,11 @@ Linux:
 
         sudo apt-get remove modemmanager
 
+Windows Subsystem for Linux:
+  - You might need to install the CP210x USB-to-UART driver from [Silicon Labs](https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers).
+  - Plug in the pi to your USB port and open "Device Manager" on your computer. Expand the "Ports" section and you will see an entry that looks like "Silicon Labs CP210x USB to UART Bridge (COM3)". Note down the number next to "COM".
+  - When running `pi-install` in Step 4 below (and in the future), you must include an additional argument to specify the right device. The device is called `/dev/ttySN`, where `N` is the number after "COM" that was shown in Device Manager. For example, the correct command for `COM3` is `pi-install /dev/ttyS3 part1/blink-pin20.bin`.
+
 Mechanically:
 
   0. Unplug your pi. Don't modify your current wiring.

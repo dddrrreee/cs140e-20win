@@ -13,7 +13,7 @@ You likely have a short somewhere and in the worst-case can fry your laptop.
 
 ### Reading before lab:
 
-  1. Read throuh `Part 0` of the lab (in the README.md)
+  1. Read through `Part 0` of the lab (in the README.md)
      to get a big-picture background of how the r/pi (and many computer
      systems) control devices.
 

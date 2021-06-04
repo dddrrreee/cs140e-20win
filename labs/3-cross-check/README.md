@@ -21,17 +21,17 @@ to everyone else's implementation.
 
 The basic idea: After completing the lab you will:
 
-    1. Be able to check that your `gpio` code is equivalant to everyone
-    else's in the class by tracing all reads and writes it does and
-    comparing them to everyone else's implementation.  If even one person
-    gets it right, then showing equivalance means you got it right too.
-    And, nicely, automatically detect if any subsequent
+   1. Be able to check that your `gpio` code is equivalent to everyone
+   else's in the class by tracing all reads and writes it does and
+   comparing them to everyone else's implementation.  If even one person
+   gets it right, then showing equivalance means you got it right too.
+   And, nicely, automatically detect if any subsequent
 	modifications you do break the code (e.g., if you rewrite
-    it to be cleaner).
+   it to be cleaner).
 
-    2. Be able to quickly, correctly write a more full-featured
-    `gpio` implementation by checking its equivalance against the
-    fairly complicated code used in the initial cs107e class.
+   2. Be able to quickly, correctly write a more full-featured
+   `gpio` implementation by checking its equivalance against the
+   fairly complicated code used in the initial cs107e class.
 
 #### Sign-off
 
